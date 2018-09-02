@@ -13,12 +13,12 @@ namespace Cirilla.Core.Models
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public GMD_Header Header { get; private set; }
-        public string Filename { get; private set; }
-        public GMD_Entry[] Entries { get; private set; }
-        public byte[] Unk1 { get; private set; }
-        public string[] Keys { get; private set; }
-        public string[] Strings { get; private set; }
+        public GMD_Header Header;
+        public string Filename;
+        public GMD_Entry[] Entries;
+        public byte[] Unk1;
+        public string[] Keys;
+        public string[] Strings;
 
         private GMD()
         {
@@ -50,7 +50,7 @@ namespace Cirilla.Core.Models
 
                 // Filename
                 byte[] bytes = br.ReadBytes((int)gmd.Header.FilenameLength); // Excludes \0 end of szString
-                gmd.Filename = Encoding.UTF8.GetString(bytes);
+                gmd.Filename = Encoding.ASCII.GetString(bytes);
                 fs.Position++; // Skip the zero from the szString
                 long posAfterFilename = fs.Position;
 
@@ -125,8 +125,78 @@ namespace Cirilla.Core.Models
             }
         }
 
-        public void Save(string filename)
+        public void Save(string path)
         {
+            Logger.Info($"Saving {Filename} to '{path}'");
+
+            UpdateHeader();
+            //UpdateEntries();
+
+            Logger.Info("Writing bytes...");
+
+            using (FileStream fs = File.OpenWrite(path))
+            using (BinaryWriter bw = new BinaryWriter(fs))
+            {
+                bw.Write(Header.ToBytes());
+                bw.Write(Encoding.ASCII.GetBytes(Filename));
+                bw.Write((byte)0); // szString end of string
+
+                foreach (var item in Entries)
+                {
+                    bw.Write(item.ToBytes());
+                }
+
+                bw.Write(Unk1);
+
+                foreach (var item in Keys)
+                {
+                    bw.Write(Encoding.ASCII.GetBytes(item));
+                    bw.Write((byte)0); // szString end of string
+                }
+
+                foreach (var item in Strings)
+                {
+                    bw.Write(Encoding.UTF8.GetBytes(item));
+                    bw.Write((byte)0); // szString end of string
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update header
+        /// This is needed when the strings changed (technically only if they all together are larger than before)
+        /// </summary>
+        public void UpdateHeader()
+        {
+            Logger.Info("Updating header...");
+
+            // String Count
+            Logger.Info("Current StringCount = " + Header.StringCount);
+            Header.StringCount = (uint)Strings.Length;
+            Logger.Info("New StringCount = " + Header.StringCount);
+
+            // StringBlockSize
+            Logger.Info("Current StringBlockSize = " + Header.StringBlockSize);
+
+            uint newSize = 0;
+
+            for (int i = 0; i < Header.StringCount; i++)
+            {
+                newSize += (uint)Encoding.UTF8.GetByteCount(Strings[i]) + 1; // +1 because szString
+            }
+
+            Header.StringBlockSize = newSize;
+            Logger.Info("New StringBlockSize = " + Header.StringBlockSize);
+        }
+
+        /// <summary>
+        /// Update entries
+        /// This is only needed when the Tags changed
+        /// </summary>
+        public void UpdateEntries()
+        {
+            Logger.Info("Updating entries...");
+
             throw new NotImplementedException();
         }
     }
