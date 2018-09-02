@@ -39,7 +39,13 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
-                            <DataGridCheckBoxColumn Header="Frozen" Width="60" Binding="{Binding ValueFrozen}"/>
+                            <DataGridTemplateColumn Header="Frozen" Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding ValueFrozen}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

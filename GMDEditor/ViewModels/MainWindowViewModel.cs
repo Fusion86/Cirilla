@@ -38,7 +38,7 @@ namespace GMDEditor.ViewModels
 
         #endregion
 
-        private LogProvider _logProvider = new LogProvider();
+        private readonly LogProvider _logProvider = new LogProvider();
 
         public MainWindowViewModel()
         {
