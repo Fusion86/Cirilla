@@ -35,7 +35,7 @@
 
             <TabControl Grid.Row="1">
                 <TabItem Header="Header">
-                    <DataGrid ItemsSource="{Binding HeaderMetadata}" ColumnWidth="*" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding HeaderMetadata}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -45,10 +45,16 @@
                 </TabItem>
 
                 <TabItem Header="Entries">
-                    <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Value}" AcceptsReturn="True" BorderThickness="0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
