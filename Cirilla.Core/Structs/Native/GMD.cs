@@ -10,11 +10,13 @@ namespace Cirilla.Core.Structs.Native
     {
         #region Native
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3, ArraySubType = UnmanagedType.U1)]
         public byte[] Magic; // "GMD"
 
+        public byte Padding1;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk0; // Version?
+        public byte[] Version; // Version?
 
         [Endian(Endianness.LittleEndian)]
         public UInt32 Language;
@@ -28,18 +30,18 @@ namespace Cirilla.Core.Structs.Native
         public UInt32 Unk2; // Zero
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 NumOfStringIds;
+        public UInt32 KeyCount;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 NumOfStrings; // Should match NumOfStringIds
+        public UInt32 StringCount; // Usually the same as KeyCount
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 LengthOfStringIdNames;
+        public UInt32 KeyBlockSize;
 
         // 0x20
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 LengthOfStrings;
+        public UInt32 StringBlockSize;
 
         [Endian(Endianness.LittleEndian)]
         public UInt32 FilenameLength;
@@ -49,5 +51,35 @@ namespace Cirilla.Core.Structs.Native
         #endregion
 
         public string MagicString => Encoding.ASCII.GetString(Magic);
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct GMD_Entry
+    {
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Index;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk2;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk3;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk4;
+
+        // 0x10
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 KeyOffset;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk6;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk7;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk8;
     }
 }
