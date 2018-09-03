@@ -27,6 +27,8 @@ namespace Cirilla.Core.Models
 
         public static GMD Load(string path)
         {
+            Logger.Info($"Loading '{path}'");
+
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader br = new BinaryReader(fs))
             {
@@ -160,6 +162,8 @@ namespace Cirilla.Core.Models
                     bw.Write((byte)0); // szString end of string
                 }
             }
+
+            Logger.Info("Saved file!");
         }
 
         /// <summary>

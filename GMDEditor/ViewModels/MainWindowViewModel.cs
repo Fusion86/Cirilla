@@ -7,6 +7,7 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using Serilog;
 
 namespace GMDEditor.ViewModels
 {
@@ -38,12 +39,8 @@ namespace GMDEditor.ViewModels
 
         #endregion
 
-        private readonly LogProvider _logProvider = new LogProvider();
-
         public MainWindowViewModel()
         {
-            Cirilla.Core.Logging.LogProvider.SetCurrentLogProvider(_logProvider);
-
             OpenGMDCommand = new RelayCommand(OpenGMD, CanOpenGMD);
             SaveGMDCommand = new RelayCommand(null, CanSaveGMD);
             SaveAsGMDCommand = new RelayCommand(SaveAsGMD, CanSaveAsGMD);
@@ -105,6 +102,7 @@ namespace GMDEditor.ViewModels
             HeaderMetadata.Clear();
             Entries.Clear();
             Context = null;
+            CurrentlyOpenFile = null;
         }
 
         public bool CanCloseGMD() => Context != null;
@@ -132,7 +130,7 @@ namespace GMDEditor.ViewModels
                 }
             }
 
-            Debug.WriteLine($"Updated {updatedStrings} strings");
+            Log.Information($"Updated {updatedStrings} strings");
 
             try
             {
