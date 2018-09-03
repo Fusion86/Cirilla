@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Controls;
 
-namespace GMDEditor
+namespace Cirilla
 {
     // Hacky logging stuff
     class InMemorySink : ILogEventSink

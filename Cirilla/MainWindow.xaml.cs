@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows;
 
-namespace GMDEditor
+namespace Cirilla
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -19,7 +19,7 @@ namespace GMDEditor
                 .WriteTo.Sink(sink)
                 .CreateLogger();
 
-            Log.Information("GMDEditor v" + Assembly.GetExecutingAssembly().GetName().Version);
+            Log.Information("Cirilla v" + Assembly.GetExecutingAssembly().GetName().Version);
             Log.Information("Cirilla.Core v" + Assembly.GetAssembly(typeof(Cirilla.Core.Models.GMD)).GetName().Version);
         }
     }

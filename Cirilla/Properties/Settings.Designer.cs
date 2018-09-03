@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GMDEditor.Properties
+namespace Cirilla.Properties
 {
 
 

@@ -1,5 +1,6 @@
 ﻿using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
+using Cirilla.Core.Interfaces;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
@@ -9,9 +10,11 @@ using System.Text;
 
 namespace Cirilla.Core.Models
 {
-    public class GMD
+    public class GMD : IFileType
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
+        public const string MAGIC_STRING = "GMD";
 
         public GMD_Header Header;
         public string Filename;
@@ -37,7 +40,7 @@ namespace Cirilla.Core.Models
                 // Header
                 gmd.Header = br.ReadStruct<GMD_Header>();
 
-                if (gmd.Header.MagicString != "GMD") throw new Exception("Not a GMD file!");
+                if (gmd.Header.MagicString != MAGIC_STRING) throw new Exception("Not a GMD file!");
 
                 // Log some info about the GMD language
                 if (Enum.IsDefined(typeof(EmLanguage), gmd.Header.Language))

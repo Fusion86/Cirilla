@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace GMDEditor.ViewModels
+namespace Cirilla.ViewModels
 {
     public enum EditCondition
     {

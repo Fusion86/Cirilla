@@ -1,0 +1,105 @@
+﻿<Window x:Class="Cirilla.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cirilla"
+        xmlns:vm="clr-namespace:Cirilla.ViewModels"
+        mc:Ignorable="d"
+        Title="GMD Editor" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:MainWindowViewModel x:Name="vm"/>
+    </Window.DataContext>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
+                <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
+                <MenuItem Header="Save as" Command="{Binding SaveFileCommand}"/>
+            </MenuItem>
+
+            <!--<MenuItem Header="Options">
+                <MenuItem Header="Allow unsafe editing" IsCheckable="True" IsChecked="{Binding AllowUnsafeEditing}"/>
+            </MenuItem>-->
+        </Menu>
+
+        <Grid Margin="5">
+            <TabControl SelectedItem="{Binding SelectedItem}">
+                <TabControl.Resources>
+                    <!-- This is needed for a workaround, afaik -->
+                    <CollectionViewSource x:Key="OpenItems" Source="{Binding OpenItems}"/>
+                    
+                    <!-- Also a workaround -->
+                    <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+
+                    <DataTemplate DataType="{x:Type vm:GMDViewModel}">
+                        <TabControl Margin="5">
+                            <TabItem Header="Header">
+                                <DataGrid ItemsSource="{Binding HeaderMetadata}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                                        <!--<DataGridTemplateColumn Header="Frozen" Width="60">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding ValueFrozen}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>-->
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+
+                            <TabItem Header="Entries">
+                                <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Value" Binding="{Binding Value}">
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="AcceptsReturn" Value="true" />
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                        </TabControl>
+                    </DataTemplate>
+                </TabControl.Resources>
+
+                <TabControl.ItemsSource>
+                    <CompositeCollection>
+                        <TabItem Header="Home">
+
+                        </TabItem>
+
+                        <CollectionContainer Collection="{Binding Source={StaticResource OpenItems}}"/>
+
+                        <TabItem Header="Log">
+                            <TextBox x:Name="tbLog" BorderThickness="0" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                        </TabItem>
+                    </CompositeCollection>
+                </TabControl.ItemsSource>
+
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock Text="{Binding Title}" />
+                            <Button Content="x" DockPanel.Dock="Right" Margin="5,0,0,0"
+                                    Command="{Binding Data.CloseFileCommand, Source={StaticResource proxy}}"
+                                    CommandParameter="{Binding}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}"/>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>

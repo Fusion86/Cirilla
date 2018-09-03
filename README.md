@@ -5,7 +5,7 @@ wip stuff for Monster Hunter: World
 
 ## Tools
 
-### GMDEditor
+### Cirilla
 
 Edit .gmd files in an okayish GUI.
 
