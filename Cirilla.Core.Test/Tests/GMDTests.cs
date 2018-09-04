@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Cirilla.Core.Test
+namespace Cirilla.Core.Test.Tests
 {
     [TestClass]
     public class GMDTests
