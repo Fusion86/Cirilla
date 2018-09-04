@@ -68,6 +68,7 @@
     </ApplicationDefinition>
     <Compile Include="BindingProxy.cs" />
     <Compile Include="InMemorySink.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="RelayCommand.cs" />

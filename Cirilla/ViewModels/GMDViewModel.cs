@@ -2,7 +2,6 @@
 using Cirilla.Core.Extensions;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using Serilog;
 using Microsoft.Win32;
@@ -10,13 +9,8 @@ using System.IO;
 
 namespace Cirilla.ViewModels
 {
-    public class GMDViewModel : FileTypeTabItemViewModelBase, INotifyPropertyChanged
+    public class GMDViewModel : FileTypeTabItemViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public override string Title => Context.Filename;
-
-        public string Filename { get; }
         public GMD Context { get; }
 
         // Editable stuff
@@ -24,9 +18,9 @@ namespace Cirilla.ViewModels
         public ObservableCollection<KeyValueViewModel> Entries { get; private set; } = new ObservableCollection<KeyValueViewModel>();
         public object CurrentlyOpenFile { get; private set; }
 
-        public GMDViewModel(string path)
+        public GMDViewModel(string path) : base(path)
         {
-            Context = GMD.Load(path);
+            Context = new GMD(path);
 
             if (Context.Header.StringCount != Context.Header.KeyCount)
                 throw new Exception("StringCount is not equal to KeyCount, this is currently not supported!");
@@ -51,9 +45,6 @@ namespace Cirilla.ViewModels
                     EditCondition.Always
                     ));
             }
-
-            // Only set after it opened successfully
-            Filename = path;
         }
 
         public override void Save()

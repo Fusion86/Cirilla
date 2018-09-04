@@ -34,17 +34,10 @@ namespace Cirilla.ViewModels
             ofd.CheckFileExists = true;
             if (ofd.ShowDialog() == true)
             {
-                // TODO: Detect file type using MAGIC_STRING
-                FileTypeTabItemViewModelBase item = null;
-
                 try
                 {
-                    switch (1)
-                    {
-                        case 1: item = new GMDViewModel(ofd.FileName); break;
-                    }
-
-                    OpenItems.Add(new GMDViewModel(ofd.FileName));
+                    FileTypeTabItemViewModelBase item = Utils.GetViewModelForFile(ofd.FileName);
+                    OpenItems.Add(item);
                 }
                 catch (Exception ex)
                 {

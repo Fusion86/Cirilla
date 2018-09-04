@@ -1,6 +1,5 @@
 ﻿using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
-using Cirilla.Core.Interfaces;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
@@ -10,12 +9,10 @@ using System.Text;
 
 namespace Cirilla.Core.Models
 {
-    public class GMD : IFileType
+    public class GMD : FileTypeBase
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
-        public const string MAGIC_STRING = "GMD";
-
+        
         public GMD_Header Header;
         public string Filename;
         public GMD_Entry[] Entries;
@@ -23,84 +20,77 @@ namespace Cirilla.Core.Models
         public string[] Keys;
         public string[] Strings;
 
-        private GMD()
-        {
-
-        }
-
-        public static GMD Load(string path)
+        public GMD(string path) : base(path)
         {
             Logger.Info($"Loading '{path}'");
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader br = new BinaryReader(fs))
             {
-                GMD gmd = new GMD();
-
                 // Header
-                gmd.Header = br.ReadStruct<GMD_Header>();
+                Header = br.ReadStruct<GMD_Header>();
 
-                if (gmd.Header.MagicString != MAGIC_STRING) throw new Exception("Not a GMD file!");
+                if (Header.MagicString != "GMD") throw new Exception("Not a GMD file!");
 
                 // Log some info about the GMD language
-                if (Enum.IsDefined(typeof(EmLanguage), gmd.Header.Language))
+                if (Enum.IsDefined(typeof(EmLanguage), Header.Language))
                 {
-                    EmLanguage language = (EmLanguage)gmd.Header.Language;
+                    EmLanguage language = (EmLanguage)Header.Language;
                     Logger.Info("Language: " + language);
                 }
                 else
                 {
-                    Logger.Warn($"Unknown language: 0x{gmd.Header.Language:X04} ({gmd.Header.Language})");
+                    Logger.Warn($"Unknown language: 0x{Header.Language:X04} ({Header.Language})");
                 }
 
                 // Filename
-                byte[] bytes = br.ReadBytes((int)gmd.Header.FilenameLength); // Excludes \0 end of szString
-                gmd.Filename = Encoding.ASCII.GetString(bytes);
+                byte[] bytes = br.ReadBytes((int)Header.FilenameLength); // Excludes \0 end of szString
+                Filename = Encoding.ASCII.GetString(bytes);
                 fs.Position++; // Skip the zero from the szString
                 long posAfterFilename = fs.Position;
 
                 // Entries table
                 // Sometimes doesn't exist
-                if (posAfterFilename + gmd.Header.KeyBlockSize + gmd.Header.StringBlockSize == fs.Length)
+                if (posAfterFilename + Header.KeyBlockSize + Header.StringBlockSize == fs.Length)
                 {
                     // Doesn't exist, untested
-                    fs.Position += gmd.Header.KeyCount + 2048 + gmd.Header.KeyBlockSize;
+                    fs.Position += Header.KeyCount + 2048 + Header.KeyBlockSize;
                 }
                 else
                 {
                     // Exits
-                    gmd.Entries = new GMD_Entry[gmd.Header.KeyCount];
-                    for (int i = 0; i < gmd.Header.KeyCount; i++)
+                    Entries = new GMD_Entry[Header.KeyCount];
+                    for (int i = 0; i < Header.KeyCount; i++)
                     {
-                        gmd.Entries[i] = br.ReadStruct<GMD_Entry>();
+                        Entries[i] = br.ReadStruct<GMD_Entry>();
                     }
                 }
 
                 // Block with unkown data
-                gmd.Unk1 = br.ReadBytes(0x800);
+                Unk1 = br.ReadBytes(0x800);
 
                 // Tags, only exists if gmd.Entries exists
-                if (gmd.Entries != null)
+                if (Entries != null)
                 {
-                    gmd.Keys = new string[gmd.Header.StringCount];
-                    for (int i = 0; i < gmd.Header.KeyCount; i++)
+                    Keys = new string[Header.StringCount];
+                    for (int i = 0; i < Header.KeyCount; i++)
                     {
                         int szLength;
-                        if (i == gmd.Header.KeyCount - 1)
-                            szLength = (int)(gmd.Header.KeyBlockSize - gmd.Entries[i].KeyOffset);
+                        if (i == Header.KeyCount - 1)
+                            szLength = (int)(Header.KeyBlockSize - Entries[i].KeyOffset);
                         else
-                            szLength = (int)(gmd.Entries[i + 1].KeyOffset - gmd.Entries[i].KeyOffset);
+                            szLength = (int)(Entries[i + 1].KeyOffset - Entries[i].KeyOffset);
 
                         bytes = br.ReadBytes(szLength - 1); // Don't read \0
                         fs.Position++; // Skip over \0
-                        gmd.Keys[i] = Encoding.ASCII.GetString(bytes);
+                        Keys[i] = Encoding.ASCII.GetString(bytes);
                     }
                 }
 
                 // Strings, seperated by \0 (aka normal szString)
                 // TODO: Can probably optimize this
-                gmd.Strings = new string[gmd.Header.StringCount];
-                for (int i = 0; i < gmd.Header.StringCount; i++)
+                Strings = new string[Header.StringCount];
+                for (int i = 0; i < Header.StringCount; i++)
                 {
                     byte b;
                     List<byte> szBytes = new List<byte>();
@@ -123,10 +113,8 @@ namespace Cirilla.Core.Models
                         }
                     }
 
-                    gmd.Strings[i] = Encoding.UTF8.GetString(szBytes.ToArray());
+                    Strings[i] = Encoding.UTF8.GetString(szBytes.ToArray());
                 }
-
-                return gmd;
             }
         }
 
