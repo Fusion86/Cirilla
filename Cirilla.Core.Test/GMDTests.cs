@@ -11,28 +11,35 @@ namespace Cirilla.Core.Test
         [TestMethod]
         public void Load__em_names_eng()
         {
-            GMD gmd = GMD.Load(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\em_names_eng.gmd");
+            GMD gmd = new GMD(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\em_names_eng.gmd");
         }
 
         [TestMethod]
         public void Load__q00503_eng()
         {
-            GMD gmd = GMD.Load(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\quest\q00503_eng.gmd");
+            GMD gmd = new GMD(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\quest\q00503_eng.gmd");
         }
 
         [TestMethod]
         public void Load__item_eng()
         {
-            GMD gmd = GMD.Load(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\item_eng.gmd");
+            GMD gmd = new GMD(@"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\item_eng.gmd");
         }
 
         [TestMethod]
-        public void Rebuild__em_names_eng()
+        public void Load__armor_eng()
+        {
+            // KeyCount != StringCount
+            GMD gmd = new GMD(@"L:\MHWMods\chunk0\common\text\steam\armor_eng.gmd");
+        }
+
+        [TestMethod]
+        public void Rebuild__action_trial_eng()
         {
             string origPath = @"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\em_names_eng.gmd";
             string rebuildPath = "rebuild__em_names_eng.gmd";
 
-            GMD gmd = GMD.Load(origPath);
+            GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
             using (HashAlgorithm hashAlgorithm = SHA256.Create())
@@ -52,7 +59,7 @@ namespace Cirilla.Core.Test
             string origPath = @"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\item_eng.gmd";
             string rebuildPath = "rebuild__item_eng.gmd";
 
-            GMD gmd = GMD.Load(origPath);
+            GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
             using (HashAlgorithm hashAlgorithm = SHA256.Create())
