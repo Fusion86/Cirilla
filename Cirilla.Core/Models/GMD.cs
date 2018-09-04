@@ -92,6 +92,12 @@ namespace Cirilla.Core.Models
                 Strings = new string[Header.StringCount];
                 for (int i = 0; i < Header.StringCount; i++)
                 {
+                    if (fs.Position == fs.Length)
+                    {
+                        Logger.Warn("We expected more strings, but we already are at the end of the stream.");
+                        break;
+                    }
+
                     byte b;
                     List<byte> szBytes = new List<byte>();
 

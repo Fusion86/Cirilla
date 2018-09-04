@@ -29,7 +29,7 @@ namespace Cirilla.Core.Test
         [TestMethod]
         public void Load__armor_eng()
         {
-            // KeyCount != StringCount
+            // StringCount > actual number of strings
             GMD gmd = new GMD(@"L:\MHWMods\chunk0\common\text\steam\armor_eng.gmd");
         }
 
