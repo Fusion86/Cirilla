@@ -25,7 +25,7 @@
         </Menu>
 
         <Grid Margin="5">
-            <TabControl SelectedItem="{Binding SelectedItem}">
+            <TabControl SelectedItem="{Binding SelectedItem}" SelectedIndex="{Binding SelectedItemIndex}">
                 <TabControl.Resources>
                     <!-- This is needed for a workaround, afaik -->
                     <CollectionViewSource x:Key="OpenItems" Source="{Binding OpenItems}"/>

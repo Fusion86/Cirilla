@@ -1,5 +1,6 @@
 ﻿using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
+using Cirilla.Core.Helpers;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
@@ -12,13 +13,13 @@ namespace Cirilla.Core.Models
     public class GMD : FileTypeBase
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         public GMD_Header Header;
         public string Filename;
-        public GMD_Entry[] Entries;
+        public List<GMD_Entry> Entries;
         public byte[] Unk1;
-        public string[] Keys;
-        public string[] Strings;
+        public List<string> Keys;
+        public List<string> Strings;
 
         public GMD(string path) : base(path)
         {
@@ -43,6 +44,12 @@ namespace Cirilla.Core.Models
                     Logger.Warn($"Unknown language: 0x{Header.Language:X04} ({Header.Language})");
                 }
 
+                // Skip "Invalid Message" strings when KeyCount != StringCount
+                bool skipInvalidMessages = Header.KeyCount != Header.StringCount;
+
+                if (skipInvalidMessages)
+                    Logger.Info("skipInvalidMessages is enabled");
+
                 // Filename
                 byte[] bytes = br.ReadBytes((int)Header.FilenameLength); // Excludes \0 end of szString
                 Filename = Encoding.ASCII.GetString(bytes);
@@ -50,47 +57,35 @@ namespace Cirilla.Core.Models
                 long posAfterFilename = fs.Position;
 
                 // Entries table
-                // Sometimes doesn't exist
-                if (posAfterFilename + Header.KeyBlockSize + Header.StringBlockSize == fs.Length)
+                Entries = new List<GMD_Entry>((int)Header.KeyCount);
+                for (int i = 0; i < Header.KeyCount; i++)
                 {
-                    // Doesn't exist, untested
-                    fs.Position += Header.KeyCount + 2048 + Header.KeyBlockSize;
-                }
-                else
-                {
-                    // Exits
-                    Entries = new GMD_Entry[Header.KeyCount];
-                    for (int i = 0; i < Header.KeyCount; i++)
-                    {
-                        Entries[i] = br.ReadStruct<GMD_Entry>();
-                    }
+                    Entries.Add(br.ReadStruct<GMD_Entry>());
                 }
 
                 // Block with unkown data
                 Unk1 = br.ReadBytes(0x800);
 
-                // Tags, only exists if gmd.Entries exists
-                if (Entries != null)
+                // Tags
+                Keys = new List<string>((int)Header.KeyCount);
+                for (int i = 0; i < Header.KeyCount; i++)
                 {
-                    Keys = new string[Header.StringCount];
-                    for (int i = 0; i < Header.KeyCount; i++)
-                    {
-                        int szLength;
-                        if (i == Header.KeyCount - 1)
-                            szLength = (int)(Header.KeyBlockSize - Entries[i].KeyOffset);
-                        else
-                            szLength = (int)(Entries[i + 1].KeyOffset - Entries[i].KeyOffset);
+                    int szLength;
+                    if (i == Header.KeyCount - 1)
+                        szLength = (int)(Header.KeyBlockSize - Entries[i].KeyOffset);
+                    else
+                        szLength = (int)(Entries[i + 1].KeyOffset - Entries[i].KeyOffset);
 
-                        bytes = br.ReadBytes(szLength - 1); // Don't read \0
-                        fs.Position++; // Skip over \0
-                        Keys[i] = Encoding.ASCII.GetString(bytes);
-                    }
+                    bytes = br.ReadBytes(szLength - 1); // Don't read \0
+                    fs.Position++; // Skip over \0
+                    Keys.Add(Encoding.ASCII.GetString(bytes));
                 }
 
-                // Strings, seperated by \0 (aka normal szString)
-                // TODO: Can probably optimize this
-                Strings = new string[Header.StringCount];
-                for (int i = 0; i < Header.StringCount; i++)
+                // Strings
+                Strings = new List<string>((int)Header.KeyCount);
+
+                int skippedInvalidMessages = 0;
+                for (int i = 0; i < Header.KeyCount; i++)
                 {
                     if (fs.Position == fs.Length)
                     {
@@ -98,28 +93,31 @@ namespace Cirilla.Core.Models
                         break;
                     }
 
-                    byte b;
-                    List<byte> szBytes = new List<byte>();
-
-                    while (true)
+                    while(true)
                     {
-                        b = br.ReadByte();
+                        string str = Utility.ReadZeroTerminatedString(br, Encoding.UTF8);
 
-                        if (b == 0)
+                        if (skipInvalidMessages && str == "Invalid Message")
                         {
-                            // Stop if we found a \0 **AND** we already have read some text.
-                            // This is because a string could have empty space in front of it.
-                            // While this is 'undocumented behaviour' it works in-game.
-                            if (szBytes.Count > 0)
-                                break;
+                            // Ignore string and read next one
+                            skippedInvalidMessages++;
                         }
                         else
                         {
-                            szBytes.Add(b);
+                            // Save string and continue with next key
+                            Strings.Add(str);
+                            break;
                         }
                     }
+                }
 
-                    Strings[i] = Encoding.UTF8.GetString(szBytes.ToArray());
+                if (skipInvalidMessages)
+                {
+                    uint expectedMessagesToSkip = Header.StringCount - Header.KeyCount;
+                    Logger.Info($"Skipped {skippedInvalidMessages} invalid messages, expected to skip {expectedMessagesToSkip} invalid messages");
+
+                    if (skippedInvalidMessages != expectedMessagesToSkip)
+                        Logger.Warn("skippedInvalidMessages != expectedMessagesToSkip, that can't be good!");
                 }
             }
         }
@@ -173,7 +171,7 @@ namespace Cirilla.Core.Models
 
             // String Count
             Logger.Info("Current StringCount = " + Header.StringCount);
-            Header.StringCount = (uint)Strings.Length;
+            Header.StringCount = (uint)Strings.Count;
             Logger.Info("New StringCount = " + Header.StringCount);
 
             // StringBlockSize

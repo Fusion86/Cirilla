@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System;
 using System.Windows;
+using Cirilla.Helpers;
 
 namespace Cirilla.ViewModels
 {
@@ -11,6 +12,7 @@ namespace Cirilla.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public object SelectedItem { get; set; }
+        public int SelectedItemIndex { get; set; }
         public ObservableCollection<FileTypeTabItemViewModelBase> OpenItems { get; set; } = new ObservableCollection<FileTypeTabItemViewModelBase>();
 
         #region Commands
@@ -36,8 +38,9 @@ namespace Cirilla.ViewModels
             {
                 try
                 {
-                    FileTypeTabItemViewModelBase item = Utils.GetViewModelForFile(ofd.FileName);
+                    FileTypeTabItemViewModelBase item = Utility.GetViewModelForFile(ofd.FileName);
                     OpenItems.Add(item);
+                    SelectedItem = item;
                 }
                 catch (Exception ex)
                 {
@@ -60,6 +63,7 @@ namespace Cirilla.ViewModels
         {
             item.Close();
             OpenItems.Remove(item);
+            SelectedItemIndex--;
         }
 
         public bool CanCloseFile(FileTypeTabItemViewModelBase item) => item.CanClose();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Cirilla.ViewModels
 {
@@ -10,6 +11,7 @@ namespace Cirilla.ViewModels
         Never,
     }
 
+    [DebuggerDisplay("{Key,nq} = {Value,nq}")]
     public class KeyValueViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

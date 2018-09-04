@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Cirilla.Core.Models;
+using System;
+using System.ComponentModel;
 using System.IO;
 
 namespace Cirilla.ViewModels

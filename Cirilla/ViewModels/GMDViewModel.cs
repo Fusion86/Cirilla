@@ -22,9 +22,6 @@ namespace Cirilla.ViewModels
         {
             Context = new GMD(path);
 
-            if (Context.Header.StringCount != Context.Header.KeyCount)
-                throw new Exception("StringCount is not equal to KeyCount, this is currently not supported!");
-
             // Header metadata
             HeaderMetadata.Add(new KeyValueViewModel("Version", "0x" + Context.Header.Version.ToHexString(), EditCondition.Never, EditCondition.Never));
             HeaderMetadata.Add(new KeyValueViewModel("Language", Context.Header.Language.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
@@ -36,7 +33,7 @@ namespace Cirilla.ViewModels
             HeaderMetadata.Add(new KeyValueViewModel("Filename", Context.Filename, EditCondition.Never, EditCondition.Never));
 
             // Entries
-            for (int i = 0; i < Context.Header.StringCount; i++)
+            for (int i = 0; i < Context.Header.KeyCount; i++)
             {
                 Entries.Add(new KeyValueViewModel(
                     Context.Keys[i],
