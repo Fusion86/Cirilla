@@ -7,8 +7,8 @@ namespace Cirilla.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Title => Path.GetFileName(Filename);
-        public string Filename { get; }
+        public string Title => Path.GetFileName(Filepath);
+        public string Filepath { get; }
 
         public virtual bool HasUnsavedChanges => false;
 
@@ -20,7 +20,7 @@ namespace Cirilla.ViewModels
 
         protected FileTypeTabItemViewModelBase(string path)
         {
-            Filename = path;
+            Filepath = path;
         }
     }
 }

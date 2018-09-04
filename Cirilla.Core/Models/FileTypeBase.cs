@@ -2,11 +2,11 @@
 {
     public abstract class FileTypeBase
     {
-        public string _path;
+        public string Filepath { get; private set; }
 
         public FileTypeBase(string path)
         {
-            _path = path;
+            Filepath = path;
         }
     }
 }

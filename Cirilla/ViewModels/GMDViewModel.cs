@@ -50,7 +50,7 @@ namespace Cirilla.ViewModels
         public override void Save()
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = Path.GetFileName(Filename);
+            sfd.FileName = Path.GetFileName(Filepath);
             if (sfd.ShowDialog() == true)
             {
                 Save(sfd.FileName);
