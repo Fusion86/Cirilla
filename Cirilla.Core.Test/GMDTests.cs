@@ -34,7 +34,7 @@ namespace Cirilla.Core.Test
         }
 
         [TestMethod]
-        public void Rebuild__action_trial_eng()
+        public void Rebuild__em_names_eng()
         {
             string origPath = @"C:\Steam\steamapps\common\Monster Hunter World\nativePC\common\text\em_names_eng.gmd";
             string rebuildPath = "rebuild__em_names_eng.gmd";
