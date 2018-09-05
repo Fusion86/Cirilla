@@ -1,7 +1,5 @@
 using Cirilla.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.Security.Cryptography;
 
 namespace Cirilla.Core.Test.Tests
 {
@@ -83,6 +81,9 @@ namespace Cirilla.Core.Test.Tests
             // Uses skipInvalidMessages, rebuild file will not be the same since it removes the "Invalid Message" strings
             string origPath = Utility.GetFullPath(@"chunk0\common\text\action_trial_eng.gmd");
             string rebuildPath = "rebuild__action_trial_eng.gmd";
+
+            GMD gmd = new GMD(origPath);
+            gmd.Save(rebuildPath);
 
             if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
                 Assert.Fail("Hash doesn't match!");
