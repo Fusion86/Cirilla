@@ -38,6 +38,17 @@ namespace Cirilla.Core.Test.Tests
         {
             // Uses skipInvalidMessages
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0\common\text\action_trial_eng.gmd"));
+
+            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+        }
+
+        [TestMethod]
+        public void Load__action_trial_ara()
+        {
+            // Uses skipInvalidMessages and weird workaround (see Models/GMD.cs)
+            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0\common\text\action_trial_ara.gmd"));
+
+            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
         [TestMethod]

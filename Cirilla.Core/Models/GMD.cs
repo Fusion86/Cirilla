@@ -6,6 +6,7 @@ using Cirilla.Core.Structs.Native;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Cirilla.Core.Models
@@ -44,8 +45,8 @@ namespace Cirilla.Core.Models
                     Logger.Warn($"Unknown language: 0x{Header.Language:X04} ({Header.Language})");
                 }
 
-                // Skip "Invalid Message" strings when KeyCount != StringCount
-                bool skipInvalidMessages = Header.KeyCount != Header.StringCount;
+                // Skip "Invalid Message" strings when StringCount > KeyCount
+                bool skipInvalidMessages = Header.StringCount > Header.KeyCount;
 
                 if (skipInvalidMessages)
                     Logger.Info("skipInvalidMessages is enabled");
@@ -82,10 +83,12 @@ namespace Cirilla.Core.Models
                 }
 
                 // Strings
-                Strings = new List<string>((int)Header.KeyCount);
-
                 int skippedInvalidMessages = 0;
-                for (int i = 0; i < Header.KeyCount; i++)
+                string[] strings = new string[Header.StringCount];
+
+                // Read all strings, including "Invalid Message" strings
+                // stop when we read all messages OR when we read the whole file
+                for (int i = 0; i < Header.StringCount; i++)
                 {
                     if (fs.Position == fs.Length)
                     {
@@ -93,22 +96,28 @@ namespace Cirilla.Core.Models
                         break;
                     }
 
-                    while(true)
-                    {
-                        string str = Utility.ReadZeroTerminatedString(br, Encoding.UTF8);
+                    strings[i] = Utility.ReadZeroTerminatedString(br, Encoding.UTF8);
+                }
 
-                        if (skipInvalidMessages && str == "Invalid Message")
-                        {
-                            // Ignore string and read next one
-                            skippedInvalidMessages++;
-                        }
-                        else
-                        {
-                            // Save string and continue with next key
-                            Strings.Add(str);
-                            break;
-                        }
+                // Figure out which strings to load
+                if (skipInvalidMessages)
+                {
+                    // Don't load "Invalid Message" strings
+                    Strings = strings.Where(x => x != "Invalid Message").ToList();
+                    skippedInvalidMessages = (int)Header.StringCount - Strings.Count;
+
+                    // Check if we now have exactly as many strings as expected
+                    if (Strings.Count != Header.KeyCount)
+                    {
+                        // In some rare cases we do want to load the "Invalid Message" strings even if skipInvalidMessages is enabled (e.g. chunk0\common\text\action_trial_ara.gmd)
+                        // however in that case we end up with more strings than {Header.KeyCount} so we just skip the ones that don't have a key (last ones)
+                        // This ususally happends to the languages: ara, kor, cht, pol, ptb, rus
+                        Strings = strings.Take((int)Header.KeyCount).ToList();
                     }
+                }
+                else
+                {
+                    Strings = new List<string>(strings);
                 }
 
                 if (skipInvalidMessages)
