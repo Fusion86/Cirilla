@@ -6,7 +6,7 @@ using System.Text;
 namespace Cirilla.Core.Structs.Native
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct GMD_Header
+    public struct FSM_Header
     {
         #region Native
 
@@ -16,51 +16,7 @@ namespace Cirilla.Core.Structs.Native
         public byte Padding1;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Version; // Version?
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 Language;
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk1; // Zero
-
-        // 0x10
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk2; // Zero
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyCount;
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 StringCount; // Usually the same as KeyCount
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyBlockSize;
-
-        // 0x20
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 StringBlockSize;
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 FilenameLength;
-
-        // 0x28
-
-        #endregion
-
-        public string MagicString => Encoding.ASCII.GetString(Magic);
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct GMD_Entry
-    {
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 Index;
-
-        [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk2;
+        public byte[] Version;
 
         [Endian(Endianness.LittleEndian)]
         public UInt32 Unk3;
@@ -71,15 +27,31 @@ namespace Cirilla.Core.Structs.Native
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyOffset;
+        public UInt32 InfoBlockCount;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk6;
+        public UInt32 OffsetToData;
+
+        // 0x18
+
+        #endregion
+
+        public string MagicString => Encoding.ASCII.GetString(Magic);
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct FSM_Thing
+    {
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk1;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk7;
+        public UInt32 Unk2;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk8;
+        public UInt32 Unk3;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk4;
     }
 }
