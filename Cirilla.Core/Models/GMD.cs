@@ -113,20 +113,22 @@ namespace Cirilla.Core.Models
                         // however in that case we end up with more strings than {Header.KeyCount} so we just skip the ones that don't have a key (last ones)
                         // This ususally happends to the languages: ara, kor, cht, pol, ptb, rus
                         Strings = strings.Take((int)Header.KeyCount).ToList();
+
+                        Logger.Warn("Using weird workaround to load file, this file is probably not used in-game.");
+                    }
+                    else
+                    {
+                        // When things look fine
+                        uint expectedMessagesToSkip = Header.StringCount - Header.KeyCount;
+                        Logger.Info($"Skipped {skippedInvalidMessages} invalid messages, expected to skip {expectedMessagesToSkip} invalid messages");
+
+                        if (skippedInvalidMessages != expectedMessagesToSkip)
+                            Logger.Warn("skippedInvalidMessages != expectedMessagesToSkip, that can't be good!");
                     }
                 }
                 else
                 {
                     Strings = new List<string>(strings);
-                }
-
-                if (skipInvalidMessages)
-                {
-                    uint expectedMessagesToSkip = Header.StringCount - Header.KeyCount;
-                    Logger.Info($"Skipped {skippedInvalidMessages} invalid messages, expected to skip {expectedMessagesToSkip} invalid messages");
-
-                    if (skippedInvalidMessages != expectedMessagesToSkip)
-                        Logger.Warn("skippedInvalidMessages != expectedMessagesToSkip, that can't be good!");
                 }
             }
         }
