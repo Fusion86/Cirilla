@@ -60,15 +60,8 @@ namespace Cirilla.Core.Test.Tests
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
-            using (HashAlgorithm hashAlgorithm = SHA256.Create())
-            using (FileStream origFs = new FileStream(origPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (FileStream rebuildFs = new FileStream(rebuildPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] origHash = hashAlgorithm.ComputeHash(origFs);
-                byte[] rebuildHash = hashAlgorithm.ComputeHash(rebuildFs);
-
-                CollectionAssert.AreEqual(origHash, rebuildHash, "Hash doesn't match!");
-            }
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
         }
 
         [TestMethod]
@@ -80,15 +73,8 @@ namespace Cirilla.Core.Test.Tests
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
-            using (HashAlgorithm hashAlgorithm = SHA256.Create())
-            using (FileStream origFs = new FileStream(origPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (FileStream rebuildFs = new FileStream(rebuildPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] origHash = hashAlgorithm.ComputeHash(origFs);
-                byte[] rebuildHash = hashAlgorithm.ComputeHash(rebuildFs);
-
-                CollectionAssert.AreEqual(origHash, rebuildHash, "Hash doesn't match!");
-            }
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
         }
 
         [TestMethod]
@@ -98,18 +84,8 @@ namespace Cirilla.Core.Test.Tests
             string origPath = Utility.GetFullPath(@"chunk0\common\text\action_trial_eng.gmd");
             string rebuildPath = "rebuild__action_trial_eng.gmd";
 
-            GMD gmd = new GMD(origPath);
-            gmd.Save(rebuildPath);
-
-            using (HashAlgorithm hashAlgorithm = SHA256.Create())
-            using (FileStream origFs = new FileStream(origPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (FileStream rebuildFs = new FileStream(rebuildPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] origHash = hashAlgorithm.ComputeHash(origFs);
-                byte[] rebuildHash = hashAlgorithm.ComputeHash(rebuildFs);
-
-                //CollectionAssert.AreEqual(origHash, rebuildHash, "Hash doesn't match!");
-            }
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
         }
     }
 }
