@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Cirilla"
         xmlns:vm="clr-namespace:Cirilla.ViewModels"
         mc:Ignorable="d"
-        Title="GMD Editor" Height="450" Width="800">
+        Title="Cirilla Toolkit" Height="450" Width="800">
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="vm"/>
     </Window.DataContext>
@@ -24,7 +24,7 @@
             </MenuItem>-->
         </Menu>
 
-        <Grid Margin="5">
+        <Grid Margin="5" Drop="Grid_Drop" AllowDrop="True">
             <TabControl SelectedItem="{Binding SelectedItem}" SelectedIndex="{Binding SelectedItemIndex}">
                 <TabControl.Resources>
                     <!-- This is needed for a workaround, afaik -->

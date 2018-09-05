@@ -35,17 +35,20 @@ namespace Cirilla.ViewModels
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.CheckFileExists = true;
             if (ofd.ShowDialog() == true)
+                OpenFile(ofd.FileName);
+        }
+
+        public void OpenFile(string path)
+        {
+            try
             {
-                try
-                {
-                    FileTypeTabItemViewModelBase item = Utility.GetViewModelForFile(ofd.FileName);
-                    OpenItems.Add(item);
-                    SelectedItem = item;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error");
-                }
+                FileTypeTabItemViewModelBase item = Utility.GetViewModelForFile(path);
+                OpenItems.Add(item);
+                SelectedItem = item;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -61,9 +64,11 @@ namespace Cirilla.ViewModels
 
         public void CloseFile(FileTypeTabItemViewModelBase item)
         {
+            if (SelectedItem == item)
+                SelectedItemIndex--;
+
             item.Close();
             OpenItems.Remove(item);
-            SelectedItemIndex--;
         }
 
         public bool CanCloseFile(FileTypeTabItemViewModelBase item) => item.CanClose();

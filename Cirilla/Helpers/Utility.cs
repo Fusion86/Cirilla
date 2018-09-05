@@ -18,7 +18,7 @@ namespace Cirilla.Helpers
         {
             MHFileType reg = Core.Helpers.Utility.GetFileType(path);
 
-            if (_handlerTypeToViewModelTypeMap.TryGetValue(reg.Handler, out Type vmType))
+            if (reg != null && _handlerTypeToViewModelTypeMap.TryGetValue(reg.Handler, out Type vmType))
                 return (FileTypeTabItemViewModelBase)Activator.CreateInstance(vmType, path);
             else
                 throw new Exception("This type of files are currently not supported.");
