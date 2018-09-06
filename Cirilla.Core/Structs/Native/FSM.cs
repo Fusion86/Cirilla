@@ -1,5 +1,4 @@
 ﻿using Cirilla.Core.Helpers;
-using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -19,10 +18,10 @@ namespace Cirilla.Core.Structs.Native
         public byte[] Version;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk3;
+        public int Unk3;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk4;
+        public int Unk4;
 
         // 0x10
 
@@ -30,7 +29,7 @@ namespace Cirilla.Core.Structs.Native
         public int InfoBlockCount;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 OffsetToData;
+        public int OffsetToData;
 
         // 0x18
 
@@ -43,30 +42,30 @@ namespace Cirilla.Core.Structs.Native
     public struct FSM_InfoBlockHeader
     {
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk1;
+        public int Unk1;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk2;
+        public int Unk2;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 StringCount;
+        public int StringCount;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk4;
+        public int Unk4;
 
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyOffset;
+        public int KeyOffset;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk6;
+        public int Unk6;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk7;
+        public int Unk7;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk8;
+        public int Unk8;
 
         // 0x20
     }

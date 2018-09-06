@@ -15,3 +15,5 @@ Edit .gmd files in an okayish GUI.
 - ID-Daemon and dynaomi
 - MHVuze
 - Delutto
+- izayoi
+- Zindea

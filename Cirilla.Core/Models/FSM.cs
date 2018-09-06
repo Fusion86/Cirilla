@@ -52,7 +52,7 @@ namespace Cirilla.Core.Models
                 }
 
                 // Object definitions
-                uint keyBlockSize = Header.OffsetToData - (uint)fs.Position;
+                long keyBlockSize = Header.OffsetToData - fs.Position;
                 Encoding enc = Encoding.GetEncoding("UTF-8", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback); // Encoding that throws errors
 
                 Objects = new List<string[]>(Header.InfoBlockCount);
