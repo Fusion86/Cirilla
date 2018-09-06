@@ -67,7 +67,7 @@ namespace Cirilla.Core.Models
                 // Block with unkown data
                 Unk1 = br.ReadBytes(0x800);
 
-                // Tags
+                // Keys
                 Keys = new List<string>((int)Header.KeyCount);
                 for (int i = 0; i < Header.KeyCount; i++)
                 {
@@ -83,7 +83,7 @@ namespace Cirilla.Core.Models
                 }
 
                 // Strings
-                int skippedInvalidMessages = 0;
+                int invalidMessageCount = 0;
                 string[] strings = new string[Header.StringCount];
 
                 // Read all strings, including "Invalid Message" strings
@@ -97,37 +97,32 @@ namespace Cirilla.Core.Models
                     }
 
                     strings[i] = br.ReadStringZero(Encoding.UTF8);
+
+                    if (strings[i] == "Invalid Message") invalidMessageCount++;
                 }
 
                 // Figure out which strings to load
                 if (skipInvalidMessages)
                 {
-                    // Don't load "Invalid Message" strings
-                    Strings = strings.Where(x => x != "Invalid Message").ToList();
-                    skippedInvalidMessages = (int)Header.StringCount - Strings.Count;
-
-                    // Check if we now have exactly as many strings as expected
-                    if (Strings.Count != Header.KeyCount)
+                    if (strings.Length - invalidMessageCount == Header.KeyCount)
+                    {
+                        // Don't load "Invalid Message" strings
+                        Strings = strings.Where(x => x != "Invalid Message").ToList();
+                    }
+                    else
                     {
                         // In some rare cases we do want to load the "Invalid Message" strings even if skipInvalidMessages is enabled (e.g. chunk0\common\text\action_trial_ara.gmd)
                         // however in that case we end up with more strings than {Header.KeyCount} so we just skip the ones that don't have a key (last ones)
                         // This ususally happends to the languages: ara, kor, cht, pol, ptb, rus
-                        Strings = strings.Take((int)Header.KeyCount).ToList();
 
                         Logger.Warn("Using weird workaround to load file, this file is probably not used in-game.");
-                    }
-                    else
-                    {
-                        // When things look fine
-                        uint expectedMessagesToSkip = Header.StringCount - Header.KeyCount;
-                        Logger.Info($"Skipped {skippedInvalidMessages} invalid messages, expected to skip {expectedMessagesToSkip} invalid messages");
 
-                        if (skippedInvalidMessages != expectedMessagesToSkip)
-                            Logger.Warn("skippedInvalidMessages != expectedMessagesToSkip, that can't be good!");
+                        Strings = strings.Take((int)Header.KeyCount).ToList();
                     }
                 }
                 else
                 {
+                    // Load all strings
                     Strings = new List<string>(strings);
                 }
             }

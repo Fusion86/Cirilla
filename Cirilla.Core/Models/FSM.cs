@@ -14,7 +14,7 @@ namespace Cirilla.Core.Models
         public FSM_Header Header;
         public List<long> InfoBlockOffsets;
         public List<FSM_InfoBlock> InfoBlocks;
-        public List<string[]> Keys;
+        public List<string[]> Objects;
 
         public FSM(string path) : base(path)
         {
@@ -35,6 +35,7 @@ namespace Cirilla.Core.Models
                     InfoBlockOffsets.Add(br.ReadInt64());
                 }
 
+                // InfoBlocks
                 InfoBlocks = new List<FSM_InfoBlock>(Header.InfoBlockCount);
                 for (int i = 0; i < Header.InfoBlockCount; i++)
                 {
@@ -50,21 +51,24 @@ namespace Cirilla.Core.Models
                     InfoBlocks.Add(new FSM_InfoBlock(br, (int)bytesToRead));
                 }
 
-                // Keys
+                // Object definitions
                 uint keyBlockSize = Header.OffsetToData - (uint)fs.Position;
                 Encoding enc = Encoding.GetEncoding("UTF-8", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback); // Encoding that throws errors
 
-                Keys = new List<string[]>(Header.InfoBlockCount);
+                Objects = new List<string[]>(Header.InfoBlockCount);
                 for (int i = 0; i < Header.InfoBlockCount; i++)
                 {
                     fs.Position = 0x18 + InfoBlocks[i].Header.KeyOffset; // 0x18 = sizeof FSM_Header
 
-                    Keys.Add(new string[InfoBlocks[i].Header.StringCount]);
+                    Objects.Add(new string[InfoBlocks[i].Header.StringCount]);
                     for (int j = 0; j < InfoBlocks[i].Header.StringCount; j++)
                     {
-                        Keys[i][j] = br.ReadStringZero(Encoding.UTF8);
+                        Objects[i][j] = br.ReadStringZero(Encoding.UTF8);
                     }
                 }
+
+                // CodeObjects
+                FSM_CodeObjectContainer root = new FSM_CodeObjectContainer(br);
             }
         }
 
@@ -79,6 +83,57 @@ namespace Cirilla.Core.Models
 
                 int dataSize = totalSize - 0x20; // sizeof FSM_InfoBlockHeader
                 Data = br.ReadBytes(dataSize);
+            }
+        }
+
+        public interface IFSM_CodeObject { }
+
+        public class FSM_CodeObjectContainer : IFSM_CodeObject
+        {
+            // In the 'Root' CodeObject  | .Size = size in bytes
+            // in every other CodeObject | .Size = number of children
+
+            public FSM_CodeObjectHeader Header;
+            public List<IFSM_CodeObject> Nodes;
+
+            public FSM_CodeObjectContainer(BinaryReader br, bool isRoot = true)
+            {
+                Header = br.ReadStruct<FSM_CodeObjectHeader>();
+
+                if (isRoot)
+                {
+                    // Contains CodeObjectContainers
+
+                    br.BaseStream.Position += 4; // Skip zeros?
+                    long posAfterHeader = br.BaseStream.Position;
+
+                    Nodes = new List<IFSM_CodeObject>();
+                    while (br.BaseStream.Position < posAfterHeader + Header.Size)
+                    {
+                        Nodes.Add(new FSM_CodeObjectContainer(br, false));
+                    }
+                }
+                else
+                {
+                    // Contains CodeObjects
+
+                    Nodes = new List<IFSM_CodeObject>(Header.Size);
+                    for (int i = 0; i < Header.Size; i++)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        public class FSM_CodeObject : IFSM_CodeObject
+        {
+            public byte[] Magic;
+            public byte[] Data;
+
+            public FSM_CodeObject(BinaryReader br)
+            {
+                Magic = br.ReadBytes(4);
             }
         }
     }

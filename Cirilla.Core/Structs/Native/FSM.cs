@@ -70,4 +70,14 @@ namespace Cirilla.Core.Structs.Native
 
         // 0x20
     }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct FSM_CodeObjectHeader
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
+        public byte[] Magic; // 0x01'00'00'00
+
+        [Endian(Endianness.LittleEndian)]
+        public int Size;
+    }
 }
