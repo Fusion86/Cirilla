@@ -27,7 +27,7 @@ namespace Cirilla.Core.Structs.Native
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 InfoBlockCount;
+        public int InfoBlockCount;
 
         [Endian(Endianness.LittleEndian)]
         public UInt32 OffsetToData;
@@ -40,7 +40,7 @@ namespace Cirilla.Core.Structs.Native
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct FSM_Thing
+    public struct FSM_InfoBlockHeader
     {
         [Endian(Endianness.LittleEndian)]
         public UInt32 Unk1;
@@ -49,9 +49,25 @@ namespace Cirilla.Core.Structs.Native
         public UInt32 Unk2;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk3;
+        public UInt32 StringCount;
 
         [Endian(Endianness.LittleEndian)]
         public UInt32 Unk4;
+
+        // 0x10
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 KeyOffset;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk6;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk7;
+
+        [Endian(Endianness.LittleEndian)]
+        public UInt32 Unk8;
+
+        // 0x20
     }
 }

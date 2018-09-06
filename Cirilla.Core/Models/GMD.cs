@@ -96,7 +96,7 @@ namespace Cirilla.Core.Models
                         break;
                     }
 
-                    strings[i] = Utility.ReadZeroTerminatedString(br, Encoding.UTF8);
+                    strings[i] = br.ReadStringZero(Encoding.UTF8);
                 }
 
                 // Figure out which strings to load
