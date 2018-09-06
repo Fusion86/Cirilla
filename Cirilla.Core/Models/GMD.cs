@@ -106,6 +106,8 @@ namespace Cirilla.Core.Models
                 {
                     if (strings.Length - invalidMessageCount == Header.KeyCount)
                     {
+                        Logger.Info($"Skipped {invalidMessageCount} invalid messages");
+
                         // Don't load "Invalid Message" strings
                         Strings = strings.Where(x => x != "Invalid Message").ToList();
                     }
