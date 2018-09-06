@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cirilla.Core.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -8,6 +9,8 @@ namespace Cirilla.Core.Extensions
 {
     public static class BinaryReaderExtensions
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public static T ReadStruct<T>(this BinaryReader br)
         {
 #if DEBUG
@@ -30,6 +33,7 @@ namespace Cirilla.Core.Extensions
         public static string ReadStringZero(this BinaryReader br, Encoding encoding)
         {
             byte b;
+            int skippedZeros = 0;
             List<byte> szBytes = new List<byte>();
 
             while (true)
@@ -43,6 +47,8 @@ namespace Cirilla.Core.Extensions
                     // While this is 'undocumented behaviour' it works in-game.
                     if (szBytes.Count > 0)
                         break;
+                    else
+                        skippedZeros++;
                 }
                 else
                 {
@@ -50,7 +56,12 @@ namespace Cirilla.Core.Extensions
                 }
             }
 
-            return encoding.GetString(szBytes.ToArray());
+            string str = encoding.GetString(szBytes.ToArray());
+
+            if (skippedZeros != 0)
+                Logger.Warn($"Skipped {skippedZeros} zeros in front of string '{str}'");
+
+            return str;
         }
     }
 }
