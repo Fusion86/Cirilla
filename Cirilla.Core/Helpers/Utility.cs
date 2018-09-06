@@ -1,4 +1,4 @@
-﻿using Cirilla.Core.Models;
+﻿using Cirilla.Core.Enums;
 using System.IO;
 using System.Linq;
 using System.Text;

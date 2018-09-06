@@ -1,7 +1,8 @@
 ﻿using Cirilla.Core.Helpers;
+using Cirilla.Core.Models;
 using System;
 
-namespace Cirilla.Core.Models
+namespace Cirilla.Core.Enums
 {
     public class MHFileType : Enumeration
     {
