@@ -17,3 +17,4 @@ Edit .gmd files in an okayish GUI.
 - Delutto
 - izayoi
 - Zindea
+- Fluffyquack

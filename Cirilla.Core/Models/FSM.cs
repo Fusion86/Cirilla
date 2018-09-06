@@ -12,9 +12,9 @@ namespace Cirilla.Core.Models
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public FSM_Header Header;
-        public List<long> InfoBlockOffsets;
-        public List<FSM_InfoBlock> InfoBlocks;
-        public List<string[]> Objects;
+        //public List<long> StructOffsets;
+        public List<FSM_Struct> Structs;
+        //public List<string[]> Objects;
 
         public FSM(string path) : base(path)
         {
@@ -28,113 +28,47 @@ namespace Cirilla.Core.Models
 
                 //long posAfterHeader = fs.Position; // Should be 0x18 (24)
 
-                // InfoBlock offsets
-                InfoBlockOffsets = new List<long>(Header.InfoBlockCount);
-                for (int i = 0; i < Header.InfoBlockCount; i++)
+                // Struct offsets - just read offsets sequential, we could also load the full structs but then we'd just jump all over the memory for no reason
+                Structs = new List<FSM_Struct>(Header.StructCount);
+                for (int i = 0; i < Header.StructCount; i++)
                 {
-                    InfoBlockOffsets.Add(br.ReadInt64());
+                    Structs.Add(new FSM_Struct { Offset = br.ReadInt64() });
                 }
 
-                // InfoBlocks
-                InfoBlocks = new List<FSM_InfoBlock>(Header.InfoBlockCount);
-                for (int i = 0; i < Header.InfoBlockCount; i++)
+                // Structs - load structs here
+                for (int i = 0; i < Header.StructCount; i++)
                 {
-                    // Here fs.Position is (posAfterHeader + InfoBlockOffsets[i])
-
-                    long bytesToRead;
-
-                    if (i == Header.InfoBlockCount - 1)
-                        bytesToRead = InfoBlocks[0].Header.KeyOffset - InfoBlockOffsets[i]; // If this is the last entry
-                    else
-                        bytesToRead = InfoBlockOffsets[i + 1] - InfoBlockOffsets[i]; // If this isn't the last entry
-
-                    InfoBlocks.Add(new FSM_InfoBlock(br, (int)bytesToRead));
+                    Structs[i].Header = br.ReadStruct<FSM_StructHeader>();
+                    Structs[i].VariableEntries = new FSM_VariableEntry[Structs[i].Header.VariableCount];
+                    for (int j = 0; j < Structs[i].Header.VariableCount; j++)
+                        Structs[i].VariableEntries[j] = br.ReadStruct<FSM_VariableEntry>();
                 }
 
-                // Object definitions
-                long keyBlockSize = Header.OffsetToData - fs.Position;
+                // Struct variables
                 Encoding enc = Encoding.GetEncoding("UTF-8", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback); // Encoding that throws errors
 
-                Objects = new List<string[]>(Header.InfoBlockCount);
-                for (int i = 0; i < Header.InfoBlockCount; i++)
+                for (int i = 0; i < Header.StructCount; i++)
                 {
-                    fs.Position = 0x18 + InfoBlocks[i].Header.KeyOffset; // 0x18 = sizeof FSM_Header
-
-                    Objects.Add(new string[InfoBlocks[i].Header.StringCount]);
-                    for (int j = 0; j < InfoBlocks[i].Header.StringCount; j++)
+                    //fs.Position = 0x18 + Structs[i].VariableEntries[j].NameOffset; // Disabled because we set the fs.Position inside the for(j) loop
+                    Structs[i].VariableNames = new string[Structs[i].Header.VariableCount];
+                    for (int j = 0; j < Structs[i].Header.VariableCount; j++)
                     {
-                        Objects[i][j] = br.ReadStringZero(Encoding.UTF8);
-                    }
-                }
+                        // This is probably not needed because member names usually are sequential in memory
+                        // but just to be safe we'll just do it the 100% correct way
+                        fs.Position = 0x18 + Structs[i].VariableEntries[j].NameOffset;
 
-                // CodeObjects
-                FSM_CodeObjectContainer root = new FSM_CodeObjectContainer(br);
-            }
-        }
-
-        public class FSM_InfoBlock
-        {
-            public FSM_InfoBlockHeader Header;
-            public byte[] Data;
-
-            public FSM_InfoBlock(BinaryReader br, int totalSize)
-            {
-                Header = br.ReadStruct<FSM_InfoBlockHeader>();
-
-                int dataSize = totalSize - 0x20; // sizeof FSM_InfoBlockHeader
-                Data = br.ReadBytes(dataSize);
-            }
-        }
-
-        public interface IFSM_CodeObject { }
-
-        public class FSM_CodeObjectContainer : IFSM_CodeObject
-        {
-            // In the 'Root' CodeObject  | .Size = size in bytes
-            // in every other CodeObject | .Size = number of children
-
-            public FSM_CodeObjectHeader Header;
-            public List<IFSM_CodeObject> Nodes;
-
-            public FSM_CodeObjectContainer(BinaryReader br, bool isRoot = true)
-            {
-                Header = br.ReadStruct<FSM_CodeObjectHeader>();
-
-                if (isRoot)
-                {
-                    // Contains CodeObjectContainers
-
-                    br.BaseStream.Position += 4; // Skip zeros?
-                    long posAfterHeader = br.BaseStream.Position;
-
-                    Nodes = new List<IFSM_CodeObject>();
-                    while (br.BaseStream.Position < posAfterHeader + Header.Size)
-                    {
-                        Nodes.Add(new FSM_CodeObjectContainer(br, false));
-                    }
-                }
-                else
-                {
-                    // Contains CodeObjects
-
-                    Nodes = new List<IFSM_CodeObject>(Header.Size);
-                    for (int i = 0; i < Header.Size; i++)
-                    {
-                        break;
+                        Structs[i].VariableNames[j] = br.ReadStringZero(Encoding.UTF8);
                     }
                 }
             }
         }
 
-        public class FSM_CodeObject : IFSM_CodeObject
+        public class FSM_Struct
         {
-            public byte[] Magic;
-            public byte[] Data;
-
-            public FSM_CodeObject(BinaryReader br)
-            {
-                Magic = br.ReadBytes(4);
-            }
+            public long Offset; // Offset after FSM_Header
+            public FSM_StructHeader Header;
+            public FSM_VariableEntry[] VariableEntries;
+            public string[] VariableNames;
         }
     }
 }

@@ -13,9 +13,9 @@ namespace Cirilla.Core.Structs.Native
         public byte[] Magic; // "GMD"
 
         public byte Padding1;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Version;
+        
+        public short Version;
+        public short Type;
 
         [Endian(Endianness.LittleEndian)]
         public int Unk3;
@@ -26,7 +26,7 @@ namespace Cirilla.Core.Structs.Native
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public int InfoBlockCount;
+        public int StructCount;
 
         [Endian(Endianness.LittleEndian)]
         public int OffsetToData;
@@ -39,44 +39,60 @@ namespace Cirilla.Core.Structs.Native
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct FSM_InfoBlockHeader
+    public struct FSM_StructHeader
     {
         [Endian(Endianness.LittleEndian)]
-        public int Unk1;
+        public int Unk1; // Offset containing struct data
 
         [Endian(Endianness.LittleEndian)]
-        public int Unk2;
+        public int Hash; // Unique identifier for struct
 
         [Endian(Endianness.LittleEndian)]
-        public int StringCount;
+        public int VariableCount;
 
         [Endian(Endianness.LittleEndian)]
         public int Unk4;
 
         // 0x10
-
-        [Endian(Endianness.LittleEndian)]
-        public int KeyOffset;
-
-        [Endian(Endianness.LittleEndian)]
-        public int Unk6;
-
-        [Endian(Endianness.LittleEndian)]
-        public int Unk7;
-
-        [Endian(Endianness.LittleEndian)]
-        public int Unk8;
-
-        // 0x20
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct FSM_CodeObjectHeader
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
+    public struct FSM_VariableEntry
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Magic; // 0x01'00'00'00
+        [Endian(Endianness.LittleEndian)]
+        public long NameOffset;
+
+        public byte Type;
+        public byte Byte1;
 
         [Endian(Endianness.LittleEndian)]
-        public int Size;
+        public long Size; // Variable size
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int1;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int2;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int3;
+
+        [Endian(Endianness.LittleEndian)]
+        public short Short1;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int4;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int5;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int6;
+
+        [Endian(Endianness.LittleEndian)]
+        public long Int7;
+
+        [Endian(Endianness.LittleEndian)]
+        public int Int8;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Cirilla.Core.Models;
+﻿using Cirilla.Core.Enums;
+using Cirilla.Core.Models;
 using Cirilla.ViewModels;
 using System;
 using System.Collections.Generic;
