@@ -10,10 +10,10 @@ namespace Cirilla.Core.Structs.Native
         #region Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3, ArraySubType = UnmanagedType.U1)]
-        public byte[] Magic; // "GMD"
+        public byte[] Magic; // "FSM"
 
         public byte Padding1;
-        
+
         public short Version;
         public short Type;
 

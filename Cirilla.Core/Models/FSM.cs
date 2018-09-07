@@ -1,9 +1,11 @@
-﻿using Cirilla.Core.Extensions;
+﻿using System;
+using Cirilla.Core.Extensions;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Cirilla.Core.Enums;
 
 namespace Cirilla.Core.Models
 {
@@ -49,6 +51,8 @@ namespace Cirilla.Core.Models
 
                 for (int i = 0; i < Header.StructCount; i++)
                 {
+                    Logger.Debug($"Struct {i}: _name_");
+
                     //fs.Position = 0x18 + Structs[i].VariableEntries[j].NameOffset; // Disabled because we set the fs.Position inside the for(j) loop
                     Structs[i].VariableNames = new string[Structs[i].Header.VariableCount];
                     for (int j = 0; j < Structs[i].Header.VariableCount; j++)
@@ -58,6 +62,20 @@ namespace Cirilla.Core.Models
                         fs.Position = 0x18 + Structs[i].VariableEntries[j].NameOffset;
 
                         Structs[i].VariableNames[j] = br.ReadStringZero(Encoding.UTF8);
+
+                        var entry = Structs[i].VariableEntries[j];
+
+                        if (Logger.IsDebugEnabled())
+                        {
+                            string typeName;
+                            if (Enum.IsDefined(typeof(FsmVariableType), entry.Type))
+                                typeName = Enum.GetName(typeof(FsmVariableType), entry.Type);
+                            else
+                                typeName = "type_" + entry.Type;
+
+                            Logger.Debug(
+                                $"  {typeName.PadRight(10)} {Structs[i].VariableNames[j].PadRight(40)} size: {entry.Size}");
+                        }
                     }
                 }
             }
