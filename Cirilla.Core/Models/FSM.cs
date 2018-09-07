@@ -1,11 +1,11 @@
 ﻿using System;
+using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
+using Cirilla.Core.Helpers;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Cirilla.Core.Enums;
 
 namespace Cirilla.Core.Models
 {
@@ -49,8 +49,6 @@ namespace Cirilla.Core.Models
                 }
 
                 // Struct variables
-                Encoding enc = Encoding.GetEncoding("UTF-8", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback); // Encoding that throws errors
-
                 for (int i = 0; i < Header.StructCount; i++)
                 {
                     Logger.Debug($"Struct {i}: _name_");
@@ -63,7 +61,7 @@ namespace Cirilla.Core.Models
                         // but just to be safe we'll just do it the 100% correct way
                         fs.Position = 0x18 + Structs[i].VariableEntries[j].NameOffset;
 
-                        Structs[i].VariableNames[j] = br.ReadStringZero(Encoding.UTF8);
+                        Structs[i].VariableNames[j] = br.ReadStringZero(ExEncoding.UTF8);
 
                         var entry = Structs[i].VariableEntries[j];
 

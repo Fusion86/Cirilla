@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Cirilla.Core.Models
 {
@@ -53,7 +52,7 @@ namespace Cirilla.Core.Models
 
                 // Filename
                 byte[] bytes = br.ReadBytes((int)Header.FilenameLength); // Excludes \0 end of szString
-                Filename = Encoding.ASCII.GetString(bytes);
+                Filename = ExEncoding.ASCII.GetString(bytes);
                 fs.Position++; // Skip the zero from the szString
                 long posAfterFilename = fs.Position;
 
@@ -79,7 +78,7 @@ namespace Cirilla.Core.Models
 
                     bytes = br.ReadBytes(szLength - 1); // Don't read \0
                     fs.Position++; // Skip over \0
-                    Keys.Add(Encoding.ASCII.GetString(bytes));
+                    Keys.Add(ExEncoding.ASCII.GetString(bytes));
                 }
 
                 // Strings
@@ -96,7 +95,7 @@ namespace Cirilla.Core.Models
                         break;
                     }
 
-                    strings[i] = br.ReadStringZero(Encoding.UTF8);
+                    strings[i] = br.ReadStringZero(ExEncoding.UTF8);
 
                     if (strings[i] == "Invalid Message") invalidMessageCount++;
                 }
@@ -134,8 +133,8 @@ namespace Cirilla.Core.Models
         {
             Logger.Info($"Saving {Filename} to '{path}'");
 
+            UpdateEntries();
             UpdateHeader();
-            //UpdateEntries();
 
             Logger.Info("Writing bytes...");
 
@@ -143,7 +142,7 @@ namespace Cirilla.Core.Models
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 bw.Write(Header.ToBytes());
-                bw.Write(Encoding.ASCII.GetBytes(Filename));
+                bw.Write(ExEncoding.ASCII.GetBytes(Filename));
                 bw.Write((byte)0); // szString end of string
 
                 foreach (var item in Entries)
@@ -155,13 +154,13 @@ namespace Cirilla.Core.Models
 
                 foreach (var item in Keys)
                 {
-                    bw.Write(Encoding.ASCII.GetBytes(item));
+                    bw.Write(ExEncoding.ASCII.GetBytes(item));
                     bw.Write((byte)0); // szString end of string
                 }
 
                 foreach (var item in Strings)
                 {
-                    bw.Write(Encoding.UTF8.GetBytes(item));
+                    bw.Write(ExEncoding.UTF8.GetBytes(item));
                     bw.Write((byte)0); // szString end of string
                 }
             }
@@ -171,7 +170,7 @@ namespace Cirilla.Core.Models
 
         /// <summary>
         /// Update header
-        /// This is needed when the strings changed (technically only if they all together are larger than before)
+        /// This is needed when anything changes
         /// </summary>
         public void UpdateHeader()
         {
@@ -182,6 +181,11 @@ namespace Cirilla.Core.Models
             Header.StringCount = (uint)Strings.Count;
             Logger.Info("New StringCount = " + Header.StringCount);
 
+            // Key Count
+            Logger.Info("Current KeyCount = " + Header.KeyCount);
+            Header.KeyCount = (uint)Keys.Count;
+            Logger.Info("New KeyCount = " + Header.KeyCount);
+
             // StringBlockSize
             Logger.Info("Current StringBlockSize = " + Header.StringBlockSize);
 
@@ -189,11 +193,19 @@ namespace Cirilla.Core.Models
 
             for (int i = 0; i < Header.StringCount; i++)
             {
-                newSize += (uint)Encoding.UTF8.GetByteCount(Strings[i]) + 1; // +1 because szString
+                newSize += (uint)ExEncoding.UTF8.GetByteCount(Strings[i]) + 1; // +1 because szString
             }
 
             Header.StringBlockSize = newSize;
             Logger.Info("New StringBlockSize = " + Header.StringBlockSize);
+
+            // KeyBlockSize
+            Logger.Info("Current KeyBlockSize = " + Header.KeyBlockSize);
+
+            // ASCII.GetByteCount() is not needed because all chars are exactly one byte large
+            Header.KeyBlockSize = Entries[Entries.Count - 1].KeyOffset + (uint)Keys[Keys.Count - 1].Length + 1; // +1 for szString end
+
+            Logger.Info("New KeyBlockSize = " + Header.KeyBlockSize);
         }
 
         /// <summary>
@@ -204,7 +216,56 @@ namespace Cirilla.Core.Models
         {
             Logger.Info("Updating entries...");
 
-            throw new NotImplementedException();
+            List<GMD_Entry> newEntries = new List<GMD_Entry>(Keys.Count);
+            newEntries.Add(Entries[0]); // First entry never changes (at least the offset + index, and we don't know what the other values mean)
+
+            for (int i = 1; i < Keys.Count; i++) // Start at 1
+            {
+                GMD_Entry newEntry;
+
+                if (Entries.Count > i)
+                    newEntry = Entries[i]; // Re-use existing entry
+                else
+                {
+                    Logger.Info("Creating new GMD_Entry for " + Keys[i - 1]);
+                    newEntry = new GMD_Entry(); // Create new entry, this happens when we added a new key
+                }
+
+                newEntry.Index = (uint)i;
+                newEntry.KeyOffset = newEntries[i - 1].KeyOffset + (uint)Keys[i - 1].Length + 1; // +1 for szString end
+                newEntries.Add(newEntry);
+            }
+
+            Entries = newEntries;
+        }
+
+        /// <summary>
+        /// Add string with key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void AddString(string key, string value)
+        {
+            if (Keys.Contains(key))
+                throw new Exception("Can't add duplicate key!");
+
+            Keys.Add(key);
+            Strings.Add(value);
+        }
+
+        /// <summary>
+        /// Remove string with key
+        /// </summary>
+        /// <param name="key"></param>
+        public void RemoveString(string key)
+        {
+            int idx = Keys.IndexOf(key);
+
+            if (idx == -1)
+                throw new Exception($"No string found with key '{key}'");
+
+            Keys.RemoveAt(idx);
+            Strings.RemoveAt(idx);
         }
     }
 }
