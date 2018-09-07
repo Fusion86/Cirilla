@@ -42,16 +42,16 @@ namespace Cirilla.Core.Structs.Native
     public struct FSM_StructHeader
     {
         [Endian(Endianness.LittleEndian)]
-        public int Unk1; // Offset containing struct data
+        public int Hash;
 
         [Endian(Endianness.LittleEndian)]
-        public int Hash; // Unique identifier for struct
+        public int Unk1; // Zero?
 
         [Endian(Endianness.LittleEndian)]
         public int VariableCount;
 
         [Endian(Endianness.LittleEndian)]
-        public int Unk4;
+        public int Unk2; // Zero?
 
         // 0x10
     }
