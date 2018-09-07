@@ -10,7 +10,7 @@ namespace Cirilla.Core.Structs.Native
         #region Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3, ArraySubType = UnmanagedType.U1)]
-        public byte[] Magic; // "FSM"
+        public byte[] Magic; // "XFS"
 
         public byte Padding1;
 

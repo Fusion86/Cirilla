@@ -28,6 +28,8 @@ namespace Cirilla.Core.Models
                 // Header
                 Header = br.ReadStruct<FSM_Header>();
 
+                if (Header.MagicString != "XFS") throw new Exception("Not an FMS file!");
+
                 //long posAfterHeader = fs.Position; // Should be 0x18 (24)
 
                 // Struct offsets - just read offsets sequential, we could also load the full structs but then we'd just jump all over the memory for no reason
