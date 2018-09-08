@@ -224,15 +224,9 @@ namespace Cirilla.Core.Models
 
             for (int i = 1; i < Keys.Count; i++) // Start at 1
             {
-                GMD_Entry newEntry;
-
-                if (Entries.Count > i)
-                    newEntry = Entries[i]; // Re-use existing entry
-                else
-                {
-                    Logger.Info("Creating new GMD_Entry for " + Keys[i - 1]);
-                    newEntry = new GMD_Entry(); // Create new entry, this happens when we added a new key
-                }
+                // TODO: This doesn't set the Unk fields! But everything still seems to work just fine?
+                Logger.Info("Creating new GMD_Entry for " + Keys[i - 1]);
+                GMD_Entry newEntry = new GMD_Entry(); // Create new entry, this happens when we added a new key
 
                 newEntry.Index = (uint)i;
                 newEntry.KeyOffset = newEntries[i - 1].KeyOffset + (uint)Keys[i - 1].Length + 1; // +1 for szString end
@@ -247,13 +241,21 @@ namespace Cirilla.Core.Models
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void AddString(string key, string value)
+        public void AddString(string key, string value, int index = -1)
         {
             if (Keys.Contains(key))
                 throw new Exception("Can't add duplicate key!");
 
-            Keys.Add(key);
-            Strings.Add(value);
+            if (index == -1)
+            {
+                Keys.Add(key);
+                Strings.Add(value);
+            }
+            else
+            {
+                Keys.Insert(index, key);
+                Strings.Insert(index, value);
+            }
         }
 
         /// <summary>

@@ -116,6 +116,19 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
+        public void Rebuild__w_sword_eng()
+        {
+            string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/w_sword_eng.gmd");
+            string rebuildPath = "rebuild__w_sword_eng.gmd";
+
+            GMD gmd = new GMD(origPath);
+            gmd.Save(rebuildPath);
+
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
+        }
+
+        [TestMethod]
         public void AddString__q00503_eng()
         {
             string newPath = "addstring__q00503_eng.gmd";
@@ -132,6 +145,24 @@ namespace Cirilla.Core.Test.Tests
             Assert.IsTrue(oldGmd.Header.StringCount < newGmd.Header.StringCount);
             Assert.IsTrue(oldGmd.Header.StringBlockSize < newGmd.Header.StringBlockSize);
             Assert.IsTrue(newGmd.Strings.Contains("New string text...."));
+        }
+
+        [TestMethod]
+        public void RemoveString__w_sword_eng()
+        {
+            string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/w_sword_eng.gmd");
+            string newPath = "removestring__w_sword_eng.gmd";
+            string readdPath = "readdstring__w_sword_eng.gmd";
+
+            GMD gmd = new GMD(origPath);
+            int idx = gmd.Keys.IndexOf("WP_WSWD_044_NAME");
+            gmd.RemoveString("WP_WSWD_044_NAME");
+            gmd.Save(newPath);
+
+            GMD newGmd = new GMD(newPath);
+
+            newGmd.AddString("WP_WSWD_044_NAME", "My new string", idx);
+            newGmd.Save(readdPath);
         }
     }
 }
