@@ -4,65 +4,52 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Serilog;
-using Microsoft.Win32;
-using System.IO;
 
 namespace Cirilla.ViewModels
 {
     public class GMDViewModel : FileTypeTabItemViewModelBase
     {
-        public GMD Context { get; }
+        private GMD _context;
 
         // Editable stuff
         public ObservableCollection<KeyValueViewModel> HeaderMetadata { get; private set; } = new ObservableCollection<KeyValueViewModel>();
         public ObservableCollection<KeyValueViewModel> Entries { get; private set; } = new ObservableCollection<KeyValueViewModel>();
-        public object CurrentlyOpenFile { get; private set; }
 
         public GMDViewModel(string path) : base(path)
         {
-            Context = new GMD(path);
+            _context = new GMD(path);
 
             // Header metadata
-            HeaderMetadata.Add(new KeyValueViewModel("Version", "0x" + Context.Header.Version.ToHexString(), EditCondition.Never, EditCondition.Never));
-            HeaderMetadata.Add(new KeyValueViewModel("Language", Context.Header.Language.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
-            HeaderMetadata.Add(new KeyValueViewModel("KeyCount", Context.Header.KeyCount.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
-            HeaderMetadata.Add(new KeyValueViewModel("StringCount", Context.Header.StringCount.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
-            HeaderMetadata.Add(new KeyValueViewModel("KeyBlockSize", Context.Header.KeyBlockSize.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
-            HeaderMetadata.Add(new KeyValueViewModel("StringBlockSize", Context.Header.StringBlockSize.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
-            HeaderMetadata.Add(new KeyValueViewModel("FilenameLength", Context.Header.FilenameLength.ToString(), EditCondition.Never, EditCondition.Never));
-            HeaderMetadata.Add(new KeyValueViewModel("Filename", Context.Filename, EditCondition.Never, EditCondition.Never));
+            HeaderMetadata.Add(new KeyValueViewModel("Version", "0x" + _context.Header.Version.ToHexString(), EditCondition.Never, EditCondition.Never));
+            HeaderMetadata.Add(new KeyValueViewModel("Language", _context.Header.Language.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
+            HeaderMetadata.Add(new KeyValueViewModel("KeyCount", _context.Header.KeyCount.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
+            HeaderMetadata.Add(new KeyValueViewModel("StringCount", _context.Header.StringCount.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
+            HeaderMetadata.Add(new KeyValueViewModel("KeyBlockSize", _context.Header.KeyBlockSize.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
+            HeaderMetadata.Add(new KeyValueViewModel("StringBlockSize", _context.Header.StringBlockSize.ToString(), EditCondition.Never, EditCondition.UnsafeOnly));
+            HeaderMetadata.Add(new KeyValueViewModel("FilenameLength", _context.Header.FilenameLength.ToString(), EditCondition.Never, EditCondition.Never));
+            HeaderMetadata.Add(new KeyValueViewModel("Filename", _context.Filename, EditCondition.Never, EditCondition.Never));
 
             // Entries
-            for (int i = 0; i < Context.Header.KeyCount; i++)
+            for (int i = 0; i < _context.Header.KeyCount; i++)
             {
                 Entries.Add(new KeyValueViewModel(
-                    Context.Keys[i],
-                    Context.Strings[i],
+                    _context.Keys[i],
+                    _context.Strings[i],
                     EditCondition.UnsafeOnly,
                     EditCondition.Always
                     ));
             }
         }
 
-        public override void Save()
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = Path.GetFileName(Filepath);
-            if (sfd.ShowDialog() == true)
-            {
-                Save(sfd.FileName);
-            }
-        }
-
-        public void Save(string path)
+        public override void Save(string path)
         {
             int updatedStrings = 0;
 
-            for (int i = 0; i < Context.Header.StringCount; i++)
+            for (int i = 0; i < _context.Header.StringCount; i++)
             {
-                if (Context.Strings[i] != Entries[i].Value)
+                if (_context.Strings[i] != Entries[i].Value)
                 {
-                    Context.Strings[i] = Entries[i].Value;
+                    _context.Strings[i] = Entries[i].Value;
                     updatedStrings++;
                 }
             }
@@ -71,7 +58,7 @@ namespace Cirilla.ViewModels
 
             try
             {
-                Context.Save(path);
+                _context.Save(path);
             }
             catch (Exception ex)
             {

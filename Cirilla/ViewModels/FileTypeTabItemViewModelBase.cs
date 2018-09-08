@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Models;
-using System;
+﻿using Microsoft.Win32;
 using System.ComponentModel;
 using System.IO;
 
@@ -14,7 +13,17 @@ namespace Cirilla.ViewModels
 
         public virtual bool HasUnsavedChanges => false;
 
-        public virtual void Save() { }
+        public virtual void Save()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Path.GetFileName(Filepath);
+            if (sfd.ShowDialog() == true)
+            {
+                Save(sfd.FileName);
+            }
+        }
+
+        public virtual void Save(string path) { }
         public virtual bool CanSave() => true;
 
         public virtual void Close() { }

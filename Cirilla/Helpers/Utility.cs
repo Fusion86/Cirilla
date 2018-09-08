@@ -11,7 +11,8 @@ namespace Cirilla.Helpers
         // Here we map a Core.Models type to a ViewModel
         private static readonly Dictionary<Type, Type> _handlerTypeToViewModelTypeMap = new Dictionary<Type, Type>
             {
-                { typeof(GMD), typeof(GMDViewModel) }
+                { typeof(GMD), typeof(GMDViewModel) },
+                { typeof(ITM), typeof(ITMViewModel) },
             };
 
         // Maps a MHFileType to a FileTypeTabItemViewModelBase

@@ -11,7 +11,7 @@ namespace Cirilla.Core.Models
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public byte[] Header;
-        List<ITM_Item> Items;
+        public List<ITM_Item> Items;
 
         public ITM(string path) : base(path)
         {

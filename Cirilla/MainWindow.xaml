@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cirilla"
         xmlns:vm="clr-namespace:Cirilla.ViewModels"
+        xmlns:uc="clr-namespace:Cirilla.UserControls"
         mc:Ignorable="d"
         Title="Cirilla Toolkit" Height="450" Width="800">
     <Window.DataContext>
@@ -29,7 +30,7 @@
                 <TabControl.Resources>
                     <!-- This is needed for a workaround, afaik -->
                     <CollectionViewSource x:Key="OpenItems" Source="{Binding OpenItems}"/>
-                    
+
                     <!-- Also a workaround -->
                     <local:BindingProxy x:Key="proxy" Data="{Binding}" />
 
@@ -67,12 +68,73 @@
                             </TabItem>
                         </TabControl>
                     </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:ITMViewModel}">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Items"/>
+
+                            <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Items}" DisplayMemberPath="Id" SelectedItem="{Binding SelectedItem}"/>
+
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Edit Selected Item"/>
+
+                            <uc:ITMItemEditor Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedItem}"/>
+                        </Grid>
+                    </DataTemplate>
                 </TabControl.Resources>
 
                 <TabControl.ItemsSource>
                     <CompositeCollection>
                         <TabItem Header="Home">
+                            <Grid>
+                                <Grid ClipToBounds="True">                                    
+                                    <Border BorderBrush="White">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="Images/Cirilla.jpg" Stretch="UniformToFill" Opacity="0.6"/>
+                                        </Border.Background>
+                                    </Border>
 
+                                    <Border BorderBrush="White" BorderThickness="40" Margin="-15">
+                                        <Border.Effect>
+                                            <BlurEffect Radius="30"/>
+                                        </Border.Effect>
+                                    </Border>
+                                </Grid>
+
+                                <DockPanel Margin="5">
+                                    <WrapPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <TextBlock Text="Thanks to: "/>
+                                        <TextBlock Text="ID-Daemon, " ToolTip="Introducing me to file format reverse engineering"/>
+                                        <TextBlock Text="dynaomi, " ToolTip="Introducing me to file format reverse engineering"/>
+                                        <TextBlock Text="MHVuze, " ToolTip="WorldChunkTool, documentation and general help"/>
+                                        <TextBlock Text="Delutto, " ToolTip="Documentation of the GMD format"/>
+                                        <TextBlock Text="izayoi, " ToolTip="Documentation"/>
+                                        <TextBlock Text="Zindea, " ToolTip="Documentation"/>
+                                        <TextBlock Text="FluffyQuack, " ToolTip="ARCTool and his FSM source code"/>
+                                        <TextBlock Text="and the Monster Hunter World Modding Discord" ToolTip="Documentation and general help"/>
+                                    </WrapPanel>
+
+                                    <Grid>
+
+                                    </Grid>
+                                </DockPanel>
+                            </Grid>
                         </TabItem>
 
                         <CollectionContainer Collection="{Binding Source={StaticResource OpenItems}}"/>
