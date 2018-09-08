@@ -36,7 +36,7 @@ namespace Cirilla.Core.Extensions
             int skippedZeros = 0;
             List<byte> szBytes = new List<byte>();
 
-            while (true)
+            while (br.BaseStream.Position != br.BaseStream.Length)
             {
                 b = br.ReadByte();
 

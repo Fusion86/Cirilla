@@ -160,6 +160,8 @@ namespace Cirilla.Core.Models
 
                 foreach (var item in Strings)
                 {
+                    if (item == null) continue;
+
                     bw.Write(ExEncoding.UTF8.GetBytes(item));
                     bw.Write((byte)0); // szString end of string
                 }
@@ -193,7 +195,8 @@ namespace Cirilla.Core.Models
 
             for (int i = 0; i < Header.StringCount; i++)
             {
-                newSize += (uint)ExEncoding.UTF8.GetByteCount(Strings[i]) + 1; // +1 because szString
+                if (Strings[i] != null)
+                    newSize += (uint)ExEncoding.UTF8.GetByteCount(Strings[i]) + 1; // +1 because szString
             }
 
             Header.StringBlockSize = newSize;

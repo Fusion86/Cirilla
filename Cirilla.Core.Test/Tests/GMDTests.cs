@@ -103,6 +103,19 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
+        public void Rebuild__wep_series_eng()
+        {
+            string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/wep_series_eng.gmd");
+            string rebuildPath = "rebuild__wep_series_eng.gmd";
+
+            GMD gmd = new GMD(origPath);
+            gmd.Save(rebuildPath);
+
+            //if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+            //    Assert.Fail("Hash doesn't match!");
+        }
+
+        [TestMethod]
         public void AddString__q00503_eng()
         {
             string newPath = "addstring__q00503_eng.gmd";
