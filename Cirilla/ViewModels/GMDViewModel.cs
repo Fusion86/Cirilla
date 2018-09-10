@@ -45,6 +45,8 @@ namespace Cirilla.ViewModels
         {
             int updatedStrings = 0;
 
+            _context.Update();
+
             for (int i = 0; i < _context.Header.StringCount; i++)
             {
                 if (_context.Strings[i] != Entries[i].Value)

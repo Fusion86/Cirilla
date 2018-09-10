@@ -170,11 +170,17 @@ namespace Cirilla.Core.Models
             Logger.Info("Saved file!");
         }
 
+        public void Update()
+        {
+            UpdateEntries();
+            UpdateHeader();
+        }
+
         /// <summary>
         /// Update header
         /// This is needed when anything changes
         /// </summary>
-        public void UpdateHeader()
+        private void UpdateHeader()
         {
             Logger.Info("Updating header...");
 
@@ -215,7 +221,7 @@ namespace Cirilla.Core.Models
         /// Update entries
         /// This is only needed when the Tags changed
         /// </summary>
-        public void UpdateEntries()
+        private void UpdateEntries()
         {
             Logger.Info("Updating entries...");
 
