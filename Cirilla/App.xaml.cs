@@ -1,7 +1,7 @@
 ﻿using Cirilla.Properties;
 using System.Windows;
 
-namespace GMDEditor
+namespace Cirilla
 {
     /// <summary>
     /// Interaction logic for App.xaml
