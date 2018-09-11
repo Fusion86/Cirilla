@@ -98,7 +98,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SettingBindingExtension.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="Spacing.cs" />
     <Compile Include="UserControls\ITMItemEditor.xaml.cs">
       <DependentUpon>ITMItemEditor.xaml</DependentUpon>
