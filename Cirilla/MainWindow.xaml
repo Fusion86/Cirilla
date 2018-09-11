@@ -17,12 +17,12 @@
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
                 <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
-                <MenuItem Header="Save as" Command="{Binding SaveFileCommand}"/>
+                <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
             </MenuItem>
 
-            <!--<MenuItem Header="Options">
-                <MenuItem Header="Allow unsafe editing" IsCheckable="True" IsChecked="{Binding AllowUnsafeEditing}"/>
-            </MenuItem>-->
+            <MenuItem Header="Tools">
+                <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
+            </MenuItem>
         </Menu>
 
         <Grid Margin="5" Drop="Grid_Drop" AllowDrop="True">

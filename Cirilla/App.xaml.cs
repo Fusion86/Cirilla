@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cirilla.Properties;
 using System.Windows;
 
 namespace GMDEditor
@@ -13,5 +8,12 @@ namespace GMDEditor
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            if (Settings.Default.Config == null)
+                Settings.Default.Config = new Cirilla.CirillaConfig();
+        }
     }
 }
