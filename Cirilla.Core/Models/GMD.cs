@@ -14,11 +14,12 @@ namespace Cirilla.Core.Models
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public GMD_Header Header;
-        public string Filename;
-        public Dictionary<string, string> Entries;
-        
-        private byte[] Unk1;
+        public GMD_Header Header => _header;
+        public string Filename { get; }
+        public List<IGMD_Entry> Entries { get; }
+
+        private GMD_Header _header;
+        private byte[] _unk1;
 
         public GMD(string path) : base(path)
         {
@@ -28,54 +29,74 @@ namespace Cirilla.Core.Models
             using (BinaryReader br = new BinaryReader(fs))
             {
                 // Header
-                Header = br.ReadStruct<GMD_Header>();
+                _header = br.ReadStruct<GMD_Header>();
 
-                if (Header.MagicString != "GMD") throw new Exception("Not a GMD file!");
+                if (_header.MagicString != "GMD") throw new Exception("Not a GMD file!");
 
                 // Log some info about the GMD language
-                if (Enum.IsDefined(typeof(EmLanguage), Header.Language))
+                if (Enum.IsDefined(typeof(EmLanguage), _header.Language))
                 {
-                    EmLanguage language = (EmLanguage)Header.Language;
+                    EmLanguage language = (EmLanguage)_header.Language;
                     Logger.Info("Language: " + language);
                 }
                 else
                 {
-                    Logger.Warn($"Unknown language: 0x{Header.Language:X04} ({Header.Language})");
+                    Logger.Warn($"Unknown language: 0x{_header.Language:X04} ({_header.Language})");
                 }
 
                 // Filename
                 Filename = br.ReadStringZero(ExEncoding.ASCII);
-                
+
                 // Set Entries initial capacity
-                Entries = new Dictionary<string, string>(Header.KeyCount);
+                Entries = new List<IGMD_Entry>(_header.StringCount);
 
                 // Info Table
-                GMD_InfoTableEntry[] infoTable = new GMD_InfoTableEntry[Header.KeyCount];
-                
-                for (int i = 0; i < Header.KeyCount; i++)
+                for (int i = 0; i < _header.KeyCount; i++)
                 {
-                    infoTable[i] = br.ReadStruct<GMD_InfoTableEntry>();
+                    GMD_Entry entry = new GMD_Entry { InfoTableEntry = br.ReadStruct<GMD_InfoTableEntry>() };
+
+                    int lastStringIndex = 0;
+                    if (Entries.OfType<GMD_Entry>().Count() > 0)
+                        lastStringIndex = Entries.OfType<GMD_Entry>().Last().InfoTableEntry.StringIndex;
+
+                    for (int j = lastStringIndex + 1; j < entry.InfoTableEntry.StringIndex; j++)
+                        Entries.Add(new GMD_EntryWithoutKey());
+
+                    Entries.Add(entry);
                 }
 
                 // Block with unknown data
-                Unk1 = br.ReadBytes(0x800);
+                _unk1 = br.ReadBytes(0x800);
 
-                // Keys
-                string[] keys = new string[Header.KeyCount];
-                for (int i = 0; i < Header.KeyCount; i++)
-                    keys[i] = br.ReadStringZero(ExEncoding.ASCII);
+                // Keys, his skips over the GMD_EntryWithoutKey entries
+                foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
+                {
+                    entry.Key = br.ReadStringZero(ExEncoding.ASCII);
+                }
 
                 // Strings
-                for (int i = 0; i < Header.StringCount; i++)
+                string[] strings = new string[_header.StringCount];
+                long startOfStringBlock = fs.Position;
+
+                for (int i = 0; i < _header.StringCount; i++)
                 {
                     if (fs.Position == fs.Length)
                     {
-                        Logger.Warn("We expected more strings, but we already are at the end of the stream.");
+                        Logger.Warn($"Expected to read {_header.StringCount - i} more strings (for a total of {_header.StringCount}). But we already are at the end of the stream!");
                         break;
                     }
 
-                    Entries.Add(keys[i], br.ReadStringZero(ExEncoding.UTF8));
+                    strings[i] = br.ReadStringZero(ExEncoding.UTF8);
                 }
+
+                Logger.Info("Expected StringBlockSize = " + _header.StringBlockSize);
+                Logger.Info("Actual StringBlockSize = " + (fs.Position - startOfStringBlock));
+
+                if (_header.StringBlockSize != (fs.Position - startOfStringBlock))
+                    Logger.Warn("Actual StringBlockSize is not the same as the expected StringBlockSize!");
+
+                for (int i = 0; i < _header.StringCount; i++)
+                    Entries[i].Value = strings[i];
             }
         }
 
@@ -83,42 +104,34 @@ namespace Cirilla.Core.Models
         {
             Logger.Info($"Saving {Filename} to '{path}'");
 
-            Logger.Info("Writing bytes...");
+            Update();
 
             using (FileStream fs = File.OpenWrite(path))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
-                bw.Write(Header.ToBytes());
+                Logger.Info("Writing bytes...");
+
+                bw.Write(_header.ToBytes());
                 bw.Write(ExEncoding.ASCII.GetBytes(Filename));
                 bw.Write((byte)0); // szString end of string
 
-                // Info Table
-                int idx = 0;
-                int keyOffset = 0;
-                foreach (var entry in Entries)
+                // Info Table, excludes GMD_EntryWithoutKey
+                foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
                 {
-                    // Generate new entry
-                    GMD_InfoTableEntry infoTableEntry = new GMD_InfoTableEntry();
-                    infoTableEntry.Index = idx;
-                    infoTableEntry.KeyOffset = keyOffset;
-                    
-                    bw.Write(infoTableEntry.ToBytes());
-
-                    idx++;
-                    keyOffset += entry.Key.Length + 1; // +1 for szString terminator
+                    bw.Write(entry.InfoTableEntry.ToBytes());
                 }
 
-                bw.Write(Unk1);
+                bw.Write(_unk1);
 
-                // Keys
-                foreach (var entry in Entries)
+                // Keys, excludes GMD_EntryWithoutKey
+                foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
                 {
                     bw.Write(ExEncoding.ASCII.GetBytes(entry.Key));
                     bw.Write((byte)0); // szString end of string
                 }
 
-                // Strings
-                foreach (var entry in Entries)
+                // Strings, __includes__ GMD_EntryWithoutKey
+                foreach (IGMD_Entry entry in Entries)
                 {
                     bw.Write(ExEncoding.UTF8.GetBytes(entry.Value));
                     bw.Write((byte)0); // szString end of string
@@ -129,13 +142,68 @@ namespace Cirilla.Core.Models
         }
 
         /// <summary>
+        /// Update header
+        /// This is needed when anything changes
+        /// </summary>
+        private void Update()
+        {
+            Logger.Info("Updating entries...");
+
+            var realEntries = Entries.OfType<GMD_Entry>().ToList();
+
+            // First info entry always has Index = 0 and KeyOffset = 0
+            realEntries[0].InfoTableEntry.StringIndex = 0;
+            realEntries[0].InfoTableEntry.KeyOffset = 0;
+
+            for (int i = 1; i < realEntries.Count; i++) // Start at 1
+            {
+                realEntries[i].InfoTableEntry.StringIndex = Entries.IndexOf(realEntries[i]);
+                realEntries[i].InfoTableEntry.KeyOffset = realEntries[i - 1].InfoTableEntry.KeyOffset + realEntries[i - 1].Key.Length + 1; // +1 for szString end
+            }
+
+            Logger.Info("Updating header...");
+
+            // String Count
+            Logger.Info("Current StringCount = " + _header.StringCount);
+            _header.StringCount = Entries.Count;
+            Logger.Info("New StringCount = " + _header.StringCount);            // Key Count
+            Logger.Info("Current KeyCount = " + _header.KeyCount);
+            _header.KeyCount = realEntries.Count;
+            Logger.Info("New KeyCount = " + _header.KeyCount);
+
+            // StringBlockSize
+            Logger.Info("Current StringBlockSize = " + _header.StringBlockSize);
+
+            int newSize = 0;
+            foreach (IGMD_Entry entry in Entries)
+            {
+                newSize += ExEncoding.UTF8.GetByteCount(entry.Value) + 1; // +1 because szString
+            }
+
+            _header.StringBlockSize = newSize;
+            Logger.Info("New StringBlockSize = " + _header.StringBlockSize);
+
+            // KeyBlockSize
+            Logger.Info("Current KeyBlockSize = " + _header.KeyBlockSize);
+
+            // ASCII.GetByteCount() is not needed because all chars are exactly one byte large
+            _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + realEntries.Last().Key.Length + 1; // +1 for szString end
+
+            Logger.Info("New KeyBlockSize = " + _header.KeyBlockSize);
+        }
+
+        /// <summary>
         /// Add string with key
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void AddString(string key, string value, int index = -1)
+        public void AddString(string key, string value)
         {
-            throw new NotImplementedException();
+            Entries.Add(new GMD_Entry
+            {
+                Key = key,
+                Value = value
+            });
         }
 
         /// <summary>
@@ -144,7 +212,27 @@ namespace Cirilla.Core.Models
         /// <param name="key"></param>
         public void RemoveString(string key)
         {
-            throw new NotImplementedException();
+            var entry = Entries.OfType<GMD_Entry>().FirstOrDefault(x => x.Key == key);
+
+            if (entry != null)
+                Entries.Remove(entry);
         }
+    }
+
+    public interface IGMD_Entry
+    {
+        string Value { get; set; }
+    }
+
+    public class GMD_Entry : IGMD_Entry
+    {
+        public GMD_InfoTableEntry InfoTableEntry;
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class GMD_EntryWithoutKey : IGMD_Entry
+    {
+        public string Value { get; set; }
     }
 }

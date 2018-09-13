@@ -56,7 +56,7 @@ namespace Cirilla.Core.Structs.Native
     public struct GMD_InfoTableEntry
     {
         [Endian(Endianness.LittleEndian)]
-        public int Index;
+        public int StringIndex;
 
         [Endian(Endianness.LittleEndian)]
         public int Unk2;
@@ -65,7 +65,10 @@ namespace Cirilla.Core.Structs.Native
         public int Unk3;
 
         [Endian(Endianness.LittleEndian)]
-        public int Unk4;
+        public short Short1;
+
+        [Endian(Endianness.LittleEndian)]
+        public short Short2;
 
         // 0x10
 
@@ -80,5 +83,7 @@ namespace Cirilla.Core.Structs.Native
 
         [Endian(Endianness.LittleEndian)]
         public int Unk8;
+
+        // 0x20
     }
 }

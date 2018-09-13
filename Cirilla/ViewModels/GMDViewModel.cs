@@ -30,11 +30,11 @@ namespace Cirilla.ViewModels
             HeaderMetadata.Add(new KeyValueViewModel("Filename", _context.Filename, EditCondition.Never, EditCondition.Never));
 
             // Entries
-            for (int i = 0; i < _context.Header.KeyCount; i++)
+            for (int i = 0; i < _context.Header.StringCount; i++)
             {
                 Entries.Add(new KeyValueViewModel(
-                    _context.Keys[i],
-                    _context.Strings[i],
+                    _context.Entries[i].GetType() == typeof(GMD_Entry) ? ((GMD_Entry)_context.Entries[i]).Key : "",
+                    _context.Entries[i].Value,
                     EditCondition.UnsafeOnly,
                     EditCondition.Always
                     ));
@@ -45,13 +45,11 @@ namespace Cirilla.ViewModels
         {
             int updatedStrings = 0;
 
-            _context.Update();
-
-            for (int i = 0; i < _context.Header.StringCount; i++)
+            for (int i = 0; i < _context.Entries.Count; i++)
             {
-                if (_context.Strings[i] != Entries[i].Value)
+                if (_context.Entries[i].Value != Entries[i].Value)
                 {
-                    _context.Strings[i] = Entries[i].Value;
+                    _context.Entries[i].Value = Entries[i].Value;
                     updatedStrings++;
                 }
             }
