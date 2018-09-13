@@ -62,8 +62,32 @@
                                                     <Setter Property="AcceptsReturn" Value="true" />
                                                 </Style>
                                             </DataGridTextColumn.EditingElementStyle>
+
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style TargetType="DataGridCell">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Key}" Value="">
+                                                            <Setter Property="IsTabStop" Value="False"/>
+                                                            <Setter Property="Focusable" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
+
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Value}" Value="Invalid Message">
+                                                    <Setter Property="Background" Value="Yellow"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Key}" Value="">
+                                                    <Setter Property="Background" Value="Orange"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
                                 </DataGrid>
                             </TabItem>
                         </TabControl>

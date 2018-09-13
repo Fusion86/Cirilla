@@ -25,7 +25,8 @@ namespace Cirilla.Core.Extensions
         }
 
         /// <summary>
-        /// Read zero terminated string (skips zeros in front of it)
+        /// Read zero terminated string (skips zeros in front of it).
+        /// Leaves BaseStream.Position += stringLength + 1 (for szString terminator)
         /// </summary>
         /// <param name="br"></param>
         /// <param name="encoding"></param>
@@ -33,7 +34,6 @@ namespace Cirilla.Core.Extensions
         public static string ReadStringZero(this BinaryReader br, Encoding encoding)
         {
             byte b;
-            int skippedZeros = 0;
             List<byte> szBytes = new List<byte>();
 
             while (br.BaseStream.Position != br.BaseStream.Length)
@@ -42,13 +42,7 @@ namespace Cirilla.Core.Extensions
 
                 if (b == 0)
                 {
-                    // Stop if we found a \0 **AND** we already have read some text.
-                    // This is because a string could have empty space in front of it.
-                    // While this is 'undocumented behaviour' it works in-game.
-                    if (szBytes.Count > 0)
-                        break;
-                    else
-                        skippedZeros++;
+                    break;
                 }
                 else
                 {
@@ -56,12 +50,7 @@ namespace Cirilla.Core.Extensions
                 }
             }
 
-            string str = encoding.GetString(szBytes.ToArray());
-
-            if (skippedZeros != 0)
-                Logger.Warn($"Skipped {skippedZeros} zeros in front of string '{str}'");
-
-            return str;
+            return encoding.GetString(szBytes.ToArray());
         }
     }
 }

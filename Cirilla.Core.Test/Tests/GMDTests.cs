@@ -1,3 +1,4 @@
+using System.Linq;
 using Cirilla.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,7 +28,6 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void Load__armor_eng()
         {
-            // StringCount > actual number of strings
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/steam/armor_eng.gmd"));
         }
 
@@ -37,7 +37,7 @@ namespace Cirilla.Core.Test.Tests
             // Uses skipInvalidMessages
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd"));
 
-            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
         [TestMethod]
@@ -46,7 +46,19 @@ namespace Cirilla.Core.Test.Tests
             // Uses skipInvalidMessages and weird workaround (see Models/GMD.cs)
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_ara.gmd"));
 
-            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+        }
+
+        [TestMethod]
+        public void Load__cm_facility_eng()
+        {
+            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/cm_facility_eng.gmd"));
+        }
+
+        [TestMethod]
+        public void Load__cm_facility_kor()
+        {
+            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/cm_facility_kor.gmd"));
         }
 
         [TestMethod]
@@ -66,7 +78,7 @@ namespace Cirilla.Core.Test.Tests
         public void Rebuild__q00503_eng()
         {
             string origPath = Utility.GetFullPath(@"chunk0/common/text/quest/q00503_eng.gmd");
-            string rebuildPath = "rebuild__q00503_eng";
+            string rebuildPath = "rebuild__q00503_eng.gmd";
 
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
@@ -98,8 +110,8 @@ namespace Cirilla.Core.Test.Tests
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
-            //if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
-            //    Assert.Fail("Hash doesn't match!");
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
         }
 
         [TestMethod]
@@ -111,8 +123,8 @@ namespace Cirilla.Core.Test.Tests
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
 
-            //if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
-            //    Assert.Fail("Hash doesn't match!");
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
         }
 
         [TestMethod]
@@ -144,24 +156,25 @@ namespace Cirilla.Core.Test.Tests
             Assert.IsTrue(oldGmd.Header.KeyBlockSize < newGmd.Header.KeyBlockSize);
             Assert.IsTrue(oldGmd.Header.StringCount < newGmd.Header.StringCount);
             Assert.IsTrue(oldGmd.Header.StringBlockSize < newGmd.Header.StringBlockSize);
-            Assert.IsTrue(newGmd.Strings.Contains("New string text...."));
+            Assert.IsNotNull(newGmd.Entries.FirstOrDefault(x => x.Value == "New string text...."));
         }
 
         [TestMethod]
-        public void RemoveString__w_sword_eng()
+        public void ReaddString__w_sword_eng()
         {
+            // This won't display correctly in game, because the string order DOES matter
+
             string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/w_sword_eng.gmd");
             string newPath = "removestring__w_sword_eng.gmd";
             string readdPath = "readdstring__w_sword_eng.gmd";
 
             GMD gmd = new GMD(origPath);
-            int idx = gmd.Keys.IndexOf("WP_WSWD_044_NAME");
             gmd.RemoveString("WP_WSWD_044_NAME");
             gmd.Save(newPath);
 
             GMD newGmd = new GMD(newPath);
 
-            newGmd.AddString("WP_WSWD_044_NAME", "My new string", idx);
+            newGmd.AddString("WP_WSWD_044_NAME", "My new string");
             newGmd.Save(readdPath);
         }
     }

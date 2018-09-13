@@ -101,7 +101,7 @@ namespace Cirilla.ViewModels
 
         public bool CanSaveInWorkingDirectory()
         {
-            if (SelectedItem is FileTypeTabItemViewModelBase item)
+            if (SelectedItem is FileTypeTabItemViewModelBase item && Properties.Settings.Default.Config.WorkingDirectoryPath != null)
                 return Directory.Exists(Properties.Settings.Default.Config.WorkingDirectoryPath)
                     && GetFullRelativePathForGameFile(item.Filepath) != null;
 

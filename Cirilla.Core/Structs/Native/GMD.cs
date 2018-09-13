@@ -1,5 +1,4 @@
 ﻿using Cirilla.Core.Helpers;
-using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -19,32 +18,32 @@ namespace Cirilla.Core.Structs.Native
         public byte[] Version; // Version?
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Language;
+        public int Language;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk1; // Zero
+        public int Unk1; // Zero
 
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk2; // Zero
+        public int Unk2; // Zero
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyCount;
+        public int KeyCount;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 StringCount; // Usually the same as KeyCount
+        public int StringCount; // Usually the same as KeyCount
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyBlockSize;
+        public int KeyBlockSize;
 
         // 0x20
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 StringBlockSize;
+        public int StringBlockSize;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 FilenameLength;
+        public int FilenameLength;
 
         // 0x28
 
@@ -54,32 +53,37 @@ namespace Cirilla.Core.Structs.Native
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct GMD_Entry
+    public struct GMD_InfoTableEntry
     {
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Index;
+        public int StringIndex;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk2;
+        public int Unk2;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk3;
+        public int Unk3;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk4;
+        public short Short1;
+
+        [Endian(Endianness.LittleEndian)]
+        public short Short2;
 
         // 0x10
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 KeyOffset;
+        public int KeyOffset;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk6;
+        public int Unk6;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk7;
+        public int Unk7;
 
         [Endian(Endianness.LittleEndian)]
-        public UInt32 Unk8;
+        public int Unk8;
+
+        // 0x20
     }
 }

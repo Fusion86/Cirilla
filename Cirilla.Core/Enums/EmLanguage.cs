@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Cirilla.Core.Enums
+﻿namespace Cirilla.Core.Enums
 {
-    public enum EmLanguage : UInt32
+    public enum EmLanguage : int
     {
         Japanese = 0,
         English = 1,
