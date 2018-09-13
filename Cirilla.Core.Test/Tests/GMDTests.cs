@@ -1,3 +1,4 @@
+using System.Linq;
 using Cirilla.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,7 +38,7 @@ namespace Cirilla.Core.Test.Tests
             // Uses skipInvalidMessages
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd"));
 
-            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace Cirilla.Core.Test.Tests
             // Uses skipInvalidMessages and weird workaround (see Models/GMD.cs)
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_ara.gmd"));
 
-            Assert.AreEqual(gmd.Strings[3], "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
+            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
         [TestMethod]
@@ -144,7 +145,7 @@ namespace Cirilla.Core.Test.Tests
             Assert.IsTrue(oldGmd.Header.KeyBlockSize < newGmd.Header.KeyBlockSize);
             Assert.IsTrue(oldGmd.Header.StringCount < newGmd.Header.StringCount);
             Assert.IsTrue(oldGmd.Header.StringBlockSize < newGmd.Header.StringBlockSize);
-            Assert.IsTrue(newGmd.Strings.Contains("New string text...."));
+            Assert.IsTrue(newGmd.Entries.ContainsValue("New string text...."));
         }
 
         [TestMethod]
@@ -155,14 +156,29 @@ namespace Cirilla.Core.Test.Tests
             string readdPath = "readdstring__w_sword_eng.gmd";
 
             GMD gmd = new GMD(origPath);
-            int idx = gmd.Keys.IndexOf("WP_WSWD_044_NAME");
+            //int idx = gmd.Entries.FindIndex(x => x.Key == "WP_WSWD_044_NAME");
             gmd.RemoveString("WP_WSWD_044_NAME");
             gmd.Save(newPath);
 
-            GMD newGmd = new GMD(newPath);
+            //GMD newGmd = new GMD(newPath);
 
-            newGmd.AddString("WP_WSWD_044_NAME", "My new string", idx);
-            newGmd.Save(readdPath);
+            //newGmd.AddString("WP_WSWD_044_NAME", "My new string", idx);
+            //newGmd.Save(readdPath);
+        }
+
+        [TestMethod]
+        public void Shuffle__q00503_eng()
+        {
+            string newPath = "shuffle__q00503_eng.gmd";
+            
+            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/quest/q00503_eng.gmd"));
+
+            var shuffled = gmd.Entries.OrderBy(x => "A").ToDictionary(item => item.Key, item => item.Value);
+            gmd.Entries = shuffled;
+
+            gmd.Save(newPath);
+            
+            GMD newGmd = new GMD(newPath);
         }
     }
 }
