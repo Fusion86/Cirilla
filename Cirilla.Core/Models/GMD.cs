@@ -160,10 +160,16 @@ namespace Cirilla.Core.Models
 
                 foreach (var item in Strings)
                 {
-                    if (item == null) continue;
-
-                    bw.Write(ExEncoding.UTF8.GetBytes(item));
-                    bw.Write((byte)0); // szString end of string
+                    if (String.IsNullOrEmpty(item))
+                    {
+                        bw.Write(ExEncoding.UTF8.GetBytes("CIRILLA_EMPTY_STRING"));
+                        bw.Write((byte)0); // szString end of string
+                    }
+                    else
+                    {
+                        bw.Write(ExEncoding.UTF8.GetBytes(item));
+                        bw.Write((byte)0); // szString end of string
+                    }
                 }
             }
 
