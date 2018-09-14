@@ -87,8 +87,13 @@
     <Compile Include="UserControls\ITMItemEditor.xaml.cs">
       <DependentUpon>ITMItemEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\NBSCItemEditor.xaml.cs">
+      <DependentUpon>NBSCItemEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
+    <Compile Include="ViewModels\NBSCItemViewModel.cs" />
+    <Compile Include="ViewModels\NBSCViewModel.cs" />
     <Compile Include="ViewModels\ITMViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -110,6 +115,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\ITMItemEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NBSCItemEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,48 +3,48 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Cirilla"
+             xmlns:root="clr-namespace:Cirilla"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Canvas Background="White">
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="0" Canvas.Left="0">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="0" Canvas.Left="0">
             <TextBlock Text="Rarity:" Width="60" TextAlignment="Right"/>
             <xctk:IntegerUpDown Width="100" Value="{Binding Rarity}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="0" Canvas.Left="170">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="0" Canvas.Left="170">
             <TextBlock Text="Type:" Width="60" TextAlignment="Right"/>
             <ComboBox Width="100"/>
             <ComboBox Width="100"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="25" Canvas.Left="0">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="25" Canvas.Left="0">
             <TextBlock Text="Max Hold:" Width="60" TextAlignment="Right"/>
             <xctk:IntegerUpDown Width="100"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="25" Canvas.Left="170">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="25" Canvas.Left="170">
             <TextBlock Text="Sorting:" Width="60" TextAlignment="Right"/>
             <xctk:IntegerUpDown Width="100" Value="{Binding SortingOrder}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="50" Canvas.Left="0">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="50" Canvas.Left="0">
             <TextBlock Text="Buy Price:" Width="60" TextAlignment="Right"/>
             <xctk:IntegerUpDown Width="100" Value="{Binding BuyPrice}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="50" Canvas.Left="170">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="50" Canvas.Left="170">
             <TextBlock Text="Sell Price:" Width="60" TextAlignment="Right"/>
             <xctk:IntegerUpDown Width="100" Value="{Binding SellPrice}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="75" Canvas.Left="0">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="75" Canvas.Left="0">
             <TextBlock Text="Icon:" Width="60" TextAlignment="Right"/>
             <ComboBox Width="100"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Height="20" local:Spacing.Horizontal="5" Canvas.Top="75" Canvas.Left="170">
+        <StackPanel Orientation="Horizontal" Height="20" root:Spacing.Horizontal="5" Canvas.Top="75" Canvas.Left="170">
             <TextBlock Text="Icon Color:" Width="60" TextAlignment="Right"/>
             <ComboBox Width="100"/>
         </StackPanel>

@@ -110,9 +110,28 @@
 
                             <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Items}" DisplayMemberPath="Id" SelectedItem="{Binding SelectedItem}"/>
 
-                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Edit Selected Item"/>
-
                             <uc:ITMItemEditor Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedItem}"/>
+                        </Grid>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:NBSCViewModel}">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="NPCs"/>
+
+                            <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Items}" DisplayMemberPath="Id" SelectedItem="{Binding SelectedItem}"/>
+
+                            <uc:NBSCItemEditor Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedItem}"/>
                         </Grid>
                     </DataTemplate>
                 </TabControl.Resources>

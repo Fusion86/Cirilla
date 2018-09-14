@@ -13,7 +13,8 @@ namespace Cirilla.Core.Enums
         public readonly string[] FileExtensions;
 
         public static MHFileType GMD = new MHFileType(typeof(GMD), "Text files.", magics: new[] { "GMD" });
-        public static MHFileType ITM = new MHFileType(typeof(ITM), "Text files.", fileExtensions: new[] { ".itm" });
+        public static MHFileType ITM = new MHFileType(typeof(ITM), "Item Data", fileExtensions: new[] { ".itm" });
+        public static MHFileType NBSC = new MHFileType(typeof(NBSC), "NPC something", fileExtensions: new[] { ".nbsc" });
 
         public MHFileType() { }
 

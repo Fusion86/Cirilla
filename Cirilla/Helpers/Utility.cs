@@ -13,6 +13,7 @@ namespace Cirilla.Helpers
             {
                 { typeof(GMD), typeof(GMDViewModel) },
                 { typeof(ITM), typeof(ITMViewModel) },
+                { typeof(NBSC), typeof(NBSCViewModel) },
             };
 
         // Maps a MHFileType to a FileTypeTabItemViewModelBase
