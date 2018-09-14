@@ -7,9 +7,15 @@ namespace Cirilla.Core.Test.Tests
     public class TSSTests
     {
         [TestMethod]
-        public void Load__itemData()
+        public void Load__orig_data()
         {
-            TSS tss = new TSS(Utility.GetFullPath(@"orig_data.bin"));
+            TSS tss = new TSS(@"orig_data.bin");
+        }
+
+        [TestMethod]
+        public void Load__data()
+        {
+            TSS tss = new TSS(Utility.GetGameDirectoryPath(@"tss/data.bin"));
         }
     }
 }

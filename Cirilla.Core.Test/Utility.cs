@@ -7,7 +7,8 @@ namespace Cirilla.Core.Test
 {
     public static class Utility
     {
-        public static string GetFullPath(string path) => Path.Combine(Settings.MHWExtractedDataRoot, path);
+        public static string GetExtractedAssetPath(string path) => Path.Combine(Settings.MHWExtractedDataRoot, path);
+        public static string GetGameDirectoryPath(string path) => Path.Combine(Settings.MHWInstallDirectory, path);
 
         public static bool CheckFilesAreSame(string path1, string path2)
         {

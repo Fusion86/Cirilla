@@ -5,6 +5,7 @@
     <Version>0.0.5</Version>
     <Authors>Fusion86</Authors>
     <Company />
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

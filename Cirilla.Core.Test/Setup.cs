@@ -11,7 +11,9 @@ namespace Cirilla.Core.Test
         {
             Logging.LogProvider.SetCurrentLogProvider(new LogProvider());
 
-            if (testContext.Properties.TryGetValue("mhwExtractedDataRoot", out object obj))
+            object obj;
+
+            if (testContext.Properties.TryGetValue("mhwExtractedDataRoot", out obj))
             {
                 string str = (string)obj;
 
@@ -20,9 +22,21 @@ namespace Cirilla.Core.Test
 
                 Settings.MHWExtractedDataRoot = str;
             }
-            else
+
+            if (testContext.Properties.TryGetValue("mhwInstallDirectory", out obj))
             {
-                Assert.Fail("No .runsettings file selected or mhwExtractedDataRoot is not set!");
+                string str = (string)obj;
+
+                if (!Directory.Exists(str))
+                    Assert.Fail($"mhwInstallDirectory '{str}' doesn't exist!");
+
+                Settings.MHWInstallDirectory = str;
+            }
+
+
+            if (Settings.MHWExtractedDataRoot == null || Settings.MHWInstallDirectory == null)
+            {
+                Assert.Fail("No .runsettings file selected or some values are not set!");
             }
         }
     }

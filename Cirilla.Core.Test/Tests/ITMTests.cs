@@ -9,7 +9,7 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void Load__itemData()
         {
-            ITM itm = new ITM(Utility.GetFullPath(@"chunk0/common/item/itemData.itm"));
+            ITM itm = new ITM(Utility.GetExtractedAssetPath(@"chunk0/common/item/itemData.itm"));
         }
     }
 }
