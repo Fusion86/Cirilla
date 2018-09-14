@@ -18,4 +18,5 @@ Edit .gmd files in an okayish GUI.
 - izayoi
 - Zindea
 - FluffyQuack
+- v00d00y
 - Monster Hunter World Modding Discord
