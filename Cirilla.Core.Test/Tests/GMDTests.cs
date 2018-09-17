@@ -62,6 +62,12 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
+        public void Load__cm_status_eng()
+        {
+            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/cm_status_eng.gmd"));
+        }
+
+        [TestMethod]
         public void Rebuild__em_names_eng()
         {
             string origPath = Utility.GetFullPath(@"chunk0/common/text/em_names_eng.gmd");
@@ -132,6 +138,19 @@ namespace Cirilla.Core.Test.Tests
         {
             string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/w_sword_eng.gmd");
             string rebuildPath = "rebuild__w_sword_eng.gmd";
+
+            GMD gmd = new GMD(origPath);
+            gmd.Save(rebuildPath);
+
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
+        }
+
+        [TestMethod]
+        public void Rebuild__cm_status_eng()
+        {
+            string origPath = Utility.GetFullPath(@"chunk0/common/text/cm_status_eng.gmd");
+            string rebuildPath = "rebuild__cm_status_eng.gmd";
 
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);
