@@ -198,17 +198,19 @@ namespace Cirilla.Core.Models
         }
 
         /// <summary>
-        /// Add string with key
+        /// Add string with key to the end of the list, unless an index is given.
+        /// If an index is given the key/value will be added at that index, and all keys/values after that index will be moved one slot
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void AddString(string key, string value)
+        public void AddString(string key, string value, int index = -1)
         {
-            Entries.Add(new GMD_Entry
-            {
-                Key = key,
-                Value = value
-            });
+            GMD_Entry newEntry = new GMD_Entry { Key = key, Value = value };
+
+            if (index == -1)
+                Entries.Add(newEntry);
+            else
+                Entries.Insert(index, newEntry);
         }
 
         /// <summary>
