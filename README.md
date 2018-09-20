@@ -22,4 +22,5 @@ Edit .gmd files in an okayish GUI.
 - v00d00y - Documentation
 - Ambytes - [MHW](https://github.com/Ambytes/MHW)
 - AsteriskAmpersand - [MHW](https://github.com/AsteriskAmpersand/MHW)
+- SeiKur0 - [Cheat Engine Table](http://fearlessrevolution.com/viewtopic.php?t=7642)
 - Monster Hunter World Modding Discord

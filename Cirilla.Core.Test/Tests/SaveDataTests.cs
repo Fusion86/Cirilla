@@ -21,6 +21,12 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
+        public void SizeOf__SaveData_Appearance()
+        {
+            Assert.AreEqual(120, Marshal.SizeOf<SaveData_Appearance>());
+        }
+
+        [TestMethod]
         public void Load__SAVEDATA1000()
         {
             SaveData save = new SaveData(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");

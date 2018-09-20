@@ -90,6 +90,7 @@ namespace Cirilla.Core.Models
     public class SaveSlot
     {
         private SaveData_SaveSlot _native;
+        // TODO: Add class for Appearance that has a ref to _native (or something like that)
 
         public SaveSlot(Stream stream)
         {
