@@ -67,7 +67,15 @@ namespace Cirilla.ViewModels
                 item.Save();
         }
 
-        public bool CanSaveFile() => SelectedItem is FileTypeTabItemViewModelBase;
+        public bool CanSaveFile()
+        {
+            var item = SelectedItem as FileTypeTabItemViewModelBase;
+
+            if (item != null)
+                return item.CanSave();
+            else
+                return false;
+        }
 
         public void CloseFile(FileTypeTabItemViewModelBase item)
         {

@@ -9,8 +9,11 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] Magic; // 0x01'00'00'00
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 28, ArraySubType = UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk1;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.U1)]
+        public byte[] Hash;
 
         [Endian(Endianness.LittleEndian)]
         public long DataSize;

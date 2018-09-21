@@ -134,6 +134,26 @@
                             <uc:NBSCItemEditor Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedItem}"/>
                         </Grid>
                     </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:SaveDataViewModel}">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Selected hunter"/>
+                                <ComboBox ItemsSource="{Binding Items}" DisplayMemberPath="HunterName" SelectedItem="{Binding SelectedItem}"/>
+
+                                <TextBlock Text="SteamID" Margin="0, 10, 0, 0"/>
+                                <TextBlock Text="{Binding SteamId}"/>
+                            </StackPanel>
+
+                            <uc:SaveSlotEditor Grid.Column="2" DataContext="{Binding SelectedItem}"/>
+                        </Grid>
+                    </DataTemplate>
                 </TabControl.Resources>
 
                 <TabControl.ItemsSource>
@@ -170,6 +190,11 @@
                                         <TextBlock Text="izayoi, " ToolTip="Documentation"/>
                                         <TextBlock Text="Zindea, " ToolTip="Documentation"/>
                                         <TextBlock Text="FluffyQuack, " ToolTip="ARCTool and his FSM source code"/>
+                                        <TextBlock Text="hexhexhex, " ToolTip="Documentation"/>
+                                        <TextBlock Text="v00d00y, " ToolTip="Documentation"/>
+                                        <TextBlock Text="Ambytes, " ToolTip="MHW and documentation"/>
+                                        <TextBlock Text="AsteriskAmpersand, " ToolTip="MHW and documentation"/>
+                                        <TextBlock Text="SeiKur0, " ToolTip="Cheat Engine Table"/>
                                         <TextBlock Text="and the Monster Hunter World Modding Discord" ToolTip="Documentation and general help"/>
                                     </WrapPanel>
 

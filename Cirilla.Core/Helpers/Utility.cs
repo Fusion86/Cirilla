@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Cirilla.Core.Helpers
 {
@@ -27,10 +26,9 @@ namespace Cirilla.Core.Helpers
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader br = new BinaryReader(fs))
             {
-                byte[] bytes = br.ReadBytes(3);
-                string magic = Encoding.ASCII.GetString(bytes);
+                byte[] bytes = br.ReadBytes(4);
 
-                return _fileTypes.Where(x => x.Magics != null).FirstOrDefault(x => x.Magics.Contains(magic));
+                return _fileTypes.Where(x => x.Magic != null).FirstOrDefault(x => x.Magic.SequenceEqual(bytes));
             }
         }
 

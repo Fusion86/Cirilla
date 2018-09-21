@@ -104,6 +104,7 @@ namespace Cirilla.Core.Models
         public string HunterName
         {
             get => ExEncoding.UTF8.GetString(_native.HunterName).TrimEnd('\0');
+            set => throw new NotImplementedException();
         }
 
         public int HunterRank
@@ -138,6 +139,7 @@ namespace Cirilla.Core.Models
 
         #region Appearance
 
+        // Group all Appearance getters/setters
         public ISaveSlotAppearanceMethods Appearance => (ISaveSlotAppearanceMethods)this;
 
         // Oh boy do I miss preprocessor macros here...

@@ -90,6 +90,9 @@
     <Compile Include="UserControls\NBSCItemEditor.xaml.cs">
       <DependentUpon>NBSCItemEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SaveSlotEditor.xaml.cs">
+      <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
     <Compile Include="ViewModels\NBSCItemViewModel.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\FileTypeTabItemViewModelBase.cs" />
+    <Compile Include="ViewModels\SaveDataViewModel.cs" />
     <Compile Include="Windows\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\NBSCItemEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SaveSlotEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
