@@ -1,5 +1,4 @@
 ﻿using Cirilla.Core.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Cirilla.ViewModels
@@ -20,10 +19,10 @@ namespace Cirilla.ViewModels
 
         public override void Save(string path)
         {
-            throw new NotImplementedException();
+            _context.Save(path);
         }
 
-        public override bool CanSave() => false;
+        public override bool CanSave() => true;
 
         public override void Close()
         {
