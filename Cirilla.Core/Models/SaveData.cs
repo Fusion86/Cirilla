@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Cirilla.Core.Models
@@ -69,9 +70,68 @@ namespace Cirilla.Core.Models
             }
         }
 
-        public void Save(string path, bool compressed = true)
+        public void Save(string path, bool encrypt = true)
         {
-            throw new NotImplementedException();
+            Logger.Info($"Saving to '{path}'");
+
+            File.WriteAllBytes(path, GetBytes(encrypt));
+        }
+
+        public byte[] GetBytes(bool encrypt = true)
+        {
+            if (SaveSlots.Count > 3)
+                throw new Exception("You can't have more than 3 SaveSlots!");
+
+            byte[] bytes;
+
+            using (MemoryStream ms = new MemoryStream())
+            using (BinaryWriter bw = new BinaryWriter(ms))
+            {
+                Logger.Info("Writing bytes...");
+
+                bw.Write(_header.ToBytes());
+
+                bw.Write(_offset1);
+                bw.Write(_offset2);
+                bw.Write(_offset3);
+                bw.Write(_offset4);
+
+                bw.Write(_unk1);
+                bw.Write(_unk4);
+                
+                // Write SaveSlots
+                //foreach(SaveSlot slot in SaveSlots)
+                for (int i = 0; i < 3; i++)
+                {
+                    bw.Write(SaveSlots[i].GetBytes());
+                }
+
+                // Fill with zeroes (default array value)
+                bytes = new byte[3_267_796];
+                bw.Write(bytes);
+
+                // Copy full stream into array so that we can (encrypt and) return it
+                bytes = ms.ToArray();
+            }
+
+            // Update hash
+            // TODO: We can probably do this inside the MemoryStream, without array copying etc
+            byte[] checksum = new byte[20];
+            SHA1.Create()
+                .ComputeHash(bytes, 64, bytes.Length - 64)
+                .CopyTo(checksum, 0);
+
+            checksum = SwapBytes(checksum);
+            Array.Copy(checksum, 0, bytes, 12, 20);
+
+            if (encrypt)
+            {
+                bytes = SwapBytes(bytes);
+                bytes = _blowfish.Encrypt_ECB(bytes);
+                bytes = SwapBytes(bytes);
+            }
+
+            return bytes;
         }
 
         private static byte[] SwapBytes(byte[] bytes)
@@ -101,10 +161,24 @@ namespace Cirilla.Core.Models
             }
         }
 
+        public byte[] GetBytes() => _native.ToBytes();
+
         public string HunterName
         {
             get => ExEncoding.UTF8.GetString(_native.HunterName).TrimEnd('\0');
-            set => throw new NotImplementedException();
+
+            set
+            {
+                // Not sure if it is needed to make the array exactly 64 bytes large
+                byte[] bytes = new byte[64];
+                byte[] cStr = ExEncoding.UTF8.GetBytes(value);
+
+                if (cStr.Length > 64)
+                    throw new Exception("Name is too large!");
+
+                Array.Copy(cStr, bytes, cStr.Length);
+                _native.HunterName = bytes;
+            }
         }
 
         public int HunterRank
