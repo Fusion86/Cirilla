@@ -1,23 +1,25 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using System.IO;
+using System;
 
 namespace Cirilla.Core.Benchmark
 {
     [MemoryDiagnoser]
     public class ByteSwapBenchmark
     {
-        private byte[] bytes;
+        private byte[] _bytes;
 
         public ByteSwapBenchmark()
         {
-            bytes = File.ReadAllBytes(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");
+            Random random = new Random();
+            _bytes = new byte[80_000_000];
+            random.NextBytes(_bytes);
         }
 
         [Benchmark]
         public void ByteSwap()
         {
-            bytes = SwapBytes(bytes);
+            _bytes = SwapBytes(_bytes);
 
             byte[] SwapBytes(byte[] bytes)
             {
@@ -36,7 +38,7 @@ namespace Cirilla.Core.Benchmark
         [Benchmark]
         public void ByteSwapUnsafeRef()
         {
-            SwapBytes(ref bytes);
+            SwapBytes(ref _bytes);
 
             unsafe void SwapBytes(ref byte[] arr)
             {
