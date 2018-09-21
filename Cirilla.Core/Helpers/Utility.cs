@@ -1,4 +1,5 @@
-﻿using Cirilla.Core.Enums;
+﻿using System.Drawing;
+using Cirilla.Core.Enums;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,16 @@ namespace Cirilla.Core.Helpers
         {
             string ext = Path.GetExtension(path);
             return _fileTypes.Where(x => x.FileExtensions != null).FirstOrDefault(x => x.FileExtensions.Contains(ext));
+        }
+
+        public static Color ABGRToColor(byte[] bytes)
+        {
+            return Color.FromArgb(
+                bytes[0],
+                bytes[3],
+                bytes[2],
+                bytes[1]
+            );
         }
     }
 }

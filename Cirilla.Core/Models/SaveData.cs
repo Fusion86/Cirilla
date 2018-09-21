@@ -5,6 +5,7 @@ using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -87,10 +88,9 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot
+    public class SaveSlot : ISaveSlotAppearanceMethods
     {
         private SaveData_SaveSlot _native;
-        // TODO: Add class for Appearance that has a ref to _native (or something like that)
 
         public SaveSlot(Stream stream)
         {
@@ -135,5 +135,22 @@ namespace Cirilla.Core.Models
             get => _native.HunterXp;
             set => _native.HunterXp = value;
         }
+
+        #region Appearance
+
+        public ISaveSlotAppearanceMethods Appearance => (ISaveSlotAppearanceMethods) this;
+
+        Color ISaveSlotAppearanceMethods.MakeUp2Color
+        {
+            get => Utility.ABGRToColor(_native.Appearance.MakeUp2Color);
+            set => _native.Appearance.MakeUp2Color = value.ToABGR();
+        }
+
+        #endregion
+    }
+    
+    public interface ISaveSlotAppearanceMethods
+    {
+        Color MakeUp2Color { get; set; }
     }
 }
