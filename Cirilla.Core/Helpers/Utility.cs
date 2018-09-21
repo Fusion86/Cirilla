@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using Cirilla.Core.Enums;
+﻿using Cirilla.Core.Enums;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
