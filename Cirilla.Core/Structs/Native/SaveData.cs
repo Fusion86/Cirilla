@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Helpers;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Structs.Native
 {
@@ -117,12 +116,11 @@ namespace Cirilla.Core.Structs.Native
     {
         public long SteamId;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk1;
+        public long Created; // Timestamp
+        public byte Unk1;
         public uint HunterRank;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk2;
+        public uint PlayTime; // Seconds
+        public long LastUpdate; // Timestamp
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
         public byte[] HunterName;
