@@ -37,9 +37,10 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 44, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk2;
+        public SaveData_GuildCard GuildCard;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 497223, ArraySubType = UnmanagedType.U1)]
-        public byte[] GuildCards;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100, ArraySubType = UnmanagedType.U1)]
+        public SaveData_GuildCard[] CollectedGuildCards;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 510413, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk3;
@@ -109,5 +110,92 @@ namespace Cirilla.Core.Structs.Native
         public byte ClothingType;
         public byte Voice;
         public int Expression;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct SaveData_GuildCard
+    {
+        public long SteamId;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk1;
+        public uint HunterRank;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk2;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
+        public byte[] HunterName;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 54, ArraySubType = UnmanagedType.U1)]
+        public byte[] PrimaryGroup;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk3;
+        public SaveData_Appearance Appearance;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 208, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk4;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
+        public byte[] PalicoName;
+        public uint PalicoRank; // Actual rank minus 1?
+        public uint PalicoHealth;
+        public uint PalicoAttackMagic;
+        public uint PalicoAttackRaw;
+        public int Unk5;
+        public uint PalicoDefense;
+        public int PalicoFireResistance;
+        public int PalicoWaterResistance;
+        public int PalicoThunderResistance;
+        public int PalicoIceResistance;
+        public int PalicoDragonResistance;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 37, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk6;
+        public byte PalicoG1;
+        public byte PalicoG2;
+        public byte PalicoG3;
+        public byte PalicoG4;
+        public byte PalicoG5;
+        public byte PalicoG6;
+        public uint Unity;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk7;
+        public short QuestsCompletedLowRank;
+        public short QuestsCompletedHighRank;
+        public short InvestigationsCompleted;
+        public short ArenaQuestsCompleted;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 123, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk8;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256, ArraySubType = UnmanagedType.U1)]
+        public byte[] Greeting;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256, ArraySubType = UnmanagedType.U1)]
+        public byte[] Title;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 18, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk9;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3020, ArraySubType = UnmanagedType.U1)]
+        public byte[] ArenaStats;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128, ArraySubType = UnmanagedType.U1)]
+        public byte[] Captured;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128, ArraySubType = UnmanagedType.U1)]
+        public byte[] Slayed;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128, ArraySubType = UnmanagedType.U1)]
+        public byte[] Largest;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128, ArraySubType = UnmanagedType.U1)]
+        public byte[] Smallest;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
+        public byte[] Research;
     }
 }

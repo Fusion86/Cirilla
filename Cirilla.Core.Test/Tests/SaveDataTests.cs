@@ -27,6 +27,12 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
+        public void SizeOf__SaveData_GuildCard()
+        {
+            Assert.AreEqual(4923, Marshal.SizeOf<SaveData_GuildCard>());
+        }
+
+        [TestMethod]
         public void Load__SAVEDATA1000()
         {
             SaveData save = new SaveData(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");
