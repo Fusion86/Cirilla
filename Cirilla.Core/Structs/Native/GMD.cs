@@ -16,33 +16,17 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] Version; // Version?
-
-        [Endian(Endianness.LittleEndian)]
         public int Language;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk1; // Zero
 
         // 0x10
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk2; // Zero
-
-        [Endian(Endianness.LittleEndian)]
         public int KeyCount;
-
-        [Endian(Endianness.LittleEndian)]
         public int StringCount; // Usually the same as KeyCount
-
-        [Endian(Endianness.LittleEndian)]
         public int KeyBlockSize;
 
         // 0x20
-
-        [Endian(Endianness.LittleEndian)]
         public int StringBlockSize;
-
-        [Endian(Endianness.LittleEndian)]
         public int FilenameLength;
 
         // 0x28
@@ -55,33 +39,16 @@ namespace Cirilla.Core.Structs.Native
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct GMD_InfoTableEntry
     {
-        [Endian(Endianness.LittleEndian)]
         public int StringIndex;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk2;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk3;
-
-        [Endian(Endianness.LittleEndian)]
         public short Short1;
-
-        [Endian(Endianness.LittleEndian)]
         public short Short2;
 
         // 0x10
-
-        [Endian(Endianness.LittleEndian)]
         public int KeyOffset;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk6;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk7;
-
-        [Endian(Endianness.LittleEndian)]
         public int Unk8;
 
         // 0x20

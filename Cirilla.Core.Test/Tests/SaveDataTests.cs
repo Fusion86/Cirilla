@@ -44,18 +44,5 @@ namespace Cirilla.Core.Test.Tests
             if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
                 Assert.Fail("Hash doesn't match!");
         }
-
-        [TestMethod]
-        public void Rebuild__SAVEDATA1000_unencrypted()
-        {
-            string origPath = @"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000";
-            string rebuildPath = "rebuild__SAVEDATA1000_unencrypted";
-
-            SaveData save = new SaveData(origPath);
-            save.Save(rebuildPath, false);
-
-            if (!Utility.CheckFilesAreSame("SAVEDATA1000_unencrypted", rebuildPath))
-                Assert.Fail("Hash doesn't match!");
-        }
     }
 }
