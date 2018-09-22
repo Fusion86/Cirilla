@@ -143,7 +143,7 @@ namespace Cirilla.Core.Structs.Native
         public uint PalicoHealth;
         public uint PalicoAttackMagic;
         public uint PalicoAttackRaw;
-        public int Unk5;
+        public uint PalicoAffinity;
         public uint PalicoDefense;
         public int PalicoFireResistance;
         public int PalicoWaterResistance;
