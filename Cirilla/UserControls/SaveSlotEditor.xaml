@@ -11,11 +11,11 @@
         <TabItem Header="Basic">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -28,7 +28,7 @@
 
                 <TextBlock Text="Hunter Name" Grid.Row="0" Grid.Column="0"/>
                 <TextBox Text="{Binding HunterName}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" MaxLength="20"/>
-                
+
                 <!-- Row -->
 
                 <TextBlock Text="Hunter Rank" Grid.Row="2" Grid.Column="0"/>
@@ -46,9 +46,79 @@
                 <xctk:IntegerUpDown Value="{Binding HunterXp}" Grid.Row="4" Grid.Column="4" Minimum="0"/>
             </Grid>
         </TabItem>
-        
+
         <TabItem Header="Appearance">
-            
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="scrollViewer">
+                <StackPanel root:Spacing.Vertical="20" Width="{Binding ActualWidth, ElementName=scrollViewer}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Face Type" Grid.Row="0"/>
+                        <ListView Grid.Row="1" SelectionMode="Single" BorderThickness="0"
+                                  SelectedItem="{Binding Appearance.FaceType}"
+                                  ItemsSource="{Binding Appearance.PossibleValues.FaceTypes}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Image Width="100" Height="100">
+                                            <Image.Source>
+                                                <CroppedBitmap Source="L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_face01_ID.png"
+                                                               SourceRect="{Binding Rect}"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock Text="{Binding Value}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+
+                    <!-- Row -->
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Hair Type" Grid.Row="0"/>
+                        <ListView Grid.Row="1" SelectionMode="Single" BorderThickness="0"
+                                  SelectedItem="{Binding Appearance.HairType}"
+                                  ItemsSource="{Binding Appearance.PossibleValues.HairTypes}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Image Width="100" Height="100">
+                                            <Image.Source>
+                                                <CroppedBitmap Source="L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_hair01_ID.png"
+                                                               SourceRect="{Binding Rect}"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock Text="{Binding Value}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
         </TabItem>
     </TabControl>
 </UserControl>

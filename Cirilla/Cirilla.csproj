@@ -77,6 +77,7 @@
     <Compile Include="InMemorySink.cs" />
     <Compile Include="Helpers\Utility.cs" />
     <Compile Include="MarginSetter.cs" />
+    <Compile Include="Models\AppearancePossibleValues.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -93,6 +94,7 @@
     <Compile Include="UserControls\SaveSlotEditor.xaml.cs">
       <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AppearanceViewModel.cs" />
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
     <Compile Include="ViewModels\NBSCItemViewModel.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\FileTypeTabItemViewModelBase.cs" />
     <Compile Include="ViewModels\SaveDataViewModel.cs" />
+    <Compile Include="ViewModels\SaveSlotViewModel.cs" />
     <Compile Include="Windows\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>

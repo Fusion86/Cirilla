@@ -1,12 +1,12 @@
 ﻿using Cirilla.Core.Models;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Cirilla.ViewModels
 {
     class SaveDataViewModel : FileTypeTabItemViewModelBase
     {
-        public SaveSlot SelectedItem { get; set; }
-        public IReadOnlyList<SaveSlot> Items => _context.SaveSlots;
+        public SaveSlotViewModel SelectedItem { get; set; }
+        public ObservableCollection<SaveSlotViewModel> Items { get; } = new ObservableCollection<SaveSlotViewModel>();
 
         public long SteamId => _context.Header.SteamId;
 
@@ -15,6 +15,11 @@ namespace Cirilla.ViewModels
         public SaveDataViewModel(string path) : base(path)
         {
             _context = new SaveData(path);
+
+            foreach(var saveSlot in _context.SaveSlots)
+            {
+                Items.Add(new SaveSlotViewModel(saveSlot));
+            }
         }
 
         public override void Save(string path)
