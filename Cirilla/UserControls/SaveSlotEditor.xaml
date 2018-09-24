@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:root="clr-namespace:Cirilla"
+             xmlns:convert="clr-namespace:Cirilla.Converters"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convert:ColorToSolidBrushConverter x:Key="ColorConverter"/>
+    </UserControl.Resources>
+    
     <TabControl>
         <TabItem Header="Basic">
             <Grid Margin="5">
@@ -48,77 +53,83 @@
         </TabItem>
 
         <TabItem Header="Appearance">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="scrollViewer">
-                <StackPanel root:Spacing.Vertical="20" Width="{Binding ActualWidth, ElementName=scrollViewer}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="22"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Face Type" Grid.Row="0"/>
-                        <ListView Grid.Row="1" SelectionMode="Single" BorderThickness="0"
-                                  SelectedItem="{Binding Appearance.FaceType}"
-                                  ItemsSource="{Binding Appearance.PossibleValues.FaceTypes}"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <Image Width="100" Height="100">
-                                            <Image.Source>
-                                                <CroppedBitmap Source="L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_face01_ID.png"
-                                                               SourceRect="{Binding Rect}"/>
-                                            </Image.Source>
-                                        </Image>
-                                        <TextBlock Text="{Binding Value}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Grid>
-
-                    <!-- Row -->
+                <WrapPanel Grid.Column="0" root:Spacing.Vertical="10" root:Spacing.Horizontal="10">
+                    <!-- Face Type -->
 
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="22"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Hair Type" Grid.Row="0"/>
-                        <ListView Grid.Row="1" SelectionMode="Single" BorderThickness="0"
-                                  SelectedItem="{Binding Appearance.HairType}"
-                                  ItemsSource="{Binding Appearance.PossibleValues.HairTypes}"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
+                        <TextBlock Grid.Row="0" Text="Face" TextAlignment="Center"/>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <Image Width="100" Height="100">
-                                            <Image.Source>
-                                                <CroppedBitmap Source="L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_hair01_ID.png"
-                                                               SourceRect="{Binding Rect}"/>
-                                            </Image.Source>
-                                        </Image>
-                                        <TextBlock Text="{Binding Value}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                        <Image Grid.Row="1" Source="{Binding Appearance.FaceType.Image}"/>
+
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
                     </Grid>
-                </StackPanel>
-            </ScrollViewer>
+                    
+                    <!-- Hair Type + Color -->
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Hair" TextAlignment="Center" Grid.ColumnSpan="2"/>
+
+                        <Image Grid.Row="1" Source="{Binding Appearance.HairType.Image}"/>
+
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+
+                        <Rectangle Fill="{Binding Appearance.HairColor, Converter={StaticResource ColorConverter}}" Stroke="Black"
+                                   Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+
+                    <!-- Eyebrows + Brow Type + Color -->
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Eyebrows" TextAlignment="Center" Grid.ColumnSpan="2"/>
+
+                        <Image Grid.Row="1" Source="{Binding Appearance.EyebrowType.Image}"/>
+                        <Image Grid.Row="2" Source="{Binding Appearance.BrowType.Image}"/>
+
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="2" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+
+                        <Rectangle Fill="{Binding Appearance.EyebrowColor, Converter={StaticResource ColorConverter}}" Stroke="Black"
+                                   Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"/>
+                    </Grid>
+                </WrapPanel>
+
+                <GridSplitter Grid.Column="1" Background="LightGray" HorizontalAlignment="Stretch"/>
+
+                <Canvas Grid.Column="2" Background="WhiteSmoke"/>
+            </Grid>
         </TabItem>
     </TabControl>
 </UserControl>

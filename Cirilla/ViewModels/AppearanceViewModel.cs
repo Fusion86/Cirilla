@@ -1,6 +1,7 @@
 ﻿using Cirilla.Core.Models;
 using Cirilla.Models;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 
 namespace Cirilla.ViewModels
@@ -9,7 +10,7 @@ namespace Cirilla.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AppearancePossibleValues PossibleValues { get; } = AppearancePossibleValues.Default;
+        public AppearancePossibleValues PossibleValues { get; } = AppearancePossibleValues.Female;
 
         private SaveSlot _saveSlot;
 
@@ -29,6 +30,30 @@ namespace Cirilla.ViewModels
         {
             get => PossibleValues.HairTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.HairType);
             set => _saveSlot.Appearance.HairType = (short)value.Value;
+        }
+
+        public Color HairColor
+        {
+            get => _saveSlot.Appearance.HairColor;
+            set => _saveSlot.Appearance.HairColor = value;
+        }
+
+        public CharacterObjectTypeWithRect EyebrowType
+        {
+            get => PossibleValues.EyebrowTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.EyebrowType);
+            set => _saveSlot.Appearance.EyebrowType = (byte)value.Value;
+        }
+
+        public CharacterObjectTypeWithRect BrowType
+        {
+            get => PossibleValues.BrowTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.BrowType);
+            set => _saveSlot.Appearance.BrowType = (byte)value.Value;
+        }
+
+        public Color EyebrowColor
+        {
+            get => _saveSlot.Appearance.EyebrowColor;
+            set => _saveSlot.Appearance.EyebrowColor = value;
         }
     }
 }
