@@ -10,7 +10,7 @@ namespace Cirilla.ViewModels
 
         public long SteamId => _context.Header.SteamId;
 
-        private SaveData _context;
+        private readonly SaveData _context;
 
         public SaveDataViewModel(string path) : base(path)
         {

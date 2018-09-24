@@ -3,6 +3,7 @@ using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -522,6 +523,30 @@ namespace Cirilla.Core.Models
         #endregion
 
         #endregion
+
+        public string GetAppearanceJson()
+        {
+            AppearanceJsonModel model = new AppearanceJsonModel();
+            model.HairType = Appearance.HairType;
+            model.BrowType = Appearance.BrowType;
+            model.EyebrowType = Appearance.EyebrowType;
+            model.EyebrowColor = Appearance.EyebrowColor;
+
+            return JsonConvert.SerializeObject(model);
+        }
+
+        public void SetAppearanceFromJson()
+        {
+            throw new NotImplementedException();
+        }
+
+        private class AppearanceJsonModel
+        {
+            public int HairType { get; set; }
+            public int BrowType { get; set; }
+            public int EyebrowType { get; set; }
+            public Color EyebrowColor { get; set; }
+        }
     }
 
     public interface ISaveSlotAppearanceMethods

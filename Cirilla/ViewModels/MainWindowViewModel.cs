@@ -26,6 +26,9 @@ namespace Cirilla.ViewModels
         public RelayCommand OpenOptionsCommand { get; }
         public RelayCommand SaveInWorkingDirectoryCommand { get; }
 
+        public RelayCommand ImportAppearanceCommand { get; }
+        public RelayCommand ExportAppearanceCommand { get; }
+
         #endregion
 
         public MainWindowViewModel()
@@ -35,6 +38,9 @@ namespace Cirilla.ViewModels
             CloseFileCommand = new RelayCommand<FileTypeTabItemViewModelBase>(CloseFile, CanCloseFile);
             OpenOptionsCommand = new RelayCommand(OpenOptions, CanOpenOptions);
             SaveInWorkingDirectoryCommand = new RelayCommand(SaveInWorkingDirectory, CanSaveInWorkingDirectory);
+
+            ImportAppearanceCommand = new RelayCommand(null, () => false);
+            ExportAppearanceCommand = new RelayCommand(ExportAppearance, CanImportExportAppearance);
         }
 
         public void OpenFile()
@@ -145,6 +151,22 @@ namespace Cirilla.ViewModels
 
                 return match.Groups[1].Value;
             }
+        }
+
+        public void ExportAppearance()
+        {
+            SaveDataViewModel vm = SelectedItem as SaveDataViewModel;
+            new ExportAppearanceWindow(vm.SelectedItem).ShowDialog();
+        }
+
+        public bool CanImportExportAppearance()
+        {
+            SaveDataViewModel vm = SelectedItem as SaveDataViewModel;
+
+            if (vm != null)
+                return vm.SelectedItem != null;
+
+            return false;
         }
     }
 }

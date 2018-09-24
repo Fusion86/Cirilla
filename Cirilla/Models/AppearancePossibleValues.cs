@@ -8,6 +8,7 @@ namespace Cirilla.Models
     // TODO: Rename this, make not static, etc
     public class AppearancePossibleValues
     {
+        public static readonly AppearancePossibleValues Male;
         public static readonly AppearancePossibleValues Female;
 
         public List<CharacterObjectTypeWithRect> FaceTypes { get; } = new List<CharacterObjectTypeWithRect>();
@@ -55,6 +56,7 @@ namespace Cirilla.Models
                 female.BrowTypes.Add(new CharacterObjectTypeWithRect(i, img));
             }
 
+            Male = female;
             Female = female;
         }
 

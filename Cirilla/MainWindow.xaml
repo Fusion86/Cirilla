@@ -20,7 +20,7 @@
                 <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
             </MenuItem>
 
-            <MenuItem Header="Tools">
+            <MenuItem Header="Edit">
                 <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
             </MenuItem>
         </Menu>
@@ -143,13 +143,27 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Selected hunter"/>
-                                <ComboBox ItemsSource="{Binding Items}" DisplayMemberPath="HunterName" SelectedItem="{Binding SelectedItem}"/>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock Text="SteamID" Margin="0, 10, 0, 0"/>
-                                <TextBlock Text="{Binding SteamId}"/>
-                            </StackPanel>
+                                <StackPanel Grid.Row="0">
+                                    <TextBlock Text="Selected hunter"/>
+                                    <ComboBox ItemsSource="{Binding Items}" DisplayMemberPath="HunterName" SelectedItem="{Binding SelectedItem}"/>
+
+                                    <TextBlock Text="SteamID" Margin="0, 10, 0, 0"/>
+                                    <TextBlock Text="{Binding SteamId}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="2">
+                                    <TextBlock Text="Hunter Appearance" Margin="0, 0, 0, 5" TextAlignment="Center"/>
+                                    <Button Content="Import JSON" Command="{Binding Data.ImportAppearanceCommand, Source={StaticResource proxy}}"/>
+                                    <Button Content="Export JSON" BorderThickness="1, 0, 1, 1" Command="{Binding Data.ExportAppearanceCommand, Source={StaticResource proxy}}"/>
+                                </StackPanel>
+                            </Grid>
 
                             <uc:SaveSlotEditor Grid.Column="2" DataContext="{Binding SelectedItem}"/>
                         </Grid>
