@@ -70,7 +70,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             
-            <Button Grid.Column="0" Content="Close" Click="Close_Click"/>
+            <Button Grid.Column="0" Content="Close &amp; discard changes" Click="Close_Click"/>
             <Button Grid.Column="2" Content="Save" Click="Save_Click"/>
         </Grid>
     </Grid>
