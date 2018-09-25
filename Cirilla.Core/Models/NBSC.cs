@@ -35,7 +35,7 @@ namespace Cirilla.Core.Models
         {
             Logger.Info($"Saving NBSC to '{path}'");
 
-            using (FileStream fs = File.OpenWrite(path))
+            using (FileStream fs = File.Create(path))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 // Header

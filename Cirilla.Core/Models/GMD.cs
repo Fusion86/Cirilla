@@ -111,7 +111,7 @@ namespace Cirilla.Core.Models
 
             Update();
 
-            using (FileStream fs = File.OpenWrite(path))
+            using (FileStream fs = File.Create(path))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 Logger.Info("Writing bytes...");
