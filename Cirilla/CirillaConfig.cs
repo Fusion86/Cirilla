@@ -10,5 +10,6 @@ namespace Cirilla
 
         public string WorkingDirectoryPath { get; set; }
         public string ExtractedFilesPath { get; set; }
+        public bool UnsafeModusEnabled { get; set; }
     }
 }
