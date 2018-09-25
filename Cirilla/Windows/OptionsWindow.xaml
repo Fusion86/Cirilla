@@ -60,7 +60,7 @@
             </Grid>
 
             <CheckBox Grid.Row="3" Content="I know what I am doing, enable all unsafe features."
-                      Grid.ColumnSpan="2" Foreground="Gray" IsChecked="{root:SettingBinding UnsafeModusEnabled}"/>
+                      Grid.ColumnSpan="2" Foreground="Gray" IsChecked="{root:SettingBinding UnsafeModeEnabled}"/>
         </Grid>
 
         <Grid Grid.Row="1">

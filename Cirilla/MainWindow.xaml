@@ -42,7 +42,7 @@
                     <DataTemplate DataType="{x:Type vm:GMDViewModel}">
                         <TabControl Margin="5">
                             <TabItem Header="Header">
-                                <DataGrid ItemsSource="{Binding HeaderMetadata}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
+                                <DataGrid ItemsSource="{Binding HeaderMetadata}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0" CanUserAddRows="False">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
                                         <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -58,10 +58,10 @@
                             </TabItem>
 
                             <TabItem Header="Entries">
-                                <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
+                                <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0" CanUserDeleteRows="{root:SettingBinding UnsafeModeEnabled}" CanUserAddRows="False">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
-                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="{root:SettingBinding UnsafeModusEnabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="{root:SettingBinding UnsafeModeEnabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                         <DataGridTextColumn Header="Value" Binding="{Binding Value}">
                                             <DataGridTextColumn.EditingElementStyle>
                                                 <Style TargetType="TextBox">
@@ -94,6 +94,13 @@
                                             </Style.Triggers>
                                         </Style>
                                     </DataGrid.RowStyle>
+
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Add Normal entry (with key)" Command="{Binding AddEntryCommand}"/>
+                                            <MenuItem Header="Add Padding entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </TabItem>
                         </TabControl>

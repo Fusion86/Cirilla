@@ -234,12 +234,12 @@ namespace Cirilla.Core.Models
     public class GMD_Entry : IGMD_Entry
     {
         public GMD_InfoTableEntry InfoTableEntry;
-        public string Key { get; set; }
-        public string Value { get; set; }
+        public string Key { get; set; } = "CIRILLA_KEY";
+        public string Value { get; set; } = "Value";
     }
 
     public class GMD_EntryWithoutKey : IGMD_Entry
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = "Invalid Message";
     }
 }

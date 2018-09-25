@@ -10,11 +10,6 @@ namespace Cirilla.ViewModels
         public int Index { get; set; }
         public IGMD_Entry Entry { get; }
 
-        public GMDEntryViewModel()
-        {
-            Entry = new GMD_Entry { Key = "CIRILLA_KEY", Value = "CIRILLA_VALUE" };
-        }
-
         public GMDEntryViewModel(int index, IGMD_Entry entry)
         {
             Index = index;
