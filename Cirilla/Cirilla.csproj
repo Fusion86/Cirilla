@@ -76,6 +76,7 @@
     <Compile Include="BindingProxy.cs" />
     <Compile Include="CirillaConfig.cs" />
     <Compile Include="Converters\ColorToSolidBrushConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="InMemorySink.cs" />
     <Compile Include="Helpers\Utility.cs" />
     <Compile Include="MarginSetter.cs" />
@@ -97,6 +98,7 @@
       <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AppearanceViewModel.cs" />
+    <Compile Include="ViewModels\GMDEntryViewModel.cs" />
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
     <Compile Include="ViewModels\NBSCItemViewModel.cs" />

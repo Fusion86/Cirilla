@@ -31,7 +31,7 @@ namespace Cirilla
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 foreach (string file in files)
-                    if(File.Exists(file))
+                    if (File.Exists(file))
                         vm.OpenFile(file);
             }
         }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Cirilla"
+        xmlns:root="clr-namespace:Cirilla"
         mc:Ignorable="d"
         Title="Options" Height="300" Width="600" Closed="Window_Closed">
     <Grid Margin="10">
@@ -27,6 +27,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Working Directory" Grid.Row="0" Grid.Column="0"
@@ -39,7 +41,7 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox IsReadOnly="True" Text="{local:SettingBinding WorkingDirectoryPath}"/>
+                <TextBox IsReadOnly="True" Text="{root:SettingBinding WorkingDirectoryPath}"/>
                 <Button Grid.Column="2" Content="Select folder" Click="WorkingDirectory_Browse"/>
             </Grid>
 
@@ -53,9 +55,12 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox IsReadOnly="True" Text="{local:SettingBinding ExtractedFilesPath}"/>
+                <TextBox IsReadOnly="True" Text="{root:SettingBinding ExtractedFilesPath}"/>
                 <Button Grid.Column="2" Content="Select folder" Click="ExtractedFiles_Browse"/>
             </Grid>
+
+            <CheckBox Grid.Row="3" Content="I know what I am doing, enable all unsafe features."
+                      Grid.ColumnSpan="2" Foreground="Gray" IsChecked="{root:SettingBinding UnsafeModeEnabled}"/>
         </Grid>
 
         <Grid Grid.Row="1">
