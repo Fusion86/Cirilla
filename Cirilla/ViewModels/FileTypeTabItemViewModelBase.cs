@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Cirilla.ViewModels
 {
@@ -32,6 +33,11 @@ namespace Cirilla.ViewModels
         protected FileTypeTabItemViewModelBase(string path)
         {
             Filepath = path;
+        }
+
+        protected void NotifyPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
     }
 }

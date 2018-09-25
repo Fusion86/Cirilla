@@ -3,6 +3,8 @@ using Cirilla.Core.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Cirilla.ViewModels
 {
@@ -11,8 +13,12 @@ namespace Cirilla.ViewModels
         public ObservableCollection<KeyValueViewModel> HeaderMetadata { get; } = new ObservableCollection<KeyValueViewModel>();
         public ObservableCollection<GMDEntryViewModel> Entries { get; } = new ObservableCollection<GMDEntryViewModel>();
 
+        public string SearchQuery { get; set; }
+        public ICollectionView FilteredEntries { get; }
+
         public RelayCommand AddEntryCommand { get; }
         public RelayCommand AddEntryNoKeyCommand { get; }
+        public RelayCommand TriggerSearchCommand { get; }
 
         private GMD _context;
 
@@ -23,6 +29,7 @@ namespace Cirilla.ViewModels
             // Commands
             AddEntryCommand = new RelayCommand(AddEntry, IsUnsafeModeEnabled);
             AddEntryNoKeyCommand = new RelayCommand(AddEntryNoKey, IsUnsafeModeEnabled);
+            TriggerSearchCommand = new RelayCommand(TriggerSearch, () => true);
 
             // Header metadata
             HeaderMetadata.Add(new KeyValueViewModel("Version", "0x" + _context.Header.Version.ToHexString()));
@@ -37,6 +44,10 @@ namespace Cirilla.ViewModels
             // Entries
             for (int i = 0; i < _context.Entries.Count; i++)
                     Entries.Add(new GMDEntryViewModel(i, _context.Entries[i]));
+
+            // Filtered Entries CollectionViewSource
+            FilteredEntries = CollectionViewSource.GetDefaultView(Entries);
+            FilteredEntries.Filter = Entries_Filter;
         }
 
         public override void Save(string path)
@@ -80,5 +91,20 @@ namespace Cirilla.ViewModels
         }
 
         public bool IsUnsafeModeEnabled() => Properties.Settings.Default.Config.UnsafeModeEnabled;
+
+        public void TriggerSearch()
+        {
+            FilteredEntries.Refresh();
+            NotifyPropertyChanged(nameof(FilteredEntries));
+        }
+
+        private bool Entries_Filter(object obj)
+        {
+            if (string.IsNullOrEmpty(SearchQuery))
+                return true;
+
+            GMDEntryViewModel entry = obj as GMDEntryViewModel;
+            return entry.Value.IndexOf(SearchQuery, StringComparison.InvariantCultureIgnoreCase) != -1;
+        }
     }
 }
