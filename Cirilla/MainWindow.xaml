@@ -3,14 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Cirilla"
+        xmlns:root="clr-namespace:Cirilla"
         xmlns:vm="clr-namespace:Cirilla.ViewModels"
         xmlns:uc="clr-namespace:Cirilla.UserControls"
+        xmlns:convert="clr-namespace:Cirilla.Converters"
         mc:Ignorable="d"
         Title="Cirilla Toolkit" Height="450" Width="800">
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="vm"/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <convert:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
 
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="White">
@@ -20,7 +25,7 @@
                 <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
             </MenuItem>
 
-            <MenuItem Header="Tools">
+            <MenuItem Header="Edit">
                 <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
             </MenuItem>
         </Menu>
@@ -32,7 +37,7 @@
                     <CollectionViewSource x:Key="OpenItems" Source="{Binding OpenItems}"/>
 
                     <!-- Also a workaround -->
-                    <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                    <root:BindingProxy x:Key="proxy" Data="{Binding}" />
 
                     <DataTemplate DataType="{x:Type vm:GMDViewModel}">
                         <TabControl Margin="5">
@@ -55,7 +60,8 @@
                             <TabItem Header="Entries">
                                 <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
+                                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="{root:SettingBinding UnsafeModusEnabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                         <DataGridTextColumn Header="Value" Binding="{Binding Value}">
                                             <DataGridTextColumn.EditingElementStyle>
                                                 <Style TargetType="TextBox">
@@ -63,7 +69,7 @@
                                                 </Style>
                                             </DataGridTextColumn.EditingElementStyle>
 
-                                            <DataGridTextColumn.CellStyle>
+                                            <!--<DataGridTextColumn.CellStyle>
                                                 <Style TargetType="DataGridCell">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Key}" Value="">
@@ -72,7 +78,7 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </DataGridTextColumn.CellStyle>
+                                            </DataGridTextColumn.CellStyle>-->
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
 

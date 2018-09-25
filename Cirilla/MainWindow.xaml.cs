@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using Cirilla.Properties;
+using Cirilla.ViewModels;
+using Serilog;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -31,8 +33,18 @@ namespace Cirilla
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 foreach (string file in files)
-                    if(File.Exists(file))
+                    if (File.Exists(file))
                         vm.OpenFile(file);
+            }
+        }
+
+        private void GMDEntries_AddingNewItem(object sender, System.Windows.Controls.AddingNewItemEventArgs e)
+        {
+            GMDViewModel gmd = (vm.SelectedItem as GMDViewModel);
+
+            if (gmd != null)
+            {
+                e.NewItem = new GMDEntryViewModel { Index = gmd.Entries.Count, Key = "CIRILLA_KEY_" + gmd.Entries.Count };
             }
         }
     }
