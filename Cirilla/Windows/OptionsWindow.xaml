@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:root="clr-namespace:Cirilla"
         mc:Ignorable="d"
-        Title="Options" Height="300" Width="600" Closed="Window_Closed">
+        Title="Options" Height="300" Width="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -70,7 +70,6 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             
-            <Button Grid.Column="0" Content="Close &amp; discard changes" Click="Close_Click"/>
             <Button Grid.Column="2" Content="Save" Click="Save_Click"/>
         </Grid>
     </Grid>

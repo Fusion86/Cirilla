@@ -33,20 +33,9 @@ namespace Cirilla.Windows
             }
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Reload();
-            Close();
-        }
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Save();
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            Properties.Settings.Default.Reload();
         }
     }
 }

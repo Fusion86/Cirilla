@@ -43,7 +43,7 @@ namespace Cirilla.ViewModels
 
             // Entries
             for (int i = 0; i < _context.Entries.Count; i++)
-                    Entries.Add(new GMDEntryViewModel(i, _context.Entries[i]));
+                Entries.Add(new GMDEntryViewModel(i, _context.Entries[i]));
 
             // Filtered Entries CollectionViewSource
             FilteredEntries = CollectionViewSource.GetDefaultView(Entries);
@@ -90,7 +90,13 @@ namespace Cirilla.ViewModels
             Entries.Add(vm);
         }
 
-        public bool IsUnsafeModeEnabled() => Properties.Settings.Default.Config.UnsafeModeEnabled;
+        public bool IsUnsafeModeEnabled()
+        {
+            if (Properties.Settings.Default.Config != null)
+                return Properties.Settings.Default.Config.UnsafeModeEnabled;
+
+            return false;
+        }
 
         public void TriggerSearch()
         {
