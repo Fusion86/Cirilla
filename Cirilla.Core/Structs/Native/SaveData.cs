@@ -8,16 +8,17 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] Magic; // 0x01'00'00'00
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk1;
+        public uint Unk1;
+        public uint Unk2;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.U1)]
         public byte[] Hash;
+
         public long DataSize;
         public long SteamId;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk2;
+        public byte[] Padding; 
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -25,6 +26,7 @@ namespace Cirilla.Core.Structs.Native
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
         public byte[] HunterName;
+
         public int HunterRank;
         public int Zeni;
         public int ResearchPoints;
@@ -36,6 +38,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 44, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk2;
+
         public SaveData_GuildCard GuildCard;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100, ArraySubType = UnmanagedType.U1)]
@@ -52,6 +55,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] MakeUp2Color;
+
         public float MakeUp2PosX;
         public float MakeUp2PosY;
         public float MakeUp2SizeX;
@@ -62,6 +66,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] MakeUp1Color;
+
         public float MakeUp1PosX;
         public float MakeUp1PosY;
         public float MakeUp1SizeX;
@@ -81,6 +86,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] FacialHairColor;
+
         public byte EyeWidth;
         public byte EyeHeight;
         public byte SkinColorX;
@@ -105,6 +111,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] ClothingColor;
+
         public short HairType;
         public byte ClothingType;
         public byte Voice;
@@ -115,7 +122,6 @@ namespace Cirilla.Core.Structs.Native
     public struct SaveData_GuildCard
     {
         public long SteamId;
-
         public long Created; // Timestamp
         public byte Unk1;
         public uint HunterRank;
@@ -130,6 +136,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk3;
+
         public SaveData_Appearance Appearance;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 208, ArraySubType = UnmanagedType.U1)]
@@ -137,6 +144,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
         public byte[] PalicoName;
+
         public uint PalicoRank; // Actual rank minus 1?
         public uint PalicoHealth;
         public uint PalicoAttackMagic;
@@ -151,6 +159,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 37, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk6;
+
         public byte PalicoG1;
         public byte PalicoG2;
         public byte PalicoG3;
@@ -161,6 +170,7 @@ namespace Cirilla.Core.Structs.Native
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk7;
+
         public short QuestsCompletedLowRank;
         public short QuestsCompletedHighRank;
         public short InvestigationsCompleted;

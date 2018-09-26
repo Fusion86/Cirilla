@@ -23,10 +23,7 @@ namespace Cirilla.Core.Models
 
         private BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
         private SaveData_Header _header;
-        private long _offset1;
-        private long _offset2;
-        private long _offset3;
-        private long _offset4;
+        private long[] _sectionOffsets;
         private byte[] _unk1;
         private byte[] _unk4;
 
@@ -49,13 +46,14 @@ namespace Cirilla.Core.Models
                 if (_header.Magic[0] != 0x01 || _header.Magic[1] != 0x00 || _header.Magic[2] != 0x00 || _header.Magic[3] != 0x00)
                     throw new Exception("Decryption failed!");
 
-                _offset1 = br.ReadInt64();
-                _offset2 = br.ReadInt64();
-                _offset3 = br.ReadInt64();
-                _offset4 = br.ReadInt64();
+                _sectionOffsets = new long[4];
+                _sectionOffsets[0] = br.ReadInt64();
+                _sectionOffsets[1] = br.ReadInt64();
+                _sectionOffsets[2] = br.ReadInt64();
+                _sectionOffsets[3] = br.ReadInt64();
 
                 // There are 3 unk blocks here, to keep things simple we combine it into one block for now
-                _unk1 = br.ReadBytes((int)(_offset4 - _offset1));
+                _unk1 = br.ReadBytes((int)(_sectionOffsets[3] - _sectionOffsets[0]));
                 _unk4 = br.ReadBytes(20);
 
                 // Initialize SaveSlots
@@ -91,10 +89,10 @@ namespace Cirilla.Core.Models
 
                 bw.Write(_header.ToBytes());
 
-                bw.Write(_offset1);
-                bw.Write(_offset2);
-                bw.Write(_offset3);
-                bw.Write(_offset4);
+                bw.Write(_sectionOffsets[0]);
+                bw.Write(_sectionOffsets[1]);
+                bw.Write(_sectionOffsets[2]);
+                bw.Write(_sectionOffsets[3]);
 
                 bw.Write(_unk1);
                 bw.Write(_unk4);
