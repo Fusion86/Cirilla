@@ -8,6 +8,7 @@ namespace Cirilla.Models
     // TODO: Rename this, make not static, etc
     public class AppearancePossibleValues
     {
+        public static readonly AppearancePossibleValues Male;
         public static readonly AppearancePossibleValues Female;
 
         public List<CharacterObjectTypeWithRect> FaceTypes { get; } = new List<CharacterObjectTypeWithRect>();
@@ -20,7 +21,7 @@ namespace Cirilla.Models
             AppearancePossibleValues female = new AppearancePossibleValues();
 
             // Face types
-            BitmapSource src = new BitmapImage(new Uri(@"L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_face01_ID.png"));
+            BitmapSource src = new BitmapImage(new Uri(@"Images\thumb_face01_ID.png", UriKind.Relative));
             for (int i = 0; i < 24; i++)
             {
                 Int32Rect rect = GetRect(i, 5, 100, 100, 1, 2);
@@ -29,7 +30,7 @@ namespace Cirilla.Models
             }
 
             // Hair types
-            src = new BitmapImage(new Uri(@"L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_hair01_ID.png"));
+            src = new BitmapImage(new Uri(@"Images\thumb_hair01_ID.png", UriKind.Relative));
             for (int i = 0; i < 28; i++)
             {
                 Int32Rect rect = GetRect(i, 5, 100, 100, 1, 2);
@@ -38,7 +39,7 @@ namespace Cirilla.Models
             }
 
             // Eyebrow types
-            src = new BitmapImage(new Uri(@"L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_brow01_ID.png"));
+            src = new BitmapImage(new Uri(@"Images\thumb_brow01_ID.png", UriKind.Relative));
             for (int i = 0; i < 16; i++)
             {
                 Int32Rect rect = GetRect(i, 4, 120, 56, 3, 6);
@@ -47,7 +48,7 @@ namespace Cirilla.Models
             }
 
             // Brow types
-            src = new BitmapImage(new Uri(@"L:\MHWMods\154553\chunk0\ui\chara_make\tex\thumb_forehead01_ID.png"));
+            src = new BitmapImage(new Uri(@"Images\thumb_forehead01_ID.png", UriKind.Relative));
             for (int i = 0; i < 24; i++)
             {
                 Int32Rect rect = GetRect(i, 4, 120, 56, 3, 6);
@@ -55,6 +56,7 @@ namespace Cirilla.Models
                 female.BrowTypes.Add(new CharacterObjectTypeWithRect(i, img));
             }
 
+            Male = female;
             Female = female;
         }
 

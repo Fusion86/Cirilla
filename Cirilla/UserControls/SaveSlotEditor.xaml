@@ -71,9 +71,9 @@
 
                         <TextBlock Grid.Row="0" Text="Face" TextAlignment="Center"/>
 
-                        <Image Grid.Row="1" Source="{Binding Appearance.FaceType.Image}"/>
+                        <Image Grid.Row="1" Source="{Binding Appearance.FaceType.Image}" Width="100" ToolTip="Face Type"/>
 
-                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Appearance.FaceType.Value}" Foreground="White" Margin="5"/>
                     </Grid>
                     
                     <!-- Hair Type + Color -->
@@ -91,9 +91,9 @@
 
                         <TextBlock Grid.Row="0" Text="Hair" TextAlignment="Center" Grid.ColumnSpan="2"/>
 
-                        <Image Grid.Row="1" Source="{Binding Appearance.HairType.Image}"/>
+                        <Image Grid.Row="1" Source="{Binding Appearance.HairType.Image}" Width="100" ToolTip="Hair Type"/>
 
-                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Appearance.HairType.Value}" Foreground="White" Margin="5"/>
 
                         <Rectangle Fill="{Binding Appearance.HairColor, Converter={StaticResource ColorConverter}}" Stroke="Black"
                                    Grid.Column="1" Grid.Row="1"/>
@@ -109,17 +109,17 @@
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="107"/>
                             <ColumnDefinition Width="20"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Row="0" Text="Eyebrows" TextAlignment="Center" Grid.ColumnSpan="2"/>
 
-                        <Image Grid.Row="1" Source="{Binding Appearance.EyebrowType.Image}"/>
-                        <Image Grid.Row="2" Source="{Binding Appearance.BrowType.Image}"/>
+                        <Image Grid.Row="1" Source="{Binding Appearance.EyebrowType.Image}" ToolTip="Eyebrow Type"/>
+                        <Image Grid.Row="2" Source="{Binding Appearance.BrowType.Image}" ToolTip="Brow Type"/>
 
-                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
-                        <TextBlock Grid.Row="2" VerticalAlignment="Bottom" Text="1" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Appearance.EyebrowType.Value}" Foreground="White" Margin="5"/>
+                        <TextBlock Grid.Row="2" VerticalAlignment="Bottom" Text="{Binding Appearance.BrowType.Value}" Foreground="White" Margin="5"/>
 
                         <Rectangle Fill="{Binding Appearance.EyebrowColor, Converter={StaticResource ColorConverter}}" Stroke="Black"
                                    Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"/>

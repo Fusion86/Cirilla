@@ -10,7 +10,7 @@ namespace Cirilla.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AppearancePossibleValues PossibleValues { get; } = AppearancePossibleValues.Female;
+        public AppearancePossibleValues PossibleValues { get; }
 
         private SaveSlot _saveSlot;
 
@@ -18,6 +18,8 @@ namespace Cirilla.ViewModels
         public AppearanceViewModel(SaveSlot saveSlot)
         {
             _saveSlot = saveSlot;
+
+            PossibleValues = _saveSlot.Appearance.Gender == Gender.Male ? AppearancePossibleValues.Male : AppearancePossibleValues.Female;
         }
 
         public CharacterObjectTypeWithRect FaceType
