@@ -33,5 +33,32 @@ namespace Cirilla.Core.Models
                     Entries.Add(br.ReadStruct<EquipmentCrafting_Entry>());
             }
         }
+
+        public void Save(string path)
+        {
+            Logger.Info($"Saving to '{path}'");
+
+            Update();
+
+            using (FileStream fs = File.Create(path))
+            using (BinaryWriter bw = new BinaryWriter(fs))
+            {
+                Logger.Info("Writing bytes...");
+
+                bw.Write(_header.ToBytes());
+
+                foreach (var entry in Entries)
+                    bw.Write(entry.ToBytes());
+            }
+        }
+
+        private void Update()
+        {
+            Logger.Info("Updating header...");
+
+            Logger.Info("Current EntryCount = " + _header.EntryCount);
+            _header.EntryCount = (uint)Entries.Count;
+            Logger.Info("new EntryCount = " + _header.EntryCount);
+        }
     }
 }
