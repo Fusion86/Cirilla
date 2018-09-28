@@ -88,6 +88,9 @@
     </Compile>
     <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="Spacing.cs" />
+    <Compile Include="UserControls\EquipmentCraftingEditor.xaml.cs">
+      <DependentUpon>EquipmentCraftingEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\GMDEditor.xaml.cs">
       <DependentUpon>GMDEditor.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,8 @@
       <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AppearanceViewModel.cs" />
+    <Compile Include="ViewModels\EquipmentCraftingEntryViewModel.cs" />
+    <Compile Include="ViewModels\EquipmentCraftingViewModel.cs" />
     <Compile Include="ViewModels\GMDEntryViewModel.cs" />
     <Compile Include="ViewModels\GMDViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
@@ -128,6 +133,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\EquipmentCraftingEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\GMDEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

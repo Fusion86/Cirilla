@@ -99,6 +99,10 @@
                             <uc:SaveSlotEditor Grid.Column="2" DataContext="{Binding SelectedItem}"/>
                         </Grid>
                     </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type vm:EquipmentCraftingViewModel}">
+                        <uc:EquipmentCraftingEditor Margin="5" DataContext="{Binding}"/>
+                    </DataTemplate>
                 </TabControl.Resources>
 
                 <TabControl.ItemsSource>

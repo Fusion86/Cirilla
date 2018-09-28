@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Cirilla.UserControls.EquipmentCraftingEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:root="clr-namespace:Cirilla"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DataGrid ItemsSource="{Binding Entries}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0" CanUserDeleteRows="{root:SettingBinding UnsafeModeEnabled}" CanUserAddRows="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+            <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+            <DataGridTextColumn Header="KeyItem" Binding="{Binding KeyItem}"/>
+            <DataGridTextColumn Header="Rank" Binding="{Binding Rank}"/>
+            <DataGridTextColumn Header="Item 1 Id" Binding="{Binding Item1_Id}"/>
+            <DataGridTextColumn Header="Item 1 Quantity" Binding="{Binding Item1_Quantity}"/>
+            <DataGridTextColumn Header="Item 2 Id" Binding="{Binding Item2_Id}"/>
+            <DataGridTextColumn Header="Item 2 Quantity" Binding="{Binding Item2_Quantity}"/>
+            <DataGridTextColumn Header="Item 3 Id" Binding="{Binding Item3_Id}"/>
+            <DataGridTextColumn Header="Item 3 Quantity" Binding="{Binding Item3_Quantity}"/>
+            <DataGridTextColumn Header="Item 4 Id" Binding="{Binding Item4_Id}"/>
+            <DataGridTextColumn Header="Item 4 Quantity" Binding="{Binding Item4_Quantity}"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

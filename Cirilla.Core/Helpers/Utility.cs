@@ -28,7 +28,7 @@ namespace Cirilla.Core.Helpers
             {
                 byte[] bytes = br.ReadBytes(4);
 
-                return _fileTypes.Where(x => x.Magic != null).FirstOrDefault(x => x.Magic.SequenceEqual(bytes));
+                return _fileTypes.Where(x => x.Magic != null).FirstOrDefault(x => x.Magic.SequenceEqual(bytes.Take(x.Magic.Length)));
             }
         }
 
