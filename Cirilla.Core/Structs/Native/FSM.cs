@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Helpers;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Cirilla.Core.Structs.Native

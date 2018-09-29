@@ -94,6 +94,9 @@
     <Compile Include="UserControls\GMDEditor.xaml.cs">
       <DependentUpon>GMDEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ITMEditor.xaml.cs">
+      <DependentUpon>ITMEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ITMItemEditor.xaml.cs">
       <DependentUpon>ITMItemEditor.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\GMDEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ITMEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

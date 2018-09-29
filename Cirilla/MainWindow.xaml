@@ -39,24 +39,7 @@
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type vm:ITMViewModel}">
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Items"/>
-
-                            <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Items}" DisplayMemberPath="Id" SelectedItem="{Binding SelectedItem}"/>
-
-                            <uc:ITMItemEditor Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedItem}"/>
-                        </Grid>
+                        <uc:ITMEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type vm:NBSCViewModel}">
