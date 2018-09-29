@@ -100,8 +100,8 @@
     <Compile Include="UserControls\ITMItemEditor.xaml.cs">
       <DependentUpon>ITMItemEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\NBSCItemEditor.xaml.cs">
-      <DependentUpon>NBSCItemEditor.xaml</DependentUpon>
+    <Compile Include="UserControls\NBSCEditor.xaml.cs">
+      <DependentUpon>NBSCEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SaveSlotEditor.xaml.cs">
       <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
@@ -152,7 +152,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\NBSCItemEditor.xaml">
+    <Page Include="UserControls\NBSCEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

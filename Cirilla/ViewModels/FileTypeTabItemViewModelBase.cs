@@ -37,7 +37,7 @@ namespace Cirilla.ViewModels
 
         protected void NotifyPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

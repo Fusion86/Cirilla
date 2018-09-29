@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Cirilla.UserControls
 {
     /// <summary>
-    /// Interaction logic for NBSCItemEditor.xaml
+    /// Interaction logic for NBSCEditor.xaml
     /// </summary>
-    public partial class NBSCItemEditor : UserControl
+    public partial class NBSCEditor : UserControl
     {
-        public NBSCItemEditor()
+        public NBSCEditor()
         {
             InitializeComponent();
         }

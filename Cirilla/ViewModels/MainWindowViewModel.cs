@@ -7,6 +7,7 @@ using Cirilla.Helpers;
 using Cirilla.Windows;
 using System.IO;
 using System.Text.RegularExpressions;
+using Serilog;
 
 namespace Cirilla.ViewModels
 {
@@ -55,6 +56,7 @@ namespace Cirilla.ViewModels
             }
             catch (Exception ex)
             {
+                Log.Error(ex.Message);
                 MessageBox.Show(ex.Message, "Error");
             }
         }
