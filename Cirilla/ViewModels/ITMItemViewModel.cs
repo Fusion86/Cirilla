@@ -8,10 +8,12 @@ namespace Cirilla.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ITM_Item _item;
+        private ITMViewModel _parent;
 
-        public ITMItemViewModel(ITM_Item item)
+        public ITMItemViewModel(ITM_Item item, ITMViewModel parent)
         {
             _item = item;
+            _parent = parent;
         }
 
         public int Id
@@ -55,5 +57,7 @@ namespace Cirilla.ViewModels
             get => _item.StorageType;
             set => _item.StorageType = value;
         }
+
+        public string Name => _parent.GetNameForItem(this);
     }
 }

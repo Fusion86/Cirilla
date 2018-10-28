@@ -6,15 +6,25 @@
              xmlns:root="clr-namespace:Cirilla"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DataGrid ItemsSource="{Binding Items}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0" CanUserDeleteRows="{root:SettingBinding UnsafeModeEnabled}" CanUserAddRows="False">
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
-            <DataGridTextColumn Header="Buy Price" Binding="{Binding BuyPrice}"/>
-            <DataGridTextColumn Header="Sell Price" Binding="{Binding SellPrice}"/>
-            <DataGridTextColumn Header="SortingOrder" Binding="{Binding SortingOrder}"/>
-            <DataGridTextColumn Header="Rarity" Binding="{Binding Rarity}"/>
-            <DataGridTextColumn Header="SubType" Binding="{Binding SubType}"/>
-            <DataGridTextColumn Header="StorageType" Binding="{Binding StorageType}"/>
-        </DataGrid.Columns>
-    </DataGrid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="White">
+            <MenuItem Header="Link to GMD" ToolTip="Select a GMD inside common/text to display the character's names">
+                <MenuItem Header="Select GMD file on disk" Command="{Binding LinkGmdCommand}"/>
+                <MenuItem Header="Select already opened GMD" IsEnabled="False"/>
+            </MenuItem>
+        </Menu>
+
+        <DataGrid Margin="0, 5, 0, 0" ItemsSource="{Binding Items}" ColumnWidth="*" AutoGenerateColumns="False" BorderThickness="0" CanUserDeleteRows="{root:SettingBinding UnsafeModeEnabled}" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Buy Price" Binding="{Binding BuyPrice}"/>
+                <DataGridTextColumn Header="Sell Price" Binding="{Binding SellPrice}"/>
+                <DataGridTextColumn Header="SortingOrder" Binding="{Binding SortingOrder}"/>
+                <DataGridTextColumn Header="Rarity" Binding="{Binding Rarity}"/>
+                <DataGridTextColumn Header="SubType" Binding="{Binding SubType}"/>
+                <DataGridTextColumn Header="StorageType" Binding="{Binding StorageType}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </UserControl>
