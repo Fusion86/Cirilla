@@ -54,26 +54,26 @@ namespace Cirilla.Core.Structs.Native
         // All colors are ABGR
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] MakeUp2Color;
+        public byte[] Makeup2Color;
 
-        public float MakeUp2PosX;
-        public float MakeUp2PosY;
-        public float MakeUp2SizeX;
-        public float MakeUp2SizeY;
-        public float MakeUp2Glossy;
-        public float MakeUp2Metallic;
-        public int MakeUp2Type;
+        public float Makeup2PosX;
+        public float Makeup2PosY;
+        public float Makeup2SizeX;
+        public float Makeup2SizeY;
+        public float Makeup2Glossy;
+        public float Makeup2Metallic;
+        public int Makeup2Type;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] MakeUp1Color;
+        public byte[] Makeup1Color;
 
-        public float MakeUp1PosX;
-        public float MakeUp1PosY;
-        public float MakeUp1SizeX;
-        public float MakeUp1SizeY;
-        public float MakeUp1Glossy;
-        public float MakeUp1Metallic;
-        public int MakeUp1Type;
+        public float Makeup1PosX;
+        public float Makeup1PosY;
+        public float Makeup1SizeX;
+        public float Makeup1SizeY;
+        public float Makeup1Glossy;
+        public float Makeup1Metallic;
+        public int Makeup1Type;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] LeftEyeColor;

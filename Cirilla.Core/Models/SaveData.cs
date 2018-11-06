@@ -19,7 +19,7 @@ namespace Cirilla.Core.Models
         private const string ENCRYPTION_KEY = "xieZjoe#P2134-3zmaghgpqoe0z8$3azeq";
 
         public SaveData_Header Header => _header;
-        public List<SaveSlot> SaveSlots;
+        public List<SaveSlot> SaveSlots { get; private set; }
 
         private BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
         private SaveData_Header _header;
@@ -217,118 +217,118 @@ namespace Cirilla.Core.Models
         // Oh boy do I miss preprocessor macros here...
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
 
-        #region MakeUp2
+        #region Makeup2
 
-        Color ISaveSlotAppearanceMethods.MakeUp2Color
+        Color ISaveSlotAppearanceMethods.Makeup2Color
         {
-            get => Utility.ABGRToColor(_native.Appearance.MakeUp2Color);
-            set => _native.Appearance.MakeUp2Color = value.ToABGR();
+            get => Utility.ABGRToColor(_native.Appearance.Makeup2Color);
+            set => _native.Appearance.Makeup2Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ISaveSlotAppearanceMethods.MakeUp2PosX
+        float ISaveSlotAppearanceMethods.Makeup2PosX
         {
-            get => _native.Appearance.MakeUp2PosX;
-            set => _native.Appearance.MakeUp2PosX = value;
+            get => _native.Appearance.Makeup2PosX;
+            set => _native.Appearance.Makeup2PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ISaveSlotAppearanceMethods.MakeUp2PosY
+        float ISaveSlotAppearanceMethods.Makeup2PosY
         {
-            get => _native.Appearance.MakeUp2PosY;
-            set => _native.Appearance.MakeUp2PosY = value;
+            get => _native.Appearance.Makeup2PosY;
+            set => _native.Appearance.Makeup2PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.MakeUp2SizeX
+        float ISaveSlotAppearanceMethods.Makeup2SizeX
         {
-            get => _native.Appearance.MakeUp2SizeX;
-            set => _native.Appearance.MakeUp2SizeX = value;
+            get => _native.Appearance.Makeup2SizeX;
+            set => _native.Appearance.Makeup2SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.MakeUp2SizeY
+        float ISaveSlotAppearanceMethods.Makeup2SizeY
         {
-            get => _native.Appearance.MakeUp2SizeY;
-            set => _native.Appearance.MakeUp2SizeY = value;
+            get => _native.Appearance.Makeup2SizeY;
+            set => _native.Appearance.Makeup2SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ISaveSlotAppearanceMethods.MakeUp2Glossy
+        float ISaveSlotAppearanceMethods.Makeup2Glossy
         {
-            get => _native.Appearance.MakeUp2Glossy;
-            set => _native.Appearance.MakeUp2Glossy = value;
+            get => _native.Appearance.Makeup2Glossy;
+            set => _native.Appearance.Makeup2Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ISaveSlotAppearanceMethods.MakeUp2Metallic
+        float ISaveSlotAppearanceMethods.Makeup2Metallic
         {
-            get => _native.Appearance.MakeUp2Metallic;
-            set => _native.Appearance.MakeUp2Metallic = value;
+            get => _native.Appearance.Makeup2Metallic;
+            set => _native.Appearance.Makeup2Metallic = value;
         }
 
-        int ISaveSlotAppearanceMethods.MakeUp2Type
+        int ISaveSlotAppearanceMethods.Makeup2Type
         {
-            get => _native.Appearance.MakeUp2Type;
-            set => _native.Appearance.MakeUp2Type = value;
+            get => _native.Appearance.Makeup2Type;
+            set => _native.Appearance.Makeup2Type = value;
         }
 
         #endregion
 
-        #region MakeUp1
+        #region Makeup1
 
-        Color ISaveSlotAppearanceMethods.MakeUp1Color
+        Color ISaveSlotAppearanceMethods.Makeup1Color
         {
-            get => Utility.ABGRToColor(_native.Appearance.MakeUp1Color);
-            set => _native.Appearance.MakeUp1Color = value.ToABGR();
+            get => Utility.ABGRToColor(_native.Appearance.Makeup1Color);
+            set => _native.Appearance.Makeup1Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ISaveSlotAppearanceMethods.MakeUp1PosX
+        float ISaveSlotAppearanceMethods.Makeup1PosX
         {
-            get => _native.Appearance.MakeUp1PosX;
-            set => _native.Appearance.MakeUp1PosX = value;
+            get => _native.Appearance.Makeup1PosX;
+            set => _native.Appearance.Makeup1PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ISaveSlotAppearanceMethods.MakeUp1PosY
+        float ISaveSlotAppearanceMethods.Makeup1PosY
         {
-            get => _native.Appearance.MakeUp1PosY;
-            set => _native.Appearance.MakeUp1PosY = value;
+            get => _native.Appearance.Makeup1PosY;
+            set => _native.Appearance.Makeup1PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.MakeUp1SizeX
+        float ISaveSlotAppearanceMethods.Makeup1SizeX
         {
-            get => _native.Appearance.MakeUp1SizeX;
-            set => _native.Appearance.MakeUp1SizeX = value;
+            get => _native.Appearance.Makeup1SizeX;
+            set => _native.Appearance.Makeup1SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.MakeUp1SizeY
+        float ISaveSlotAppearanceMethods.Makeup1SizeY
         {
-            get => _native.Appearance.MakeUp1SizeY;
-            set => _native.Appearance.MakeUp1SizeY = value;
+            get => _native.Appearance.Makeup1SizeY;
+            set => _native.Appearance.Makeup1SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ISaveSlotAppearanceMethods.MakeUp1Glossy
+        float ISaveSlotAppearanceMethods.Makeup1Glossy
         {
-            get => _native.Appearance.MakeUp1Glossy;
-            set => _native.Appearance.MakeUp1Glossy = value;
+            get => _native.Appearance.Makeup1Glossy;
+            set => _native.Appearance.Makeup1Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ISaveSlotAppearanceMethods.MakeUp1Metallic
+        float ISaveSlotAppearanceMethods.Makeup1Metallic
         {
-            get => _native.Appearance.MakeUp1Metallic;
-            set => _native.Appearance.MakeUp1Metallic = value;
+            get => _native.Appearance.Makeup1Metallic;
+            set => _native.Appearance.Makeup1Metallic = value;
         }
 
-        int ISaveSlotAppearanceMethods.MakeUp1Type
+        int ISaveSlotAppearanceMethods.Makeup1Type
         {
-            get => _native.Appearance.MakeUp1Type;
-            set => _native.Appearance.MakeUp1Type = value;
+            get => _native.Appearance.Makeup1Type;
+            set => _native.Appearance.Makeup1Type = value;
         }
 
         #endregion
@@ -524,23 +524,23 @@ namespace Cirilla.Core.Models
 
     public interface ISaveSlotAppearanceMethods
     {
-        Color MakeUp2Color { get; set; }
-        float MakeUp2PosX { get; set; }
-        float MakeUp2PosY { get; set; }
-        float MakeUp2SizeX { get; set; }
-        float MakeUp2SizeY { get; set; }
-        float MakeUp2Glossy { get; set; }
-        float MakeUp2Metallic { get; set; }
-        int MakeUp2Type { get; set; }
+        Color Makeup2Color { get; set; }
+        float Makeup2PosX { get; set; }
+        float Makeup2PosY { get; set; }
+        float Makeup2SizeX { get; set; }
+        float Makeup2SizeY { get; set; }
+        float Makeup2Glossy { get; set; }
+        float Makeup2Metallic { get; set; }
+        int Makeup2Type { get; set; }
 
-        Color MakeUp1Color { get; set; }
-        float MakeUp1PosX { get; set; }
-        float MakeUp1PosY { get; set; }
-        float MakeUp1SizeX { get; set; }
-        float MakeUp1SizeY { get; set; }
-        float MakeUp1Glossy { get; set; }
-        float MakeUp1Metallic { get; set; }
-        int MakeUp1Type { get; set; }
+        Color Makeup1Color { get; set; }
+        float Makeup1PosX { get; set; }
+        float Makeup1PosY { get; set; }
+        float Makeup1SizeX { get; set; }
+        float Makeup1SizeY { get; set; }
+        float Makeup1Glossy { get; set; }
+        float Makeup1Metallic { get; set; }
+        int Makeup1Type { get; set; }
 
         Color LeftEyeColor { get; set; }
         Color RightEyeColor { get; set; }
