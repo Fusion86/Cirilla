@@ -61,7 +61,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
                             <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="{root:SettingBinding UnsafeModeEnabled, Converter={StaticResource InverseBooleanConverter}}"/>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}">
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
                                 <DataGridTextColumn.EditingElementStyle>
                                     <Style TargetType="TextBox">
                                         <Setter Property="AcceptsReturn" Value="true" />
