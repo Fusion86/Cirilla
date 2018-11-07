@@ -1,4 +1,5 @@
-﻿using Cirilla.Core.Models;
+﻿using Cirilla.Core.Enums;
+using Cirilla.Core.Models;
 using Cirilla.Models;
 using System.ComponentModel;
 using System.Drawing;
@@ -14,7 +15,7 @@ namespace Cirilla.ViewModels
 
         private SaveSlot _saveSlot;
 
-        // Can't bind to Appearance field directly because it's a struct, thats why we have the ISaveSlotAppearanceMethods
+        // Can't bind to Appearance field directly because it's a struct, thats why we have the IAppearanceMethods
         public AppearanceViewModel(SaveSlot saveSlot)
         {
             _saveSlot = saveSlot;

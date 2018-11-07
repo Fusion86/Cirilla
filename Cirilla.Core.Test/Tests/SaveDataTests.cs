@@ -1,6 +1,8 @@
 ﻿using Cirilla.Core.Models;
 using Cirilla.Core.Structs.Native;
+using Cirilla.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Test.Tests
@@ -23,7 +25,7 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void SizeOf__SaveData_Appearance()
         {
-            Assert.AreEqual(120, Marshal.SizeOf<SaveData_Appearance>());
+            Assert.AreEqual(120, Marshal.SizeOf<CharacterAppearance>());
         }
 
         [TestMethod]

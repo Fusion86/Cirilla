@@ -1,6 +1,9 @@
 ﻿using BlowFishCS;
+using Cirilla.Core.Attributes;
+using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
+using Cirilla.Core.Interfaces;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
@@ -146,7 +149,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : ISaveSlotAppearanceMethods
+    public class SaveSlot : IAppearanceProperties
     {
         private SaveData_SaveSlot _native;
 
@@ -212,62 +215,62 @@ namespace Cirilla.Core.Models
         #region Appearance
 
         // Group all Appearance getters/setters
-        public ISaveSlotAppearanceMethods Appearance => (ISaveSlotAppearanceMethods)this;
+        public IAppearanceProperties Appearance => (IAppearanceProperties)this;
 
         // Oh boy do I miss preprocessor macros here...
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
 
         #region Makeup2
 
-        Color ISaveSlotAppearanceMethods.Makeup2Color
+        Color IAppearanceProperties.Makeup2Color
         {
             get => Utility.ABGRToColor(_native.Appearance.Makeup2Color);
             set => _native.Appearance.Makeup2Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ISaveSlotAppearanceMethods.Makeup2PosX
+        float IAppearanceProperties.Makeup2PosX
         {
             get => _native.Appearance.Makeup2PosX;
             set => _native.Appearance.Makeup2PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ISaveSlotAppearanceMethods.Makeup2PosY
+        float IAppearanceProperties.Makeup2PosY
         {
             get => _native.Appearance.Makeup2PosY;
             set => _native.Appearance.Makeup2PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.Makeup2SizeX
+        float IAppearanceProperties.Makeup2SizeX
         {
             get => _native.Appearance.Makeup2SizeX;
             set => _native.Appearance.Makeup2SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.Makeup2SizeY
+        float IAppearanceProperties.Makeup2SizeY
         {
             get => _native.Appearance.Makeup2SizeY;
             set => _native.Appearance.Makeup2SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ISaveSlotAppearanceMethods.Makeup2Glossy
+        float IAppearanceProperties.Makeup2Glossy
         {
             get => _native.Appearance.Makeup2Glossy;
             set => _native.Appearance.Makeup2Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ISaveSlotAppearanceMethods.Makeup2Metallic
+        float IAppearanceProperties.Makeup2Metallic
         {
             get => _native.Appearance.Makeup2Metallic;
             set => _native.Appearance.Makeup2Metallic = value;
         }
 
-        int ISaveSlotAppearanceMethods.Makeup2Type
+        int IAppearanceProperties.Makeup2Type
         {
             get => _native.Appearance.Makeup2Type;
             set => _native.Appearance.Makeup2Type = value;
@@ -277,55 +280,55 @@ namespace Cirilla.Core.Models
 
         #region Makeup1
 
-        Color ISaveSlotAppearanceMethods.Makeup1Color
+        Color IAppearanceProperties.Makeup1Color
         {
             get => Utility.ABGRToColor(_native.Appearance.Makeup1Color);
             set => _native.Appearance.Makeup1Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ISaveSlotAppearanceMethods.Makeup1PosX
+        float IAppearanceProperties.Makeup1PosX
         {
             get => _native.Appearance.Makeup1PosX;
             set => _native.Appearance.Makeup1PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ISaveSlotAppearanceMethods.Makeup1PosY
+        float IAppearanceProperties.Makeup1PosY
         {
             get => _native.Appearance.Makeup1PosY;
             set => _native.Appearance.Makeup1PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.Makeup1SizeX
+        float IAppearanceProperties.Makeup1SizeX
         {
             get => _native.Appearance.Makeup1SizeX;
             set => _native.Appearance.Makeup1SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ISaveSlotAppearanceMethods.Makeup1SizeY
+        float IAppearanceProperties.Makeup1SizeY
         {
             get => _native.Appearance.Makeup1SizeY;
             set => _native.Appearance.Makeup1SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ISaveSlotAppearanceMethods.Makeup1Glossy
+        float IAppearanceProperties.Makeup1Glossy
         {
             get => _native.Appearance.Makeup1Glossy;
             set => _native.Appearance.Makeup1Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ISaveSlotAppearanceMethods.Makeup1Metallic
+        float IAppearanceProperties.Makeup1Metallic
         {
             get => _native.Appearance.Makeup1Metallic;
             set => _native.Appearance.Makeup1Metallic = value;
         }
 
-        int ISaveSlotAppearanceMethods.Makeup1Type
+        int IAppearanceProperties.Makeup1Type
         {
             get => _native.Appearance.Makeup1Type;
             set => _native.Appearance.Makeup1Type = value;
@@ -335,25 +338,25 @@ namespace Cirilla.Core.Models
 
         #region Colors 1
 
-        Color ISaveSlotAppearanceMethods.LeftEyeColor
+        Color IAppearanceProperties.LeftEyeColor
         {
             get => Utility.ABGRToColor(_native.Appearance.LeftEyeColor);
             set => _native.Appearance.LeftEyeColor = value.ToABGR();
         }
 
-        Color ISaveSlotAppearanceMethods.RightEyeColor
+        Color IAppearanceProperties.RightEyeColor
         {
             get => Utility.ABGRToColor(_native.Appearance.RightEyeColor);
             set => _native.Appearance.RightEyeColor = value.ToABGR();
         }
 
-        Color ISaveSlotAppearanceMethods.EyebrowColor
+        Color IAppearanceProperties.EyebrowColor
         {
             get => Utility.ABGRToColor(_native.Appearance.EyebrowColor);
             set => _native.Appearance.EyebrowColor = value.ToABGR();
         }
 
-        Color ISaveSlotAppearanceMethods.FacialHairColor
+        Color IAppearanceProperties.FacialHairColor
         {
             get => Utility.ABGRToColor(_native.Appearance.FacialHairColor);
             set => _native.Appearance.FacialHairColor = value.ToABGR();
@@ -363,49 +366,49 @@ namespace Cirilla.Core.Models
 
         #region Types 1
 
-        byte ISaveSlotAppearanceMethods.EyeWidth
+        byte IAppearanceProperties.EyeWidth
         {
             get => _native.Appearance.EyeWidth;
             set => _native.Appearance.EyeWidth = value;
         }
 
-        byte ISaveSlotAppearanceMethods.EyeHeight
+        byte IAppearanceProperties.EyeHeight
         {
             get => _native.Appearance.EyeHeight;
             set => _native.Appearance.EyeHeight = value;
         }
 
-        byte ISaveSlotAppearanceMethods.SkinColorX
+        byte IAppearanceProperties.SkinColorX
         {
             get => _native.Appearance.SkinColorX;
             set => _native.Appearance.SkinColorX = value;
         }
 
-        byte ISaveSlotAppearanceMethods.SkinColorY
+        byte IAppearanceProperties.SkinColorY
         {
             get => _native.Appearance.SkinColorY;
             set => _native.Appearance.SkinColorY = value;
         }
 
-        byte ISaveSlotAppearanceMethods.Age
+        byte IAppearanceProperties.Age
         {
             get => _native.Appearance.Age;
             set => _native.Appearance.Age = value;
         }
 
-        byte ISaveSlotAppearanceMethods.Wrinkles
+        byte IAppearanceProperties.Wrinkles
         {
             get => _native.Appearance.Wrinkles;
             set => _native.Appearance.Wrinkles = value;
         }
 
-        byte ISaveSlotAppearanceMethods.NoseHeight
+        byte IAppearanceProperties.NoseHeight
         {
             get => _native.Appearance.NoseHeight;
             set => _native.Appearance.NoseHeight = value;
         }
 
-        byte ISaveSlotAppearanceMethods.MouthHeight
+        byte IAppearanceProperties.MouthHeight
         {
             get => _native.Appearance.MouthHeight;
             set => _native.Appearance.MouthHeight = value;
@@ -415,7 +418,7 @@ namespace Cirilla.Core.Models
 
         #region Gender
 
-        Gender ISaveSlotAppearanceMethods.Gender
+        Gender IAppearanceProperties.Gender
         {
             get => (Gender)_native.Appearance.Gender;
             set => _native.Appearance.Gender = (int)value;
@@ -425,49 +428,49 @@ namespace Cirilla.Core.Models
 
         #region Types 2
 
-        byte ISaveSlotAppearanceMethods.BrowType
+        byte IAppearanceProperties.BrowType
         {
             get => _native.Appearance.BrowType;
             set => _native.Appearance.BrowType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.FaceType
+        byte IAppearanceProperties.FaceType
         {
             get => _native.Appearance.FaceType;
             set => _native.Appearance.FaceType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.EyeType
+        byte IAppearanceProperties.EyeType
         {
             get => _native.Appearance.EyeType;
             set => _native.Appearance.EyeType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.NoseType
+        byte IAppearanceProperties.NoseType
         {
             get => _native.Appearance.NoseType;
             set => _native.Appearance.NoseType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.MouthType
+        byte IAppearanceProperties.MouthType
         {
             get => _native.Appearance.MouthType;
             set => _native.Appearance.MouthType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.EyebrowType
+        byte IAppearanceProperties.EyebrowType
         {
             get => _native.Appearance.EyebrowType;
             set => _native.Appearance.EyebrowType = value;
         }
 
-        EyelashLength ISaveSlotAppearanceMethods.EyelashLength
+        EyelashLength IAppearanceProperties.EyelashLength
         {
             get => (EyelashLength)_native.Appearance.EyelashLength;
             set => _native.Appearance.EyelashLength = (byte)value;
         }
 
-        byte ISaveSlotAppearanceMethods.FacialHairType
+        byte IAppearanceProperties.FacialHairType
         {
             get => _native.Appearance.FacialHairType;
             set => _native.Appearance.FacialHairType = value;
@@ -477,13 +480,13 @@ namespace Cirilla.Core.Models
 
         #region Colors 2
 
-        Color ISaveSlotAppearanceMethods.HairColor
+        Color IAppearanceProperties.HairColor
         {
             get => Utility.ABGRToColor(_native.Appearance.HairColor);
             set => _native.Appearance.HairColor = value.ToABGR();
         }
 
-        Color ISaveSlotAppearanceMethods.ClothingColor
+        Color IAppearanceProperties.ClothingColor
         {
             get => Utility.ABGRToColor(_native.Appearance.ClothingColor);
             set => _native.Appearance.ClothingColor = value.ToABGR();
@@ -493,25 +496,25 @@ namespace Cirilla.Core.Models
 
         #region Types 3
 
-        short ISaveSlotAppearanceMethods.HairType
+        short IAppearanceProperties.HairType
         {
             get => _native.Appearance.HairType;
             set => _native.Appearance.HairType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.ClothingType
+        byte IAppearanceProperties.ClothingType
         {
             get => _native.Appearance.ClothingType;
             set => _native.Appearance.ClothingType = value;
         }
 
-        byte ISaveSlotAppearanceMethods.Voice
+        byte IAppearanceProperties.Voice
         {
             get => _native.Appearance.Voice;
             set => _native.Appearance.Voice = value;
         }
 
-        int ISaveSlotAppearanceMethods.Expression
+        int IAppearanceProperties.Expression
         {
             get => _native.Appearance.Expression;
             set => _native.Appearance.Expression = value;
@@ -520,86 +523,5 @@ namespace Cirilla.Core.Models
         #endregion
 
         #endregion
-    }
-
-    public interface ISaveSlotAppearanceMethods
-    {
-        Color Makeup2Color { get; set; }
-        float Makeup2PosX { get; set; }
-        float Makeup2PosY { get; set; }
-        float Makeup2SizeX { get; set; }
-        float Makeup2SizeY { get; set; }
-        float Makeup2Glossy { get; set; }
-        float Makeup2Metallic { get; set; }
-        int Makeup2Type { get; set; }
-
-        Color Makeup1Color { get; set; }
-        float Makeup1PosX { get; set; }
-        float Makeup1PosY { get; set; }
-        float Makeup1SizeX { get; set; }
-        float Makeup1SizeY { get; set; }
-        float Makeup1Glossy { get; set; }
-        float Makeup1Metallic { get; set; }
-        int Makeup1Type { get; set; }
-
-        Color LeftEyeColor { get; set; }
-        Color RightEyeColor { get; set; }
-        Color EyebrowColor { get; set; }
-        Color FacialHairColor { get; set; }
-
-        byte EyeWidth { get; set; }
-        byte EyeHeight { get; set; }
-        byte SkinColorX { get; set; }
-        byte SkinColorY { get; set; }
-        byte Age { get; set; }
-        byte Wrinkles { get; set; }
-        byte NoseHeight { get; set; }
-        byte MouthHeight { get; set; }
-
-        Gender Gender { get; set; }
-
-        byte BrowType { get; set; }
-        byte FaceType { get; set; }
-        byte EyeType { get; set; }
-        byte NoseType { get; set; }
-        byte MouthType { get; set; }
-        byte EyebrowType { get; set; }
-        EyelashLength EyelashLength { get; set; }
-        byte FacialHairType { get; set; }
-
-        Color HairColor { get; set; }
-        Color ClothingColor { get; set; }
-
-        short HairType { get; set; }
-        byte ClothingType { get; set; }
-        byte Voice { get; set; }
-        int Expression { get; set; }
-    }
-
-    public class RangeAttribute : Attribute
-    {
-        public float Min { get; }
-        public float Max { get; }
-        public string Description { get; }
-
-        public RangeAttribute(float min, float max, string description = null)
-        {
-            Min = min;
-            Max = max;
-            Description = description;
-        }
-    }
-
-    public enum Gender : int
-    {
-        Male = 0,
-        Female = 1
-    }
-
-    public enum EyelashLength : byte
-    {
-        Short = 0,
-        Average = 1,
-        Long = 2
     }
 }
