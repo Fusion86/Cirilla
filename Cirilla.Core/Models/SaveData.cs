@@ -191,7 +191,7 @@ namespace Cirilla.Core.Models
             }
         }
 
-        public int Zeni
+        public int Zenny
         {
             get => _native.Zeni;
             set => _native.Zeni = value;
