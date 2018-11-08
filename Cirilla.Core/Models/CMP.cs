@@ -16,7 +16,7 @@ namespace Cirilla.Core.Models
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly static byte[] EXPECTED_MAGIC = new byte[] { 0x07, 0x00 };
+        private readonly static byte[] CMP_MAGIC = new byte[] { 0x07, 0x00 };
 
         private CharacterAppearance _native;
 
@@ -29,10 +29,26 @@ namespace Cirilla.Core.Models
             {
                 byte[] magic = br.ReadBytes(2);
 
-                if (magic.SequenceEqual(EXPECTED_MAGIC) == false)
+                if (magic.SequenceEqual(CMP_MAGIC) == false)
                     throw new Exception("Not a CMP file!");
 
                 _native = br.ReadStruct<CharacterAppearance>();
+            }
+        }
+
+        public CMP(CharacterAppearance characterAppearance) : base(null)
+        {
+            Logger.Info("Creating new CMP based on CharacterAppearance data");
+            _native = characterAppearance;
+        }
+
+        public void Save(string path)
+        {
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            using (BinaryWriter bw = new BinaryWriter(fs))
+            {
+                bw.Write(CMP_MAGIC);
+                bw.Write(_native.ToBytes());
             }
         }
 

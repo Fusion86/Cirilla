@@ -104,7 +104,7 @@ namespace Cirilla.Core.Models
                 //foreach(SaveSlot slot in SaveSlots)
                 for (int i = 0; i < 3; i++)
                 {
-                    bw.Write(SaveSlots[i].GetBytes());
+                    bw.Write(SaveSlots[i].Native.ToBytes());
                 }
 
                 // Fill with zeroes (default array value)
@@ -151,6 +151,7 @@ namespace Cirilla.Core.Models
 
     public class SaveSlot : IAppearanceProperties
     {
+        public SaveData_SaveSlot Native => _native;
         private SaveData_SaveSlot _native;
 
         public SaveSlot(Stream stream)
@@ -161,8 +162,6 @@ namespace Cirilla.Core.Models
                 _native = br.ReadStruct<SaveData_SaveSlot>();
             }
         }
-
-        public byte[] GetBytes() => _native.ToBytes();
 
         public string HunterName
         {
