@@ -47,6 +47,11 @@
                                 <MenuItem Header="Add Normal entry (with key)" Command="{Binding AddEntryCommand}"/>
                                 <MenuItem Header="Add Padding entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
                             </MenuItem>
+
+                            <MenuItem Header="Import/Export CSV">
+                                <MenuItem Header="Import values from CSV" Command="{Binding ImportCsvCommand}"/>
+                                <MenuItem Header="Export values to CSV" Command="{Binding ExportCsvCommand}"/>
+                            </MenuItem>
                         </Menu>
 
                         <TextBlock Grid.Column="1" Text="Search: "/>

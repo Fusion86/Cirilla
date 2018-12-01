@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
-namespace Cirilla
+namespace Cirilla.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

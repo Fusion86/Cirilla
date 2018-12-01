@@ -1,9 +1,16 @@
-﻿using Cirilla.Core.Models;
-using Cirilla.Core.Extensions;
+﻿using Cirilla.Core.Extensions;
+using Cirilla.Core.Helpers;
+using Cirilla.Core.Models;
+using Cirilla.Models;
+using Cirilla.Windows;
+using CsvHelper;
+using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Cirilla.ViewModels
@@ -13,12 +20,16 @@ namespace Cirilla.ViewModels
         public ObservableCollection<KeyValueViewModel> HeaderMetadata { get; } = new ObservableCollection<KeyValueViewModel>();
         public ObservableCollection<GMDEntryViewModel> Entries { get; } = new ObservableCollection<GMDEntryViewModel>();
 
+        public string Name => _context.Filename;
+
         public string SearchQuery { get; set; }
         public ICollectionView FilteredEntries { get; }
 
         public RelayCommand AddEntryCommand { get; }
         public RelayCommand AddEntryNoKeyCommand { get; }
         public RelayCommand TriggerSearchCommand { get; }
+        public RelayCommand ImportCsvCommand { get; }
+        public RelayCommand ExportCsvCommand { get; }
 
         private GMD _context;
 
@@ -29,7 +40,9 @@ namespace Cirilla.ViewModels
             // Commands
             AddEntryCommand = new RelayCommand(AddEntry, IsUnsafeModeEnabled);
             AddEntryNoKeyCommand = new RelayCommand(AddEntryNoKey, IsUnsafeModeEnabled);
-            TriggerSearchCommand = new RelayCommand(TriggerSearch, () => true);
+            TriggerSearchCommand = new RelayCommand(TriggerSearch);
+            ImportCsvCommand = new RelayCommand(ImportCsv, CanImportCsv);
+            ExportCsvCommand = new RelayCommand(ExportCsv, CanExportCsv);
 
             // Header metadata
             HeaderMetadata.Add(new KeyValueViewModel("Version", "0x" + _context.Header.Version.ToHexString()));
@@ -102,6 +115,36 @@ namespace Cirilla.ViewModels
         {
             FilteredEntries.Refresh();
             NotifyPropertyChanged(nameof(FilteredEntries));
+        }
+
+        public bool CanImportCsv() => true;
+        public void ImportCsv()
+        {
+            new ImportCsvWindow(this).ShowDialog();
+        }
+
+        public bool CanExportCsv() => true;
+        public void ExportCsv()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "CSV UTF-8 (Comma delimited)|*.csv";
+            sfd.FileName = Name + ".csv";
+
+            if (sfd.ShowDialog() == true)
+            {
+                using (FileStream fs = new FileStream(sfd.FileName, FileMode.Create))
+                using (TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8))
+                using (CsvWriter writer = new CsvWriter(tw))
+                {
+                    writer.Configuration.Delimiter = ";";
+
+                    foreach (var entry in _context.Entries.OfType<GMD_Entry>())
+                    {
+                        writer.WriteRecord(new StringKeyValuePair(entry.Key, entry.Value));
+                        writer.NextRecord();
+                    }
+                }
+            }
         }
 
         private bool Entries_Filter(object obj)

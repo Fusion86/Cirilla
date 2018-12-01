@@ -40,6 +40,9 @@
     <Reference Include="Costura, Version=3.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.1.0\lib\net46\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="CsvHelper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.9.2.3\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
       <HintPath>..\packages\Ookii.Dialogs.1.0\lib\net35\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
@@ -81,6 +84,7 @@
     <Compile Include="Helpers\Utility.cs" />
     <Compile Include="MarginSetter.cs" />
     <Compile Include="Models\AppearancePossibleValues.cs" />
+    <Compile Include="Models\StringKeyValuePair.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -111,6 +115,7 @@
     <Compile Include="ViewModels\EquipmentCraftingViewModel.cs" />
     <Compile Include="ViewModels\GMDEntryViewModel.cs" />
     <Compile Include="ViewModels\GMDViewModel.cs" />
+    <Compile Include="ViewModels\ImportCsvWindowViewModel.cs" />
     <Compile Include="ViewModels\ITMItemViewModel.cs" />
     <Compile Include="ViewModels\NBSCItemViewModel.cs" />
     <Compile Include="ViewModels\NBSCViewModel.cs" />
@@ -119,12 +124,20 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\FileTypeTabItemViewModelBase.cs" />
+    <Compile Include="ViewModels\ObjectValuesDiffViewModel.cs" />
     <Compile Include="ViewModels\SaveDataViewModel.cs" />
     <Compile Include="ViewModels\SaveSlotViewModel.cs" />
+    <Compile Include="Windows\ImportCsvWindow.xaml.cs">
+      <DependentUpon>ImportCsvWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\ImportCsvWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -132,7 +145,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
