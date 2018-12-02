@@ -30,16 +30,19 @@ namespace Cirilla.Core.Models
         private byte[] _unk1;
         private byte[] _unk4;
 
-        public SaveData(string path) : base(path)
+        public SaveData(string path, bool isEncrypted = true) : base(path)
         {
             Logger.Info($"Loading '{path}'");
 
             byte[] bytes = File.ReadAllBytes(path);
 
-            // BlowFish decryption is rather slow, maybe C would be faster (using P/Invoke)?
-            bytes = SwapBytes(bytes);
-            bytes = _blowfish.Decrypt_ECB(bytes);
-            bytes = SwapBytes(bytes);
+            if (isEncrypted)
+            {
+                // BlowFish decryption is rather slow, maybe C would be faster (using P/Invoke)?
+                bytes = SwapBytes(bytes);
+                bytes = _blowfish.Decrypt_ECB(bytes);
+                bytes = SwapBytes(bytes);
+            }
 
             using (MemoryStream ms = new MemoryStream(bytes))
             using (BinaryReader br = new BinaryReader(ms))
@@ -71,14 +74,14 @@ namespace Cirilla.Core.Models
             }
         }
 
-        public void Save(string path, bool encrypt = true)
+        public void Save(string path, bool encrypt = true, bool fixChecksum = true)
         {
             Logger.Info($"Saving to '{path}'");
 
-            File.WriteAllBytes(path, GetBytes(encrypt));
+            File.WriteAllBytes(path, GetBytes(encrypt, fixChecksum));
         }
 
-        public byte[] GetBytes(bool encrypt = true)
+        public byte[] GetBytes(bool encrypt = true, bool fixChecksum = true)
         {
             if (SaveSlots.Count > 3)
                 throw new Exception("You can't have more than 3 SaveSlots!");
@@ -99,7 +102,7 @@ namespace Cirilla.Core.Models
 
                 bw.Write(_unk1);
                 bw.Write(_unk4);
-                
+
                 // Write SaveSlots
                 //foreach(SaveSlot slot in SaveSlots)
                 for (int i = 0; i < 3; i++)
@@ -115,15 +118,18 @@ namespace Cirilla.Core.Models
                 bytes = ms.ToArray();
             }
 
-            // Update hash
-            // TODO: We can probably do this inside the MemoryStream, without array copying etc
-            byte[] checksum = new byte[20];
-            SHA1.Create()
-                .ComputeHash(bytes, 64, bytes.Length - 64)
-                .CopyTo(checksum, 0);
+            if (fixChecksum)
+            {
+                // Update hash
+                // TODO: We can probably do this inside the MemoryStream, without array copying etc
+                byte[] checksum = new byte[20];
+                SHA1.Create()
+                    .ComputeHash(bytes, 64, bytes.Length - 64)
+                    .CopyTo(checksum, 0);
 
-            checksum = SwapBytes(checksum);
-            Array.Copy(checksum, 0, bytes, 12, 20);
+                checksum = SwapBytes(checksum);
+                Array.Copy(checksum, 0, bytes, 12, 20);
+            }
 
             if (encrypt)
             {

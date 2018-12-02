@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core", "Cirilla.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Benchmark", "Cirilla.Core.Benchmark\Cirilla.Core.Benchmark.csproj", "{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zireael", "Zireael\Zireael.csproj", "{897B299B-34AB-4822-8646-E9B34BA064E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaveTool", "SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,17 +39,22 @@ Global
 		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{897B299B-34AB-4822-8646-E9B34BA064E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{897B299B-34AB-4822-8646-E9B34BA064E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{897B299B-34AB-4822-8646-E9B34BA064E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{897B299B-34AB-4822-8646-E9B34BA064E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FD8304BD-F468-4229-8627-543085351B56} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
-		{897B299B-34AB-4822-8646-E9B34BA064E7} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{CF26C1F8-5F6E-461D-A115-C00C87ED9996} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}
