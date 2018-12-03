@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Cirilla.Core.Interfaces
 {
-    public interface IAppearanceProperties
+    public interface ICharacterAppearanceProperties
     {
         Color Makeup2Color { get; set; }
         float Makeup2PosX { get; set; }

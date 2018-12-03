@@ -20,43 +20,43 @@ namespace Cirilla.ViewModels
         {
             _saveSlot = saveSlot;
 
-            PossibleValues = _saveSlot.Appearance.Gender == Gender.Male ? AppearancePossibleValues.Male : AppearancePossibleValues.Female;
+            PossibleValues = _saveSlot.CharacterAppearance.Gender == Gender.Male ? AppearancePossibleValues.Male : AppearancePossibleValues.Female;
         }
 
         public CharacterObjectTypeWithRect FaceType
         {
-            get => PossibleValues.FaceTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.FaceType);
-            set => _saveSlot.Appearance.FaceType = (byte)value.Value;
+            get => PossibleValues.FaceTypes.FirstOrDefault(x => x.Value == _saveSlot.CharacterAppearance.FaceType);
+            set => _saveSlot.CharacterAppearance.FaceType = (byte)value.Value;
         }
 
         public CharacterObjectTypeWithRect HairType
         {
-            get => PossibleValues.HairTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.HairType);
-            set => _saveSlot.Appearance.HairType = (short)value.Value;
+            get => PossibleValues.HairTypes.FirstOrDefault(x => x.Value == _saveSlot.CharacterAppearance.HairType);
+            set => _saveSlot.CharacterAppearance.HairType = (short)value.Value;
         }
 
         public Color HairColor
         {
-            get => _saveSlot.Appearance.HairColor;
-            set => _saveSlot.Appearance.HairColor = value;
+            get => _saveSlot.CharacterAppearance.HairColor;
+            set => _saveSlot.CharacterAppearance.HairColor = value;
         }
 
         public CharacterObjectTypeWithRect EyebrowType
         {
-            get => PossibleValues.EyebrowTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.EyebrowType);
-            set => _saveSlot.Appearance.EyebrowType = (byte)value.Value;
+            get => PossibleValues.EyebrowTypes.FirstOrDefault(x => x.Value == _saveSlot.CharacterAppearance.EyebrowType);
+            set => _saveSlot.CharacterAppearance.EyebrowType = (byte)value.Value;
         }
 
         public CharacterObjectTypeWithRect BrowType
         {
-            get => PossibleValues.BrowTypes.FirstOrDefault(x => x.Value == _saveSlot.Appearance.BrowType);
-            set => _saveSlot.Appearance.BrowType = (byte)value.Value;
+            get => PossibleValues.BrowTypes.FirstOrDefault(x => x.Value == _saveSlot.CharacterAppearance.BrowType);
+            set => _saveSlot.CharacterAppearance.BrowType = (byte)value.Value;
         }
 
         public Color EyebrowColor
         {
-            get => _saveSlot.Appearance.EyebrowColor;
-            set => _saveSlot.Appearance.EyebrowColor = value;
+            get => _saveSlot.CharacterAppearance.EyebrowColor;
+            set => _saveSlot.CharacterAppearance.EyebrowColor = value;
         }
     }
 }

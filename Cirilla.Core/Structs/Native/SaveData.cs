@@ -34,10 +34,8 @@ namespace Cirilla.Core.Structs.Native
         public int PlayTime; // In seconds
         public int Unk1;
 
-        public CharacterAppearance Appearance;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 44, ArraySubType = UnmanagedType.U1)]
-        public byte[] Unk2;
+        public CharacterAppearance CharacterAppearance;
+        public PalicoAppearance PalicoAppearance;
 
         public SaveData_GuildCard GuildCard;
 

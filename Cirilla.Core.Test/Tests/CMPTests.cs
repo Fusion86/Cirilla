@@ -37,7 +37,7 @@ namespace Cirilla.Core.Test.Tests
             string cmpPath = "saveslot0.cmp";
 
             SaveData saveData = new SaveData(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");
-            CMP cmp = new CMP(saveData.SaveSlots[0].Native.Appearance);
+            CMP cmp = new CMP(saveData.SaveSlots[0].Native.CharacterAppearance);
 
             cmp.Save(cmpPath);
 

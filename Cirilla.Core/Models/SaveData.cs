@@ -155,7 +155,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : IAppearanceProperties
+    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties
     {
         public SaveData_SaveSlot Native => _native;
         private SaveData_SaveSlot _native;
@@ -217,315 +217,411 @@ namespace Cirilla.Core.Models
             set => _native.HunterXp = value;
         }
 
-        #region Appearance
+        #region Character Appearance
 
         // Group all Appearance getters/setters
-        public IAppearanceProperties Appearance => (IAppearanceProperties)this;
+        public ICharacterAppearanceProperties CharacterAppearance => (ICharacterAppearanceProperties)this;
 
         // Oh boy do I miss preprocessor macros here...
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
 
         #region Makeup2
 
-        Color IAppearanceProperties.Makeup2Color
+        Color ICharacterAppearanceProperties.Makeup2Color
         {
-            get => Utility.ABGRToColor(_native.Appearance.Makeup2Color);
-            set => _native.Appearance.Makeup2Color = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.Makeup2Color);
+            set => _native.CharacterAppearance.Makeup2Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float IAppearanceProperties.Makeup2PosX
+        float ICharacterAppearanceProperties.Makeup2PosX
         {
-            get => _native.Appearance.Makeup2PosX;
-            set => _native.Appearance.Makeup2PosX = value;
+            get => _native.CharacterAppearance.Makeup2PosX;
+            set => _native.CharacterAppearance.Makeup2PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float IAppearanceProperties.Makeup2PosY
+        float ICharacterAppearanceProperties.Makeup2PosY
         {
-            get => _native.Appearance.Makeup2PosY;
-            set => _native.Appearance.Makeup2PosY = value;
+            get => _native.CharacterAppearance.Makeup2PosY;
+            set => _native.CharacterAppearance.Makeup2PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float IAppearanceProperties.Makeup2SizeX
+        float ICharacterAppearanceProperties.Makeup2SizeX
         {
-            get => _native.Appearance.Makeup2SizeX;
-            set => _native.Appearance.Makeup2SizeX = value;
+            get => _native.CharacterAppearance.Makeup2SizeX;
+            set => _native.CharacterAppearance.Makeup2SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float IAppearanceProperties.Makeup2SizeY
+        float ICharacterAppearanceProperties.Makeup2SizeY
         {
-            get => _native.Appearance.Makeup2SizeY;
-            set => _native.Appearance.Makeup2SizeY = value;
+            get => _native.CharacterAppearance.Makeup2SizeY;
+            set => _native.CharacterAppearance.Makeup2SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float IAppearanceProperties.Makeup2Glossy
+        float ICharacterAppearanceProperties.Makeup2Glossy
         {
-            get => _native.Appearance.Makeup2Glossy;
-            set => _native.Appearance.Makeup2Glossy = value;
+            get => _native.CharacterAppearance.Makeup2Glossy;
+            set => _native.CharacterAppearance.Makeup2Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float IAppearanceProperties.Makeup2Metallic
+        float ICharacterAppearanceProperties.Makeup2Metallic
         {
-            get => _native.Appearance.Makeup2Metallic;
-            set => _native.Appearance.Makeup2Metallic = value;
+            get => _native.CharacterAppearance.Makeup2Metallic;
+            set => _native.CharacterAppearance.Makeup2Metallic = value;
         }
 
-        int IAppearanceProperties.Makeup2Type
+        int ICharacterAppearanceProperties.Makeup2Type
         {
-            get => _native.Appearance.Makeup2Type;
-            set => _native.Appearance.Makeup2Type = value;
+            get => _native.CharacterAppearance.Makeup2Type;
+            set => _native.CharacterAppearance.Makeup2Type = value;
         }
 
         #endregion
 
         #region Makeup1
 
-        Color IAppearanceProperties.Makeup1Color
+        Color ICharacterAppearanceProperties.Makeup1Color
         {
-            get => Utility.ABGRToColor(_native.Appearance.Makeup1Color);
-            set => _native.Appearance.Makeup1Color = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.Makeup1Color);
+            set => _native.CharacterAppearance.Makeup1Color = value.ToABGR();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float IAppearanceProperties.Makeup1PosX
+        float ICharacterAppearanceProperties.Makeup1PosX
         {
-            get => _native.Appearance.Makeup1PosX;
-            set => _native.Appearance.Makeup1PosX = value;
+            get => _native.CharacterAppearance.Makeup1PosX;
+            set => _native.CharacterAppearance.Makeup1PosX = value;
         }
 
         [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float IAppearanceProperties.Makeup1PosY
+        float ICharacterAppearanceProperties.Makeup1PosY
         {
-            get => _native.Appearance.Makeup1PosY;
-            set => _native.Appearance.Makeup1PosY = value;
+            get => _native.CharacterAppearance.Makeup1PosY;
+            set => _native.CharacterAppearance.Makeup1PosY = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float IAppearanceProperties.Makeup1SizeX
+        float ICharacterAppearanceProperties.Makeup1SizeX
         {
-            get => _native.Appearance.Makeup1SizeX;
-            set => _native.Appearance.Makeup1SizeX = value;
+            get => _native.CharacterAppearance.Makeup1SizeX;
+            set => _native.CharacterAppearance.Makeup1SizeX = value;
         }
 
         [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float IAppearanceProperties.Makeup1SizeY
+        float ICharacterAppearanceProperties.Makeup1SizeY
         {
-            get => _native.Appearance.Makeup1SizeY;
-            set => _native.Appearance.Makeup1SizeY = value;
+            get => _native.CharacterAppearance.Makeup1SizeY;
+            set => _native.CharacterAppearance.Makeup1SizeY = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float IAppearanceProperties.Makeup1Glossy
+        float ICharacterAppearanceProperties.Makeup1Glossy
         {
-            get => _native.Appearance.Makeup1Glossy;
-            set => _native.Appearance.Makeup1Glossy = value;
+            get => _native.CharacterAppearance.Makeup1Glossy;
+            set => _native.CharacterAppearance.Makeup1Glossy = value;
         }
 
         [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float IAppearanceProperties.Makeup1Metallic
+        float ICharacterAppearanceProperties.Makeup1Metallic
         {
-            get => _native.Appearance.Makeup1Metallic;
-            set => _native.Appearance.Makeup1Metallic = value;
+            get => _native.CharacterAppearance.Makeup1Metallic;
+            set => _native.CharacterAppearance.Makeup1Metallic = value;
         }
 
-        int IAppearanceProperties.Makeup1Type
+        int ICharacterAppearanceProperties.Makeup1Type
         {
-            get => _native.Appearance.Makeup1Type;
-            set => _native.Appearance.Makeup1Type = value;
+            get => _native.CharacterAppearance.Makeup1Type;
+            set => _native.CharacterAppearance.Makeup1Type = value;
         }
 
         #endregion
 
         #region Colors 1
 
-        Color IAppearanceProperties.LeftEyeColor
+        Color ICharacterAppearanceProperties.LeftEyeColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.LeftEyeColor);
-            set => _native.Appearance.LeftEyeColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.LeftEyeColor);
+            set => _native.CharacterAppearance.LeftEyeColor = value.ToABGR();
         }
 
-        Color IAppearanceProperties.RightEyeColor
+        Color ICharacterAppearanceProperties.RightEyeColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.RightEyeColor);
-            set => _native.Appearance.RightEyeColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.RightEyeColor);
+            set => _native.CharacterAppearance.RightEyeColor = value.ToABGR();
         }
 
-        Color IAppearanceProperties.EyebrowColor
+        Color ICharacterAppearanceProperties.EyebrowColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.EyebrowColor);
-            set => _native.Appearance.EyebrowColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.EyebrowColor);
+            set => _native.CharacterAppearance.EyebrowColor = value.ToABGR();
         }
 
-        Color IAppearanceProperties.FacialHairColor
+        Color ICharacterAppearanceProperties.FacialHairColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.FacialHairColor);
-            set => _native.Appearance.FacialHairColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.FacialHairColor);
+            set => _native.CharacterAppearance.FacialHairColor = value.ToABGR();
         }
 
         #endregion
 
         #region Types 1
 
-        byte IAppearanceProperties.EyeWidth
+        byte ICharacterAppearanceProperties.EyeWidth
         {
-            get => _native.Appearance.EyeWidth;
-            set => _native.Appearance.EyeWidth = value;
+            get => _native.CharacterAppearance.EyeWidth;
+            set => _native.CharacterAppearance.EyeWidth = value;
         }
 
-        byte IAppearanceProperties.EyeHeight
+        byte ICharacterAppearanceProperties.EyeHeight
         {
-            get => _native.Appearance.EyeHeight;
-            set => _native.Appearance.EyeHeight = value;
+            get => _native.CharacterAppearance.EyeHeight;
+            set => _native.CharacterAppearance.EyeHeight = value;
         }
 
-        byte IAppearanceProperties.SkinColorX
+        byte ICharacterAppearanceProperties.SkinColorX
         {
-            get => _native.Appearance.SkinColorX;
-            set => _native.Appearance.SkinColorX = value;
+            get => _native.CharacterAppearance.SkinColorX;
+            set => _native.CharacterAppearance.SkinColorX = value;
         }
 
-        byte IAppearanceProperties.SkinColorY
+        byte ICharacterAppearanceProperties.SkinColorY
         {
-            get => _native.Appearance.SkinColorY;
-            set => _native.Appearance.SkinColorY = value;
+            get => _native.CharacterAppearance.SkinColorY;
+            set => _native.CharacterAppearance.SkinColorY = value;
         }
 
-        byte IAppearanceProperties.Age
+        byte ICharacterAppearanceProperties.Age
         {
-            get => _native.Appearance.Age;
-            set => _native.Appearance.Age = value;
+            get => _native.CharacterAppearance.Age;
+            set => _native.CharacterAppearance.Age = value;
         }
 
-        byte IAppearanceProperties.Wrinkles
+        byte ICharacterAppearanceProperties.Wrinkles
         {
-            get => _native.Appearance.Wrinkles;
-            set => _native.Appearance.Wrinkles = value;
+            get => _native.CharacterAppearance.Wrinkles;
+            set => _native.CharacterAppearance.Wrinkles = value;
         }
 
-        byte IAppearanceProperties.NoseHeight
+        byte ICharacterAppearanceProperties.NoseHeight
         {
-            get => _native.Appearance.NoseHeight;
-            set => _native.Appearance.NoseHeight = value;
+            get => _native.CharacterAppearance.NoseHeight;
+            set => _native.CharacterAppearance.NoseHeight = value;
         }
 
-        byte IAppearanceProperties.MouthHeight
+        byte ICharacterAppearanceProperties.MouthHeight
         {
-            get => _native.Appearance.MouthHeight;
-            set => _native.Appearance.MouthHeight = value;
+            get => _native.CharacterAppearance.MouthHeight;
+            set => _native.CharacterAppearance.MouthHeight = value;
         }
 
         #endregion
 
         #region Gender
 
-        Gender IAppearanceProperties.Gender
+        Gender ICharacterAppearanceProperties.Gender
         {
-            get => (Gender)_native.Appearance.Gender;
-            set => _native.Appearance.Gender = (int)value;
+            get => (Gender)_native.CharacterAppearance.Gender;
+            set => _native.CharacterAppearance.Gender = (int)value;
         }
 
         #endregion
 
         #region Types 2
 
-        byte IAppearanceProperties.BrowType
+        byte ICharacterAppearanceProperties.BrowType
         {
-            get => _native.Appearance.BrowType;
-            set => _native.Appearance.BrowType = value;
+            get => _native.CharacterAppearance.BrowType;
+            set => _native.CharacterAppearance.BrowType = value;
         }
 
-        byte IAppearanceProperties.FaceType
+        byte ICharacterAppearanceProperties.FaceType
         {
-            get => _native.Appearance.FaceType;
-            set => _native.Appearance.FaceType = value;
+            get => _native.CharacterAppearance.FaceType;
+            set => _native.CharacterAppearance.FaceType = value;
         }
 
-        byte IAppearanceProperties.EyeType
+        byte ICharacterAppearanceProperties.EyeType
         {
-            get => _native.Appearance.EyeType;
-            set => _native.Appearance.EyeType = value;
+            get => _native.CharacterAppearance.EyeType;
+            set => _native.CharacterAppearance.EyeType = value;
         }
 
-        byte IAppearanceProperties.NoseType
+        byte ICharacterAppearanceProperties.NoseType
         {
-            get => _native.Appearance.NoseType;
-            set => _native.Appearance.NoseType = value;
+            get => _native.CharacterAppearance.NoseType;
+            set => _native.CharacterAppearance.NoseType = value;
         }
 
-        byte IAppearanceProperties.MouthType
+        byte ICharacterAppearanceProperties.MouthType
         {
-            get => _native.Appearance.MouthType;
-            set => _native.Appearance.MouthType = value;
+            get => _native.CharacterAppearance.MouthType;
+            set => _native.CharacterAppearance.MouthType = value;
         }
 
-        byte IAppearanceProperties.EyebrowType
+        byte ICharacterAppearanceProperties.EyebrowType
         {
-            get => _native.Appearance.EyebrowType;
-            set => _native.Appearance.EyebrowType = value;
+            get => _native.CharacterAppearance.EyebrowType;
+            set => _native.CharacterAppearance.EyebrowType = value;
         }
 
-        EyelashLength IAppearanceProperties.EyelashLength
+        EyelashLength ICharacterAppearanceProperties.EyelashLength
         {
-            get => (EyelashLength)_native.Appearance.EyelashLength;
-            set => _native.Appearance.EyelashLength = (byte)value;
+            get => (EyelashLength)_native.CharacterAppearance.EyelashLength;
+            set => _native.CharacterAppearance.EyelashLength = (byte)value;
         }
 
-        byte IAppearanceProperties.FacialHairType
+        byte ICharacterAppearanceProperties.FacialHairType
         {
-            get => _native.Appearance.FacialHairType;
-            set => _native.Appearance.FacialHairType = value;
+            get => _native.CharacterAppearance.FacialHairType;
+            set => _native.CharacterAppearance.FacialHairType = value;
         }
 
         #endregion
 
         #region Colors 2
 
-        Color IAppearanceProperties.HairColor
+        Color ICharacterAppearanceProperties.HairColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.HairColor);
-            set => _native.Appearance.HairColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.HairColor);
+            set => _native.CharacterAppearance.HairColor = value.ToABGR();
         }
 
-        Color IAppearanceProperties.ClothingColor
+        Color ICharacterAppearanceProperties.ClothingColor
         {
-            get => Utility.ABGRToColor(_native.Appearance.ClothingColor);
-            set => _native.Appearance.ClothingColor = value.ToABGR();
+            get => Utility.ABGRToColor(_native.CharacterAppearance.ClothingColor);
+            set => _native.CharacterAppearance.ClothingColor = value.ToABGR();
         }
 
         #endregion
 
         #region Types 3
 
-        short IAppearanceProperties.HairType
+        short ICharacterAppearanceProperties.HairType
         {
-            get => _native.Appearance.HairType;
-            set => _native.Appearance.HairType = value;
+            get => _native.CharacterAppearance.HairType;
+            set => _native.CharacterAppearance.HairType = value;
         }
 
-        byte IAppearanceProperties.ClothingType
+        byte ICharacterAppearanceProperties.ClothingType
         {
-            get => _native.Appearance.ClothingType;
-            set => _native.Appearance.ClothingType = value;
+            get => _native.CharacterAppearance.ClothingType;
+            set => _native.CharacterAppearance.ClothingType = value;
         }
 
-        byte IAppearanceProperties.Voice
+        byte ICharacterAppearanceProperties.Voice
         {
-            get => _native.Appearance.Voice;
-            set => _native.Appearance.Voice = value;
+            get => _native.CharacterAppearance.Voice;
+            set => _native.CharacterAppearance.Voice = value;
         }
 
-        int IAppearanceProperties.Expression
+        int ICharacterAppearanceProperties.Expression
         {
-            get => _native.Appearance.Expression;
-            set => _native.Appearance.Expression = value;
+            get => _native.CharacterAppearance.Expression;
+            set => _native.CharacterAppearance.Expression = value;
         }
 
         #endregion
+
+        #endregion
+
+        #region Palico Appearance
+
+        public IPalicoAppearanceProperties PalicoAppearance => (IPalicoAppearanceProperties)this;
+
+        Color IPalicoAppearanceProperties.PatternColor1
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor1);
+            set => _native.PalicoAppearance.PatternColor1 = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.PatternColor2
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor2);
+            set => _native.PalicoAppearance.PatternColor2 = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.PatternColor3
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor3);
+            set => _native.PalicoAppearance.PatternColor3 = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.FurColor
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.FurColor);
+            set => _native.PalicoAppearance.FurColor = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.LeftEyeColor
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.LeftEyeColor);
+            set => _native.PalicoAppearance.LeftEyeColor = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.RightEyeColor
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.RightEyeColor);
+            set => _native.PalicoAppearance.RightEyeColor = value.ToABGR();
+        }
+
+        Color IPalicoAppearanceProperties.ClothingColor
+        {
+            get => Utility.ABGRToColor(_native.PalicoAppearance.ClothingColor);
+            set => _native.PalicoAppearance.ClothingColor = value.ToABGR();
+        }
+
+        float IPalicoAppearanceProperties.FurLength
+        {
+            get => _native.PalicoAppearance.FurLength;
+            set => _native.PalicoAppearance.FurLength = value;
+        }
+
+        float IPalicoAppearanceProperties.FurThickness
+        {
+            get => _native.PalicoAppearance.FurThickness;
+            set => _native.PalicoAppearance.FurThickness = value;
+        }
+
+        byte IPalicoAppearanceProperties.PatternType
+        {
+            get => _native.PalicoAppearance.PatternType;
+            set => _native.PalicoAppearance.PatternType = value;
+        }
+
+        byte IPalicoAppearanceProperties.EyeType
+        {
+            get => _native.PalicoAppearance.EyeType;
+            set => _native.PalicoAppearance.EyeType = value;
+        }
+
+        byte IPalicoAppearanceProperties.EarType
+        {
+            get => _native.PalicoAppearance.EarType;
+            set => _native.PalicoAppearance.EarType = value;
+        }
+
+        byte IPalicoAppearanceProperties.TailType
+        {
+            get => _native.PalicoAppearance.TailType;
+            set => _native.PalicoAppearance.TailType = value;
+        }
+
+        ushort IPalicoAppearanceProperties.VoiceType
+        {
+            get => _native.PalicoAppearance.VoiceType;
+            set => _native.PalicoAppearance.VoiceType = value;
+        }
+
+        ushort IPalicoAppearanceProperties.VoicePitch
+        {
+            get => _native.PalicoAppearance.VoicePitch;
+            set => _native.PalicoAppearance.VoicePitch = value;
+        }
 
         #endregion
     }
