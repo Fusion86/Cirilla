@@ -4,11 +4,11 @@ namespace Cirilla.Core.Attributes
 {
     public class RangeAttribute : Attribute
     {
-        public float Min { get; }
-        public float Max { get; }
+        public object Min { get; }
+        public object Max { get; }
         public string Description { get; }
 
-        public RangeAttribute(float min, float max, string description = null)
+        public RangeAttribute(object min, object max, string description = null)
         {
             Min = min;
             Max = max;

@@ -587,36 +587,42 @@ namespace Cirilla.Core.Models
             set => _native.PalicoAppearance.FurThickness = value;
         }
 
+        [Range(0, 3)]
         byte IPalicoAppearanceProperties.PatternType
         {
             get => _native.PalicoAppearance.PatternType;
             set => _native.PalicoAppearance.PatternType = value;
         }
 
+        [Range(0, 5)]
         byte IPalicoAppearanceProperties.EyeType
         {
             get => _native.PalicoAppearance.EyeType;
             set => _native.PalicoAppearance.EyeType = value;
         }
 
+        [Range(0, 4)]
         byte IPalicoAppearanceProperties.EarType
         {
             get => _native.PalicoAppearance.EarType;
             set => _native.PalicoAppearance.EarType = value;
         }
 
+        [Range(0, 3)]
         byte IPalicoAppearanceProperties.TailType
         {
             get => _native.PalicoAppearance.TailType;
             set => _native.PalicoAppearance.TailType = value;
         }
 
+        [Range(0, 2)]
         ushort IPalicoAppearanceProperties.VoiceType
         {
             get => _native.PalicoAppearance.VoiceType;
             set => _native.PalicoAppearance.VoiceType = value;
         }
 
+        [Range(0, 0)]
         ushort IPalicoAppearanceProperties.VoicePitch
         {
             get => _native.PalicoAppearance.VoicePitch;
