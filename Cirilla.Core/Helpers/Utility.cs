@@ -38,13 +38,13 @@ namespace Cirilla.Core.Helpers
             return _fileTypes.Where(x => x.FileExtensions != null).FirstOrDefault(x => x.FileExtensions.Contains(ext));
         }
 
-        public static Color ABGRToColor(byte[] bytes)
+        public static Color RGBAToColor(byte[] bytes)
         {
             return Color.FromArgb(
-                bytes[0],
                 bytes[3],
-                bytes[2],
-                bytes[1]
+                bytes[0],
+                bytes[1],
+                bytes[2]
             );
         }
     }

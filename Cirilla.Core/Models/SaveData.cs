@@ -229,7 +229,7 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.Makeup2Color
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.Makeup2Color);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup2Color);
             set => _native.CharacterAppearance.Makeup2Color = value.ToABGR();
         }
 
@@ -287,7 +287,7 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.Makeup1Color
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.Makeup1Color);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup1Color);
             set => _native.CharacterAppearance.Makeup1Color = value.ToABGR();
         }
 
@@ -345,25 +345,25 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.LeftEyeColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.LeftEyeColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.LeftEyeColor);
             set => _native.CharacterAppearance.LeftEyeColor = value.ToABGR();
         }
 
         Color ICharacterAppearanceProperties.RightEyeColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.RightEyeColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.RightEyeColor);
             set => _native.CharacterAppearance.RightEyeColor = value.ToABGR();
         }
 
         Color ICharacterAppearanceProperties.EyebrowColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.EyebrowColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.EyebrowColor);
             set => _native.CharacterAppearance.EyebrowColor = value.ToABGR();
         }
 
         Color ICharacterAppearanceProperties.FacialHairColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.FacialHairColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.FacialHairColor);
             set => _native.CharacterAppearance.FacialHairColor = value.ToABGR();
         }
 
@@ -487,13 +487,13 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.HairColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.HairColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.HairColor);
             set => _native.CharacterAppearance.HairColor = value.ToABGR();
         }
 
         Color ICharacterAppearanceProperties.ClothingColor
         {
-            get => Utility.ABGRToColor(_native.CharacterAppearance.ClothingColor);
+            get => Utility.RGBAToColor(_native.CharacterAppearance.ClothingColor);
             set => _native.CharacterAppearance.ClothingColor = value.ToABGR();
         }
 
@@ -535,43 +535,43 @@ namespace Cirilla.Core.Models
 
         Color IPalicoAppearanceProperties.PatternColor1
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor1);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor1);
             set => _native.PalicoAppearance.PatternColor1 = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.PatternColor2
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor2);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor2);
             set => _native.PalicoAppearance.PatternColor2 = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.PatternColor3
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.PatternColor3);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor3);
             set => _native.PalicoAppearance.PatternColor3 = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.FurColor
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.FurColor);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.FurColor);
             set => _native.PalicoAppearance.FurColor = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.LeftEyeColor
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.LeftEyeColor);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.LeftEyeColor);
             set => _native.PalicoAppearance.LeftEyeColor = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.RightEyeColor
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.RightEyeColor);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.RightEyeColor);
             set => _native.PalicoAppearance.RightEyeColor = value.ToABGR();
         }
 
         Color IPalicoAppearanceProperties.ClothingColor
         {
-            get => Utility.ABGRToColor(_native.PalicoAppearance.ClothingColor);
+            get => Utility.RGBAToColor(_native.PalicoAppearance.ClothingColor);
             set => _native.PalicoAppearance.ClothingColor = value.ToABGR();
         }
 
@@ -586,36 +586,31 @@ namespace Cirilla.Core.Models
             get => _native.PalicoAppearance.FurThickness;
             set => _native.PalicoAppearance.FurThickness = value;
         }
-
-        [Range(0, 3)]
+        
         byte IPalicoAppearanceProperties.PatternType
         {
             get => _native.PalicoAppearance.PatternType;
             set => _native.PalicoAppearance.PatternType = value;
         }
-
-        [Range(0, 5)]
+        
         byte IPalicoAppearanceProperties.EyeType
         {
             get => _native.PalicoAppearance.EyeType;
             set => _native.PalicoAppearance.EyeType = value;
         }
-
-        [Range(0, 4)]
+        
         byte IPalicoAppearanceProperties.EarType
         {
             get => _native.PalicoAppearance.EarType;
             set => _native.PalicoAppearance.EarType = value;
         }
-
-        [Range(0, 3)]
+        
         byte IPalicoAppearanceProperties.TailType
         {
             get => _native.PalicoAppearance.TailType;
             set => _native.PalicoAppearance.TailType = value;
         }
-
-        [Range(0, 2)]
+        
         ushort IPalicoAppearanceProperties.VoiceType
         {
             get => _native.PalicoAppearance.VoiceType;

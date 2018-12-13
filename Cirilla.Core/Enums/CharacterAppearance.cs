@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cirilla.Core.Enums
+﻿namespace Cirilla.Core.Enums
 {
     public enum Gender : int
     {
