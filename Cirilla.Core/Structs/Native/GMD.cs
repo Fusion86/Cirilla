@@ -39,16 +39,16 @@ namespace Cirilla.Core.Structs.Native
     public struct GMD_InfoTableEntry
     {
         public int StringIndex;
-        public int Unk2;
-        public int Unk3;
-        public short Short1;
-        public short Short2;
+        public uint Hash1;
+        public uint Hash2;
+        public short Zero1;
+        public short Unk1; // Flag?
 
         // 0x10
         public int KeyOffset;
-        public int Unk6;
-        public int Unk7;
-        public int Unk8;
+        public int Zero2;
+        public int Zero3;
+        public int Zero4;
 
         // 0x20
     }

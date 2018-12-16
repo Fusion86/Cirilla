@@ -34,18 +34,14 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void Load__action_trial_eng()
         {
-            // Uses skipInvalidMessages
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd"));
-
             //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
         [TestMethod]
         public void Load__action_trial_ara()
         {
-            // Uses skipInvalidMessages and weird workaround (see Models/GMD.cs)
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_ara.gmd"));
-
             //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
         }
 
@@ -115,7 +111,6 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void Rebuild__action_trial_eng()
         {
-            // Uses skipInvalidMessages, rebuild file will not be the same since it removes the "Invalid Message" strings
             string origPath = Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd");
             string rebuildPath = "rebuild__action_trial_eng.gmd";
 
@@ -225,7 +220,6 @@ namespace Cirilla.Core.Test.Tests
         public void ReaddString__w_sword_eng()
         {
             // This won't display correctly in game, because the string order DOES matter
-
             string origPath = Utility.GetFullPath(@"chunk0/common/text/steam/w_sword_eng.gmd");
             string newPath = "removestring__w_sword_eng.gmd";
             string readdPath = "readdstring__w_sword_eng.gmd";

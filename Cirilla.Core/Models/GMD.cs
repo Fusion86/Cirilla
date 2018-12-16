@@ -3,6 +3,7 @@ using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
+using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,8 @@ namespace Cirilla.Core.Models
                 // Header
                 _header = br.ReadStruct<GMD_Header>();
 
-                if (_header.MagicString != "GMD") throw new Exception("Not a GMD file!");
+                if (_header.MagicString != "GMD")
+                    throw new Exception("Not a GMD file!");
 
                 // Log some info about the GMD language
                 if (Enum.IsDefined(typeof(EmLanguage), _header.Language))
@@ -75,9 +77,7 @@ namespace Cirilla.Core.Models
 
                 // Keys, this skips over the GMD_EntryWithoutKey entries
                 foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
-                {
                     entry.Key = br.ReadStringZero(ExEncoding.ASCII);
-                }
 
                 // Strings
                 string[] strings = new string[_header.StringCount];
@@ -166,12 +166,48 @@ namespace Cirilla.Core.Models
                 realEntries[i].InfoTableEntry.KeyOffset = realEntries[i - 1].InfoTableEntry.KeyOffset + realEntries[i - 1].Key.Length + 1; // +1 for szString end
             }
 
+            // Check and update hashes (CRC32 with bitwise complement, aka reverse each bit)
+            Logger.Info("Checking and updating hashes...");
+
+            foreach (var entry in realEntries)
+            {
+                byte[] keyBytes = ExEncoding.ASCII.GetBytes(entry.Key);
+
+                // Hash 1
+                byte[] input1 = new byte[keyBytes.Length * 2];
+                keyBytes.CopyTo(input1, 0);
+                keyBytes.CopyTo(input1, keyBytes.Length);
+
+                uint hash1 = ~Crc32Algorithm.Compute(input1);
+
+                if (entry.InfoTableEntry.Hash1 != hash1)
+                {
+                    Logger.Info($"Hash1 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash1:X04}\nNew hash: {hash1:X04}");
+                    entry.InfoTableEntry.Hash1 = hash1;
+                }
+
+                // Hash 2
+                byte[] input2 = new byte[keyBytes.Length * 3];
+                keyBytes.CopyTo(input2, 0);
+                keyBytes.CopyTo(input2, keyBytes.Length);
+                keyBytes.CopyTo(input2, keyBytes.Length * 2);
+
+                uint hash2 = ~Crc32Algorithm.Compute(input2);
+
+                // If hash1 doesn't match then this hash obviously doesn't match as well since they have the same input (InfoTableEntry.Key)
+                if (entry.InfoTableEntry.Hash2 != hash2)
+                {
+                    Logger.Info($"Hash2 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash2:X04}\nNew hash: {hash2:X04}");
+                    entry.InfoTableEntry.Hash2 = hash2;
+                }
+            }
+
             Logger.Info("Updating header...");
 
             // String Count
             Logger.Info("Current StringCount = " + _header.StringCount);
             _header.StringCount = Entries.Count;
-            Logger.Info("New StringCount = " + _header.StringCount);            // Key Count
+            Logger.Info("New StringCount = " + _header.StringCount); // Key Count
             Logger.Info("Current KeyCount = " + _header.KeyCount);
             _header.KeyCount = realEntries.Count;
             Logger.Info("New KeyCount = " + _header.KeyCount);
@@ -181,9 +217,7 @@ namespace Cirilla.Core.Models
 
             int newSize = 0;
             foreach (IGMD_Entry entry in Entries)
-            {
                 newSize += ExEncoding.UTF8.GetByteCount(entry.Value) + 1; // +1 because szString
-            }
 
             _header.StringBlockSize = newSize;
             Logger.Info("New StringBlockSize = " + _header.StringBlockSize);
