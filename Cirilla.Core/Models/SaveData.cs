@@ -187,6 +187,24 @@ namespace Cirilla.Core.Models
             }
         }
 
+        public string PalicoName
+        {
+            get => ExEncoding.UTF8.GetString(_native.GuildCard.PalicoName).TrimEnd('\0');
+
+            set
+            {
+                // Not sure if it is needed to make the array exactly 64 bytes large
+                byte[] bytes = new byte[64];
+                byte[] cStr = ExEncoding.UTF8.GetBytes(value);
+
+                if (cStr.Length > 64)
+                    throw new Exception("Name is too large!");
+
+                Array.Copy(cStr, bytes, cStr.Length);
+                //_native.PalicoName = bytes;
+            }
+        }
+
         public int HunterRank
         {
             get => _native.HunterRank;
@@ -230,7 +248,7 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.Makeup2Color
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup2Color);
-            set => _native.CharacterAppearance.Makeup2Color = value.ToABGR();
+            set => _native.CharacterAppearance.Makeup2Color = value.ToRgbaBytes();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
@@ -288,7 +306,7 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.Makeup1Color
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup1Color);
-            set => _native.CharacterAppearance.Makeup1Color = value.ToABGR();
+            set => _native.CharacterAppearance.Makeup1Color = value.ToRgbaBytes();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
@@ -346,25 +364,25 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.LeftEyeColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.LeftEyeColor);
-            set => _native.CharacterAppearance.LeftEyeColor = value.ToABGR();
+            set => _native.CharacterAppearance.LeftEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.RightEyeColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.RightEyeColor);
-            set => _native.CharacterAppearance.RightEyeColor = value.ToABGR();
+            set => _native.CharacterAppearance.RightEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.EyebrowColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.EyebrowColor);
-            set => _native.CharacterAppearance.EyebrowColor = value.ToABGR();
+            set => _native.CharacterAppearance.EyebrowColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.FacialHairColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.FacialHairColor);
-            set => _native.CharacterAppearance.FacialHairColor = value.ToABGR();
+            set => _native.CharacterAppearance.FacialHairColor = value.ToRgbaBytes();
         }
 
         #endregion
@@ -488,13 +506,13 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.HairColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.HairColor);
-            set => _native.CharacterAppearance.HairColor = value.ToABGR();
+            set => _native.CharacterAppearance.HairColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.ClothingColor
         {
             get => Utility.RGBAToColor(_native.CharacterAppearance.ClothingColor);
-            set => _native.CharacterAppearance.ClothingColor = value.ToABGR();
+            set => _native.CharacterAppearance.ClothingColor = value.ToRgbaBytes();
         }
 
         #endregion
@@ -536,43 +554,43 @@ namespace Cirilla.Core.Models
         Color IPalicoAppearanceProperties.PatternColor1
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor1);
-            set => _native.PalicoAppearance.PatternColor1 = value.ToABGR();
+            set => _native.PalicoAppearance.PatternColor1 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.PatternColor2
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor2);
-            set => _native.PalicoAppearance.PatternColor2 = value.ToABGR();
+            set => _native.PalicoAppearance.PatternColor2 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.PatternColor3
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor3);
-            set => _native.PalicoAppearance.PatternColor3 = value.ToABGR();
+            set => _native.PalicoAppearance.PatternColor3 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.FurColor
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.FurColor);
-            set => _native.PalicoAppearance.FurColor = value.ToABGR();
+            set => _native.PalicoAppearance.FurColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.LeftEyeColor
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.LeftEyeColor);
-            set => _native.PalicoAppearance.LeftEyeColor = value.ToABGR();
+            set => _native.PalicoAppearance.LeftEyeColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.RightEyeColor
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.RightEyeColor);
-            set => _native.PalicoAppearance.RightEyeColor = value.ToABGR();
+            set => _native.PalicoAppearance.RightEyeColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.ClothingColor
         {
             get => Utility.RGBAToColor(_native.PalicoAppearance.ClothingColor);
-            set => _native.PalicoAppearance.ClothingColor = value.ToABGR();
+            set => _native.PalicoAppearance.ClothingColor = value.ToRgbaBytes();
         }
 
         float IPalicoAppearanceProperties.FurLength

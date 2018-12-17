@@ -71,7 +71,7 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.Makeup2Color
         {
             get => Utility.RGBAToColor(_native.Makeup2Color);
-            set => _native.Makeup2Color = value.ToABGR();
+            set => _native.Makeup2Color = value.ToRgbaBytes();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
@@ -129,7 +129,7 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.Makeup1Color
         {
             get => Utility.RGBAToColor(_native.Makeup1Color);
-            set => _native.Makeup1Color = value.ToABGR();
+            set => _native.Makeup1Color = value.ToRgbaBytes();
         }
 
         [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
@@ -187,25 +187,25 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.LeftEyeColor
         {
             get => Utility.RGBAToColor(_native.LeftEyeColor);
-            set => _native.LeftEyeColor = value.ToABGR();
+            set => _native.LeftEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.RightEyeColor
         {
             get => Utility.RGBAToColor(_native.RightEyeColor);
-            set => _native.RightEyeColor = value.ToABGR();
+            set => _native.RightEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.EyebrowColor
         {
             get => Utility.RGBAToColor(_native.EyebrowColor);
-            set => _native.EyebrowColor = value.ToABGR();
+            set => _native.EyebrowColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.FacialHairColor
         {
             get => Utility.RGBAToColor(_native.FacialHairColor);
-            set => _native.FacialHairColor = value.ToABGR();
+            set => _native.FacialHairColor = value.ToRgbaBytes();
         }
 
         #endregion
@@ -329,13 +329,13 @@ namespace Cirilla.Core.Models
         Color ICharacterAppearanceProperties.HairColor
         {
             get => Utility.RGBAToColor(_native.HairColor);
-            set => _native.HairColor = value.ToABGR();
+            set => _native.HairColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.ClothingColor
         {
             get => Utility.RGBAToColor(_native.ClothingColor);
-            set => _native.ClothingColor = value.ToABGR();
+            set => _native.ClothingColor = value.ToRgbaBytes();
         }
 
         #endregion
