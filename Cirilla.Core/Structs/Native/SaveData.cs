@@ -42,8 +42,55 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100, ArraySubType = UnmanagedType.U1)]
         public SaveData_GuildCard[] CollectedGuildCards;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 510413, ArraySubType = UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 106038, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk2;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 63224, ArraySubType = UnmanagedType.U1)]
+        public byte[] ItemLoadouts;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk3;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 608, ArraySubType = UnmanagedType.U1)]
+        public byte[] ItemPouch;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 11200, ArraySubType = UnmanagedType.U1)]
+        public byte[] ItemBox;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 67992, ArraySubType = UnmanagedType.U1)]
+        public byte[] EquipmentSlots;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 148032, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk4;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
+        public byte[] PalicoName;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 540, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk5;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10500, ArraySubType = UnmanagedType.U1)]
+        public byte[] Investigations;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4025, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk6;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 60928, ArraySubType = UnmanagedType.U1)]
+        public byte[] EquipmentLoadout;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 25889, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk7;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 512, ArraySubType = UnmanagedType.U1)]
+        public byte[] ClaimedDLC;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 469, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk8;
+
+        public byte IsActiveSlot; // 0x80 (128) = yes
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10383, ArraySubType = UnmanagedType.U1)]
+        public byte[] Unk9;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

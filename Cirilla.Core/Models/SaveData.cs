@@ -189,7 +189,7 @@ namespace Cirilla.Core.Models
 
         public string PalicoName
         {
-            get => ExEncoding.UTF8.GetString(_native.GuildCard.PalicoName).TrimEnd('\0');
+            get => ExEncoding.UTF8.GetString(_native.PalicoName).TrimEnd('\0');
 
             set
             {
@@ -201,7 +201,7 @@ namespace Cirilla.Core.Models
                     throw new Exception("Name is too large!");
 
                 Array.Copy(cStr, bytes, cStr.Length);
-                //_native.PalicoName = bytes;
+                _native.PalicoName = bytes;
             }
         }
 
