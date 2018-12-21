@@ -37,9 +37,9 @@ namespace Cirilla.Core.Models
             byte[] bytes = File.ReadAllBytes(path);
 
             // 0x01 00 00 00 == decrypted, something else means that it's encrypted
-            bool decrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;          
+            bool isUnencrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;          
 
-            if (!decrypted)
+            if (!isUnencrypted)
             {
                 // BlowFish decryption is rather slow, maybe C would be faster (using P/Invoke)?
                 bytes = SwapBytes(bytes);
