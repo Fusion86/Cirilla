@@ -36,7 +36,7 @@ namespace Cirilla.Core.Models
 
             byte[] bytes = File.ReadAllBytes(path);
 
-            // 0x01 00 00 00 == decrypted, something else means that it's encrypted
+            // 0x01 00 00 00 == decrypted, something else means that it's encrypted
             bool isUnencrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;          
 
             if (!isUnencrypted)
