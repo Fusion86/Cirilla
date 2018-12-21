@@ -39,8 +39,8 @@
                 <TextBlock Text="Hunter Rank" Grid.Row="2" Grid.Column="0"/>
                 <xctk:IntegerUpDown Value="{Binding HunterRank}" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="999"/>
 
-                <TextBlock Text="Zeni" Grid.Row="2" Grid.Column="3"/>
-                <xctk:IntegerUpDown Value="{Binding Zeni}" Grid.Row="2" Grid.Column="4" Minimum="0"/>
+                <TextBlock Text="Zenny" Grid.Row="2" Grid.Column="3"/>
+                <xctk:IntegerUpDown Value="{Binding Zenny}" Grid.Row="2" Grid.Column="4" Minimum="0"/>
 
                 <!-- Row -->
 

@@ -14,15 +14,25 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="White">
-            <MenuItem Header="File">
-                <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
-                <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
-                <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
-            </MenuItem>
+            <Menu.Resources>
+                <CollectionViewSource x:Key="ExtraMenuItems" Source="{Binding SelectedItem.ExtraMenuItems}"/>
+            </Menu.Resources>
+            
+            <Menu.ItemsSource>
+                <CompositeCollection>
+                    <MenuItem Header="File">
+                        <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
+                        <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
+                        <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
+                    </MenuItem>
 
-            <MenuItem Header="Edit">
-                <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
-            </MenuItem>
+                    <MenuItem Header="Edit">
+                        <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
+                    </MenuItem>
+
+                    <CollectionContainer Collection="{Binding Source={StaticResource ExtraMenuItems}}"/>
+                </CompositeCollection>
+            </Menu.ItemsSource>
         </Menu>
 
         <Grid Margin="5" Drop="Grid_Drop" AllowDrop="True">
@@ -110,6 +120,7 @@
                                         <TextBlock Text="Ambytes, " ToolTip="MHW and documentation"/>
                                         <TextBlock Text="AsteriskAmpersand, " ToolTip="MHW and documentation"/>
                                         <TextBlock Text="SeiKur0, " ToolTip="Cheat Engine Table"/>
+                                        <TextBlock Text="Freschu, " ToolTip="Documentation"/>
                                         <TextBlock Text="and the Monster Hunter World Modding Discord" ToolTip="Documentation and general help"/>
                                     </WrapPanel>
 

@@ -30,13 +30,16 @@ namespace Cirilla.Core.Models
         private byte[] _unk1;
         private byte[] _unk4;
 
-        public SaveData(string path, bool isEncrypted = true) : base(path)
+        public SaveData(string path) : base(path)
         {
             Logger.Info($"Loading '{path}'");
 
             byte[] bytes = File.ReadAllBytes(path);
 
-            if (isEncrypted)
+            // 0x01 00 00 00 == decrypted, something else means that it's encrypted
+            bool decrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;          
+
+            if (!decrypted)
             {
                 // BlowFish decryption is rather slow, maybe C would be faster (using P/Invoke)?
                 bytes = SwapBytes(bytes);
@@ -50,7 +53,7 @@ namespace Cirilla.Core.Models
                 _header = br.ReadStruct<SaveData_Header>();
 
                 if (_header.Magic[0] != 0x01 || _header.Magic[1] != 0x00 || _header.Magic[2] != 0x00 || _header.Magic[3] != 0x00)
-                    throw new Exception("Decryption failed!");
+                    throw new Exception("Decryption failed or this isn't a valid SAVEDATA1000 file.");
 
                 _sectionOffsets = new long[4];
                 _sectionOffsets[0] = br.ReadInt64();

@@ -1,5 +1,7 @@
 ﻿using Cirilla.Core.Models;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace Cirilla.ViewModels
 {
@@ -16,15 +18,23 @@ namespace Cirilla.ViewModels
         {
             _context = new SaveData(path);
 
-            foreach(var saveSlot in _context.SaveSlots)
+            foreach (var saveSlot in _context.SaveSlots)
             {
                 Items.Add(new SaveSlotViewModel(saveSlot));
             }
         }
 
-        public override void Save(string path)
+        public override void Save()
         {
-            _context.Save(path);
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Path.GetFileName(Filepath);
+            sfd.Filter = "Encrypted SAVEDATA1000|*|Decrypted SAVEDATA1000|*";
+
+            if (sfd.ShowDialog() == true)
+            {
+                bool save_encrypted = sfd.FilterIndex == 1; // index 2 = unencrypted
+                _context.Save(sfd.FileName, save_encrypted);
+            }
         }
 
         public override bool CanSave() => true;

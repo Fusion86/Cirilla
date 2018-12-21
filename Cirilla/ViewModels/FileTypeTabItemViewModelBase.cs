@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Cirilla.ViewModels
 {
@@ -29,6 +31,8 @@ namespace Cirilla.ViewModels
 
         public virtual void Close() { }
         public virtual bool CanClose() => true;
+
+        public ObservableCollection<FrameworkElement> ExtraMenuItems { get; } = new ObservableCollection<FrameworkElement>();
 
         protected FileTypeTabItemViewModelBase(string path)
         {

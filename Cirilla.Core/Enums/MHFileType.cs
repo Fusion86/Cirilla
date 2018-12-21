@@ -16,6 +16,7 @@ namespace Cirilla.Core.Enums
         public static MHFileType ITM = new MHFileType(typeof(ITM), "Item data", fileExtensions: new[] { ".itm" });
         public static MHFileType NBSC = new MHFileType(typeof(NBSC), "NPC something", fileExtensions: new[] { ".nbsc" });
         public static MHFileType SaveData = new MHFileType(typeof(SaveData), "SaveData", magic: new byte[] { 0x72, 0xC8, 0x62, 0x47 });
+        public static MHFileType DecryptedSaveData = new MHFileType(typeof(SaveData), "Decrypted SaveData", magic: new byte[] { 0x01, 0x00, 0x00, 0x00 });
         public static MHFileType EquipmentCrafting = new MHFileType(typeof(EquipmentCrafting), "Equipment crafting", fileExtensions: new[] { ".eq_crt" });
         public static MHFileType CMP = new MHFileType(typeof(CMP), "Character Preset", fileExtensions: new[] { ".cmp" });
 
