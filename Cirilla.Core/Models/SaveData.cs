@@ -37,7 +37,7 @@ namespace Cirilla.Core.Models
             byte[] bytes = File.ReadAllBytes(path);
 
             // 0x01 00 00 00 == decrypted, something else means that it's encrypted
-            bool isUnencrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;          
+            bool isUnencrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;
 
             if (!isUnencrypted)
             {
@@ -158,7 +158,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties
+    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ICloneable
     {
         public SaveData_SaveSlot Native => _native;
         private SaveData_SaveSlot _native;
@@ -170,6 +170,29 @@ namespace Cirilla.Core.Models
             {
                 _native = br.ReadStruct<SaveData_SaveSlot>();
             }
+        }
+
+        public SaveSlot(SaveData_SaveSlot native)
+        {
+            _native = native;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SaveSlot other)
+                return _native.Equals(other._native); // Compare struct data
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _native.GetHashCode();
+        }
+
+        public object Clone()
+        {
+            return new SaveSlot(_native); // ValueType = passed by value = new object
         }
 
         public string HunterName
@@ -236,6 +259,12 @@ namespace Cirilla.Core.Models
         {
             get => _native.HunterXp;
             set => _native.HunterXp = value;
+        }
+
+        public int PlayTime
+        {
+            get => _native.PlayTime;
+            set => _native.PlayTime = value;
         }
 
         #region Character Appearance
@@ -607,31 +636,31 @@ namespace Cirilla.Core.Models
             get => _native.PalicoAppearance.FurThickness;
             set => _native.PalicoAppearance.FurThickness = value;
         }
-        
+
         byte IPalicoAppearanceProperties.PatternType
         {
             get => _native.PalicoAppearance.PatternType;
             set => _native.PalicoAppearance.PatternType = value;
         }
-        
+
         byte IPalicoAppearanceProperties.EyeType
         {
             get => _native.PalicoAppearance.EyeType;
             set => _native.PalicoAppearance.EyeType = value;
         }
-        
+
         byte IPalicoAppearanceProperties.EarType
         {
             get => _native.PalicoAppearance.EarType;
             set => _native.PalicoAppearance.EarType = value;
         }
-        
+
         byte IPalicoAppearanceProperties.TailType
         {
             get => _native.PalicoAppearance.TailType;
             set => _native.PalicoAppearance.TailType = value;
         }
-        
+
         ushort IPalicoAppearanceProperties.VoiceType
         {
             get => _native.PalicoAppearance.VoiceType;
