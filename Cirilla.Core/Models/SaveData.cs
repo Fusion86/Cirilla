@@ -77,6 +77,12 @@ namespace Cirilla.Core.Models
             }
         }
 
+        public long SteamId
+        {
+            get => _header.SteamId;
+            set => _header.SteamId = value;
+        }
+
         public void Save(string path, bool encrypt = true, bool fixChecksum = true)
         {
             Logger.Info($"Saving to '{path}'");
