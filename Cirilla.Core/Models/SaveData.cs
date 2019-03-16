@@ -667,14 +667,13 @@ namespace Cirilla.Core.Models
             set => _native.PalicoAppearance.TailType = value;
         }
 
-        ushort IPalicoAppearanceProperties.VoiceType
+        byte IPalicoAppearanceProperties.VoiceType
         {
             get => _native.PalicoAppearance.VoiceType;
             set => _native.PalicoAppearance.VoiceType = value;
         }
 
-        [Range(0, 0)]
-        ushort IPalicoAppearanceProperties.VoicePitch
+        byte IPalicoAppearanceProperties.VoicePitch
         {
             get => _native.PalicoAppearance.VoicePitch;
             set => _native.PalicoAppearance.VoicePitch = value;

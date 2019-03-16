@@ -32,7 +32,8 @@ namespace Cirilla.Core.Structs.Native
         public byte EyeType;
         public byte EarType;
         public byte TailType;
-        public ushort VoiceType;
-        public ushort VoicePitch;
+        public byte VoiceType;
+        public byte VoicePitch;
+        public ushort Unk; // Zero?
     }
 }
