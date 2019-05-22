@@ -45,7 +45,7 @@ namespace SaveTool
         {
             try
             {
-                SaveData saveData = new SaveData(opts.InFile, false);
+                SaveData saveData = new SaveData(opts.InFile);
                 saveData.Save(opts.OutFile, true, opts.FixChecksum);
                 Console.WriteLine($"Saved encrypted savedata in '{opts.OutFile}'");
             }
