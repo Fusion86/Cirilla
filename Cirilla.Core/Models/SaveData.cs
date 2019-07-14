@@ -72,7 +72,7 @@ namespace Cirilla.Core.Models
                 //while (ms.Position < ms.Length)
                 for (int i = 0; i < 3; i++)
                 {
-                    SaveSlots.Add(new SaveSlot(ms));
+                    SaveSlots.Add(new SaveSlot(this, ms));
                 }
             }
         }
@@ -166,11 +166,15 @@ namespace Cirilla.Core.Models
 
     public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ICloneable
     {
+        public SaveData SaveData { get; }
+
         public SaveData_SaveSlot Native => _native;
         private SaveData_SaveSlot _native;
 
-        public SaveSlot(Stream stream)
+        public SaveSlot(SaveData saveData, Stream stream)
         {
+            SaveData = saveData;
+
             // Don't close stream
             using (BinaryReader br = new BinaryReader(stream, Encoding.UTF8, true))
             {
@@ -178,8 +182,9 @@ namespace Cirilla.Core.Models
             }
         }
 
-        public SaveSlot(SaveData_SaveSlot native)
+        public SaveSlot(SaveData saveData, SaveData_SaveSlot native)
         {
+            SaveData = saveData;
             _native = native;
         }
 
@@ -198,7 +203,7 @@ namespace Cirilla.Core.Models
 
         public object Clone()
         {
-            return new SaveSlot(_native); // ValueType = passed by value = new object
+            return new SaveSlot(SaveData, _native); // ValueType = passed by value = new object
         }
 
         public string HunterName
