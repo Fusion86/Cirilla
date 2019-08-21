@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Cirilla.Core.Enums;
+using System.Drawing;
 
 namespace Cirilla.Core.Interfaces
 {
@@ -18,7 +19,7 @@ namespace Cirilla.Core.Interfaces
         byte EyeType { get; set; }
         byte EarType { get; set; }
         byte TailType { get; set; }
-        byte VoiceType { get; set; }
-        byte VoicePitch { get; set; }
+        PalicoVoiceType VoiceType { get; set; }
+        PalicoVoicePitch VoicePitch { get; set; }
     }
 }

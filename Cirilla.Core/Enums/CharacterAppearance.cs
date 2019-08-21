@@ -12,4 +12,18 @@
         Average = 1,
         Long = 2
     }
+
+    public enum PalicoVoiceType : byte
+    {
+        Type1 = 0,
+        Type2 = 1,
+        Type3 = 2
+    }
+
+    public enum PalicoVoicePitch : byte
+    {
+        MediumPitch = 0,
+        LowPitch = 1,
+        HighPitch = 2
+    }
 }

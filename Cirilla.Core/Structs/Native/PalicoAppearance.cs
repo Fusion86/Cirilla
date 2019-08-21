@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using Cirilla.Core.Enums;
+using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Structs.Native
 {
@@ -32,8 +33,8 @@ namespace Cirilla.Core.Structs.Native
         public byte EyeType;
         public byte EarType;
         public byte TailType;
-        public byte VoiceType;
-        public byte VoicePitch;
+        public PalicoVoiceType VoiceType;
+        public PalicoVoicePitch VoicePitch;
         public ushort Unk; // Zero?
     }
 }

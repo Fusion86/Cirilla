@@ -75,6 +75,8 @@ namespace Cirilla.Core.Models
                     SaveSlots.Add(new SaveSlot(this, ms));
                 }
             }
+
+            Logger.Info($"Successfully loaded '{path}'");
         }
 
         public long SteamId
@@ -88,6 +90,8 @@ namespace Cirilla.Core.Models
             Logger.Info($"Saving to '{path}'");
 
             File.WriteAllBytes(path, GetBytes(encrypt, fixChecksum));
+
+            Logger.Info($"Successfully saved to '{path}'");
         }
 
         public byte[] GetBytes(bool encrypt = true, bool fixChecksum = true)
@@ -217,7 +221,7 @@ namespace Cirilla.Core.Models
                 byte[] cStr = ExEncoding.UTF8.GetBytes(value);
 
                 if (cStr.Length > 64)
-                    throw new Exception("Name is too large!");
+                    throw new Exception("Hunter name can't use more than 64 bytes, try using a shorter name!");
 
                 Array.Copy(cStr, bytes, cStr.Length);
                 _native.HunterName = bytes;
@@ -235,7 +239,7 @@ namespace Cirilla.Core.Models
                 byte[] cStr = ExEncoding.UTF8.GetBytes(value);
 
                 if (cStr.Length > 64)
-                    throw new Exception("Name is too large!");
+                    throw new Exception("Palico name can't use more than 64 bytes, try using a shorter name!");
 
                 Array.Copy(cStr, bytes, cStr.Length);
                 _native.PalicoName = bytes;
@@ -672,13 +676,13 @@ namespace Cirilla.Core.Models
             set => _native.PalicoAppearance.TailType = value;
         }
 
-        byte IPalicoAppearanceProperties.VoiceType
+        PalicoVoiceType IPalicoAppearanceProperties.VoiceType
         {
             get => _native.PalicoAppearance.VoiceType;
             set => _native.PalicoAppearance.VoiceType = value;
         }
 
-        byte IPalicoAppearanceProperties.VoicePitch
+        PalicoVoicePitch IPalicoAppearanceProperties.VoicePitch
         {
             get => _native.PalicoAppearance.VoicePitch;
             set => _native.PalicoAppearance.VoicePitch = value;
