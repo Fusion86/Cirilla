@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Test", "Cirilla.Core.Test\Cirilla.Core.Test.csproj", "{504B74E1-6B52-4710-AB83-F08CD8B08782}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Benchmark", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaveTool", "SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveTool", "SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceEditPalette", "FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF26C1F8-5F6E-461D-A115-C00C87ED9996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{FD8304BD-F468-4229-8627-543085351B56} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{CF26C1F8-5F6E-461D-A115-C00C87ED9996} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{0BC469D8-2521-40EE-82F8-3510FBEAFF67} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}
