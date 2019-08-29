@@ -26,4 +26,5 @@ Edit .gmd files in an okayish GUI.
 - Freschu - Documentation
 - IcySon55 - [Kuriimu](https://github.com/IcySon55/Kuriimu/blob/master/src/text/text_gmd/GMDv2.cs)
 - TheCrazyT - [MHW-Research](https://github.com/TheCrazyT/MHW-Research)
+- UberGrainy - [MHW Modding Tutorial Links](https://forums.nexusmods.com/index.php?/topic/7267936-tutorial-mhw-modding-tutorial-links/)
 - Monster Hunter World Modding Discord
