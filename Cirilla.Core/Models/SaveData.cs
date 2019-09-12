@@ -212,13 +212,13 @@ namespace Cirilla.Core.Models
 
         public string HunterName
         {
-            get => ExEncoding.UTF8.GetString(_native.HunterName).TrimEnd('\0');
+            get => Encoding.UTF8.GetString(_native.HunterName).TrimEnd('\0');
 
             set
             {
                 // Not sure if it is needed to make the array exactly 64 bytes large
                 byte[] bytes = new byte[64];
-                byte[] cStr = ExEncoding.UTF8.GetBytes(value);
+                byte[] cStr = Encoding.UTF8.GetBytes(value);
 
                 if (cStr.Length > 64)
                     throw new Exception("Hunter name can't use more than 64 bytes, try using a shorter name!");
@@ -230,13 +230,13 @@ namespace Cirilla.Core.Models
 
         public string PalicoName
         {
-            get => ExEncoding.UTF8.GetString(_native.PalicoName).TrimEnd('\0');
+            get => Encoding.UTF8.GetString(_native.PalicoName).TrimEnd('\0');
 
             set
             {
                 // Not sure if it is needed to make the array exactly 64 bytes large
                 byte[] bytes = new byte[64];
-                byte[] cStr = ExEncoding.UTF8.GetBytes(value);
+                byte[] cStr = Encoding.UTF8.GetBytes(value);
 
                 if (cStr.Length > 64)
                     throw new Exception("Palico name can't use more than 64 bytes, try using a shorter name!");
