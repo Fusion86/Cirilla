@@ -42,6 +42,7 @@ namespace Cirilla.Core.Test.Tests
         public void Load__SAVEDATA1000()
         {
             SaveData save = new SaveData(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");
+            Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
         }
 
         [TestMethod]

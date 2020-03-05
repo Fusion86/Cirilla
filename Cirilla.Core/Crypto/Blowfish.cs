@@ -55,9 +55,9 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace BlowFishCS
+namespace Cirilla.Core.Crypto.BlowFishCS
 {
-    class BlowFish
+    public class BlowFish
     {
         #region "Global variables and constants"
 

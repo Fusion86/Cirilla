@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <TestRunParameters>
-    <Parameter name="mhwExtractedDataRoot" value="L:\\MHWMods"/>
+    <Parameter name="mhwExtractedDataRoot" value="L:\\Sync\\MHW Mods"/>
   </TestRunParameters>
 </RunSettings>
