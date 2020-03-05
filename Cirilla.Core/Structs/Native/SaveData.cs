@@ -14,11 +14,16 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.U1)]
         public byte[] Hash;
 
+        /// <remarks>
+        /// Base Game Data Size = 9438368
+        /// Iceborn Data Size = 11284640
+        /// </remarks>
         public long DataSize;
+
         public long SteamId;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
-        public byte[] Padding; 
+        public byte[] Padding;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -28,15 +33,19 @@ namespace Cirilla.Core.Structs.Native
         public byte[] HunterName;
 
         public int HunterRank;
+        private int Zero1;
         public int Zeni;
         public int ResearchPoints;
         public int HunterXp;
+        private int Zero2;
         public int PlayTime; // In seconds
-        public int Unk1;
 
         public CharacterAppearance CharacterAppearance;
         public PalicoAppearance PalicoAppearance;
 
+        /// <summary>
+        /// Your own GuildCard.
+        /// </summary>
         public SaveData_GuildCard GuildCard;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100, ArraySubType = UnmanagedType.U1)]
@@ -87,7 +96,11 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 469, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk8;
 
-        public byte IsActiveSlot; // 0x80 (128) = yes
+        /// <remarks>
+        /// 0x0 = no
+        /// 0x80 (128) = yes
+        /// </remarks>
+        public byte IsActiveSlot;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10383, ArraySubType = UnmanagedType.U1)]
         public byte[] Unk9;

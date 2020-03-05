@@ -3,25 +3,22 @@ using System.Drawing;
 
 namespace Cirilla.Core.Interfaces
 {
+    public interface ICharacterMakeup
+    {
+        Color Color { get; set; }
+        float PosX { get; set; }
+        float PosY { get; set; }
+        float SizeX { get; set; }
+        float SizeY { get; set; }
+        float Glossy { get; set; }
+        float Metallic { get; set; }
+        int Type { get; set; }
+    }
+
     public interface ICharacterAppearanceProperties
     {
-        Color Makeup2Color { get; set; }
-        float Makeup2PosX { get; set; }
-        float Makeup2PosY { get; set; }
-        float Makeup2SizeX { get; set; }
-        float Makeup2SizeY { get; set; }
-        float Makeup2Glossy { get; set; }
-        float Makeup2Metallic { get; set; }
-        int Makeup2Type { get; set; }
-
-        Color Makeup1Color { get; set; }
-        float Makeup1PosX { get; set; }
-        float Makeup1PosY { get; set; }
-        float Makeup1SizeX { get; set; }
-        float Makeup1SizeY { get; set; }
-        float Makeup1Glossy { get; set; }
-        float Makeup1Metallic { get; set; }
-        int Makeup1Type { get; set; }
+        //ICharacterMakeup Makeup2 { get; set; }
+        //ICharacterMakeup Makeup1 { get; set; }
 
         Color LeftEyeColor { get; set; }
         Color RightEyeColor { get; set; }

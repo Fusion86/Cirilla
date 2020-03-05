@@ -38,10 +38,12 @@ namespace Cirilla.Core.Test.Tests
             Assert.AreEqual(44, Marshal.SizeOf<PalicoAppearance>());
         }
 
-        [TestMethod]
-        public void Load__SAVEDATA1000()
+        [DataTestMethod]
+        [DataRow("SAVEDATA1000_ib_dec")]
+        [DataRow("SAVEDATA1000_ib_dec_1")]
+        public void Load__SAVEDATA1000(string filename)
         {
-            SaveData save = new SaveData(@"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000");
+            SaveData save = new SaveData(@"L:\Sync\MHW Mods\test_dataset\" + filename);
             Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
         }
 

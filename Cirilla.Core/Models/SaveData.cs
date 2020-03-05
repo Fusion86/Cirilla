@@ -22,7 +22,7 @@ namespace Cirilla.Core.Models
         private const string ENCRYPTION_KEY = "xieZjoe#P2134-3zmaghgpqoe0z8$3azeq";
 
         public SaveData_Header Header => _header;
-        public List<SaveSlot> SaveSlots { get; private set; }
+        public SaveSlot[] SaveSlots { get; private set; }
 
         private BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
         private SaveData_Header _header;
@@ -45,6 +45,8 @@ namespace Cirilla.Core.Models
                 bytes = SwapBytes(bytes);
                 bytes = _blowfish.Decrypt_ECB(bytes);
                 bytes = SwapBytes(bytes);
+
+                // TODO: Iceborn decryption
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
@@ -53,7 +55,10 @@ namespace Cirilla.Core.Models
                 _header = br.ReadStruct<SaveData_Header>();
 
                 if (_header.Magic[0] != 0x01 || _header.Magic[1] != 0x00 || _header.Magic[2] != 0x00 || _header.Magic[3] != 0x00)
-                    throw new Exception("Decryption failed or this isn't a valid SAVEDATA1000 file.");
+                    throw new Exception("Decryption failed or this isn't a valid SAVEDATA file.");
+
+                if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborn SAVEDATA, which is not supported anymore. Try using an older version of this tool.");
+                else if (_header.DataSize != 11284640) throw new Exception("Unexpected DataSize, meaning that this version can't work with this SAVEDATA.");
 
                 _sectionOffsets = new long[4];
                 _sectionOffsets[0] = br.ReadInt64();
@@ -65,14 +70,10 @@ namespace Cirilla.Core.Models
                 _unk1 = br.ReadBytes((int)(_sectionOffsets[3] - _sectionOffsets[0]));
                 _unk4 = br.ReadBytes(20);
 
-                // Initialize SaveSlots
-                SaveSlots = new List<SaveSlot>(3);
-
-                // Read SaveSlots till the end of the file (max 3 ingame, but there is space for 7)
-                //while (ms.Position < ms.Length)
+                // Load SaveSlots
                 for (int i = 0; i < 3; i++)
                 {
-                    SaveSlots.Add(new SaveSlot(this, ms));
+                    SaveSlots[0] = new SaveSlot(this, ms);
                 }
             }
 
@@ -96,8 +97,8 @@ namespace Cirilla.Core.Models
 
         public byte[] GetBytes(bool encrypt = true, bool fixChecksum = true)
         {
-            if (SaveSlots.Count > 3)
-                throw new Exception("You can't have more than 3 SaveSlots!");
+            if (SaveSlots.Length != 3)
+                throw new Exception("There should be exactly 3 SaveSlots!");
 
             byte[] bytes;
 
@@ -285,126 +286,14 @@ namespace Cirilla.Core.Models
         #region Character Appearance
 
         // Group all Appearance getters/setters
-        public ICharacterAppearanceProperties CharacterAppearance => (ICharacterAppearanceProperties)this;
+        public ICharacterAppearanceProperties CharacterAppearance => this;
 
-        // Oh boy do I miss preprocessor macros here...
-        // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
+        // NOTE TO FUTURE SELF:
+        // public ICharacterAppearanceProperties CharacterAppearance => new SomeWrapperClass(ref _native.CharacterAppearance);
+        // and do the same in CMD.cs
 
-        #region Makeup2
-
-        Color ICharacterAppearanceProperties.Makeup2Color
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup2Color);
-            set => _native.CharacterAppearance.Makeup2Color = value.ToRgbaBytes();
-        }
-
-        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ICharacterAppearanceProperties.Makeup2PosX
-        {
-            get => _native.CharacterAppearance.Makeup2PosX;
-            set => _native.CharacterAppearance.Makeup2PosX = value;
-        }
-
-        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ICharacterAppearanceProperties.Makeup2PosY
-        {
-            get => _native.CharacterAppearance.Makeup2PosY;
-            set => _native.CharacterAppearance.Makeup2PosY = value;
-        }
-
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ICharacterAppearanceProperties.Makeup2SizeX
-        {
-            get => _native.CharacterAppearance.Makeup2SizeX;
-            set => _native.CharacterAppearance.Makeup2SizeX = value;
-        }
-
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ICharacterAppearanceProperties.Makeup2SizeY
-        {
-            get => _native.CharacterAppearance.Makeup2SizeY;
-            set => _native.CharacterAppearance.Makeup2SizeY = value;
-        }
-
-        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ICharacterAppearanceProperties.Makeup2Glossy
-        {
-            get => _native.CharacterAppearance.Makeup2Glossy;
-            set => _native.CharacterAppearance.Makeup2Glossy = value;
-        }
-
-        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ICharacterAppearanceProperties.Makeup2Metallic
-        {
-            get => _native.CharacterAppearance.Makeup2Metallic;
-            set => _native.CharacterAppearance.Makeup2Metallic = value;
-        }
-
-        int ICharacterAppearanceProperties.Makeup2Type
-        {
-            get => _native.CharacterAppearance.Makeup2Type;
-            set => _native.CharacterAppearance.Makeup2Type = value;
-        }
-
-        #endregion
-
-        #region Makeup1
-
-        Color ICharacterAppearanceProperties.Makeup1Color
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup1Color);
-            set => _native.CharacterAppearance.Makeup1Color = value.ToRgbaBytes();
-        }
-
-        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
-        float ICharacterAppearanceProperties.Makeup1PosX
-        {
-            get => _native.CharacterAppearance.Makeup1PosX;
-            set => _native.CharacterAppearance.Makeup1PosX = value;
-        }
-
-        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
-        float ICharacterAppearanceProperties.Makeup1PosY
-        {
-            get => _native.CharacterAppearance.Makeup1PosY;
-            set => _native.CharacterAppearance.Makeup1PosY = value;
-        }
-
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ICharacterAppearanceProperties.Makeup1SizeX
-        {
-            get => _native.CharacterAppearance.Makeup1SizeX;
-            set => _native.CharacterAppearance.Makeup1SizeX = value;
-        }
-
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
-        float ICharacterAppearanceProperties.Makeup1SizeY
-        {
-            get => _native.CharacterAppearance.Makeup1SizeY;
-            set => _native.CharacterAppearance.Makeup1SizeY = value;
-        }
-
-        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
-        float ICharacterAppearanceProperties.Makeup1Glossy
-        {
-            get => _native.CharacterAppearance.Makeup1Glossy;
-            set => _native.CharacterAppearance.Makeup1Glossy = value;
-        }
-
-        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
-        float ICharacterAppearanceProperties.Makeup1Metallic
-        {
-            get => _native.CharacterAppearance.Makeup1Metallic;
-            set => _native.CharacterAppearance.Makeup1Metallic = value;
-        }
-
-        int ICharacterAppearanceProperties.Makeup1Type
-        {
-            get => _native.CharacterAppearance.Makeup1Type;
-            set => _native.CharacterAppearance.Makeup1Type = value;
-        }
-
-        #endregion
+        //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup2;
+        //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup1;
 
         #region Colors 1
 

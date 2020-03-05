@@ -2,32 +2,27 @@
 
 namespace Cirilla.Core.Structs.Native
 {
+    public struct CharacterMakeup
+    {
+        private int Unk;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
+        public byte[] Color;
+
+        public float PosX;
+        public float PosY;
+        public float SizeX;
+        public float SizeY;
+        public float Glossy;
+        public float Metallic;
+        public int Type;
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CharacterAppearance
     {
-        // All colors are ABGR
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Makeup2Color;
-
-        public float Makeup2PosX;
-        public float Makeup2PosY;
-        public float Makeup2SizeX;
-        public float Makeup2SizeY;
-        public float Makeup2Glossy;
-        public float Makeup2Metallic;
-        public int Makeup2Type;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
-        public byte[] Makeup1Color;
-
-        public float Makeup1PosX;
-        public float Makeup1PosY;
-        public float Makeup1SizeX;
-        public float Makeup1SizeY;
-        public float Makeup1Glossy;
-        public float Makeup1Metallic;
-        public int Makeup1Type;
+        CharacterMakeup Makeup2;
+        CharacterMakeup Makeup1;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] LeftEyeColor;
