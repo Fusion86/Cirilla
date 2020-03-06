@@ -1,4 +1,5 @@
 ﻿using Cirilla.Core.Attributes;
+using Cirilla.Core.Crypto;
 using Cirilla.Core.Crypto.BlowFishCS;
 using Cirilla.Core.Enums;
 using Cirilla.Core.Extensions;
@@ -45,7 +46,10 @@ namespace Cirilla.Core.Models
                 bytes = _blowfish.Decrypt_ECB(bytes);
                 bytes = SwapBytes(bytes);
 
-                // TODO: Iceborn decryption
+                IcebornCrypto.DecryptRegion(bytes, 0x70, 0xDA50); // Not a clue what this is, but it's not important for my use cases
+                IcebornCrypto.DecryptRegion(bytes, 0x3010D8, 0x2098C0); // Saveslot 1
+                IcebornCrypto.DecryptRegion(bytes, 0x50AB98, 0x2098C0); // Saveslot 2
+                IcebornCrypto.DecryptRegion(bytes, 0x714658, 0x2098C0); // Saveslot 3
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
@@ -166,7 +170,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : ICloneable
+    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ICloneable
     {
         public SaveData SaveData { get; }
 
@@ -279,14 +283,413 @@ namespace Cirilla.Core.Models
             set => _native.PlayTime = value;
         }
 
+        #region Character Appearance
+
         // Group all Appearance getters/setters
-        //public ICharacterAppearanceProperties CharacterAppearance => this;
+        public ICharacterAppearanceProperties CharacterAppearance => this;
 
-        // NOTE TO FUTURE SELF:
-        // public ICharacterAppearanceProperties CharacterAppearance => new SomeWrapperClass(ref _native.CharacterAppearance);
-        // and do the same in CMD.cs
+        // Oh boy do I miss preprocessor macros here...
+        // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
 
-        //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup2;
-        //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup1;
+        #region Makeup2
+        
+        // HACK: Makeup is not enclassed (like in native struct) because I'm lazy
+        Color ICharacterAppearanceProperties.Makeup2Color
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup2.Color);
+            set => _native.CharacterAppearance.Makeup2.Color = value.ToRgbaBytes();
+        }
+
+        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
+        float ICharacterAppearanceProperties.Makeup2PosX
+        {
+            get => _native.CharacterAppearance.Makeup2.PosX;
+            set => _native.CharacterAppearance.Makeup2.PosX = value;
+        }
+
+        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
+        float ICharacterAppearanceProperties.Makeup2PosY
+        {
+            get => _native.CharacterAppearance.Makeup2.PosY;
+            set => _native.CharacterAppearance.Makeup2.PosY = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup2SizeX
+        {
+            get => _native.CharacterAppearance.Makeup2.SizeX;
+            set => _native.CharacterAppearance.Makeup2.SizeX = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup2SizeY
+        {
+            get => _native.CharacterAppearance.Makeup2.SizeY;
+            set => _native.CharacterAppearance.Makeup2.SizeY = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
+        float ICharacterAppearanceProperties.Makeup2Glossy
+        {
+            get => _native.CharacterAppearance.Makeup2.Glossy;
+            set => _native.CharacterAppearance.Makeup2.Glossy = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
+        float ICharacterAppearanceProperties.Makeup2Metallic
+        {
+            get => _native.CharacterAppearance.Makeup2.Metallic;
+            set => _native.CharacterAppearance.Makeup2.Metallic = value;
+        }
+
+        int ICharacterAppearanceProperties.Makeup2Type
+        {
+            get => _native.CharacterAppearance.Makeup2.Type;
+            set => _native.CharacterAppearance.Makeup2.Type = value;
+        }
+
+        #endregion
+
+        #region Makeup1
+
+        Color ICharacterAppearanceProperties.Makeup1Color
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup1.Color);
+            set => _native.CharacterAppearance.Makeup1.Color = value.ToRgbaBytes();
+        }
+
+        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
+        float ICharacterAppearanceProperties.Makeup1PosX
+        {
+            get => _native.CharacterAppearance.Makeup1.PosX;
+            set => _native.CharacterAppearance.Makeup1.PosX = value;
+        }
+
+        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
+        float ICharacterAppearanceProperties.Makeup1PosY
+        {
+            get => _native.CharacterAppearance.Makeup1.PosY;
+            set => _native.CharacterAppearance.Makeup1.PosY = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup1SizeX
+        {
+            get => _native.CharacterAppearance.Makeup1.SizeX;
+            set => _native.CharacterAppearance.Makeup1.SizeX = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup1SizeY
+        {
+            get => _native.CharacterAppearance.Makeup1.SizeY;
+            set => _native.CharacterAppearance.Makeup1.SizeY = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
+        float ICharacterAppearanceProperties.Makeup1Glossy
+        {
+            get => _native.CharacterAppearance.Makeup1.Glossy;
+            set => _native.CharacterAppearance.Makeup1.Glossy = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
+        float ICharacterAppearanceProperties.Makeup1Metallic
+        {
+            get => _native.CharacterAppearance.Makeup1.Metallic;
+            set => _native.CharacterAppearance.Makeup1.Metallic = value;
+        }
+
+        int ICharacterAppearanceProperties.Makeup1Type
+        {
+            get => _native.CharacterAppearance.Makeup1.Type;
+            set => _native.CharacterAppearance.Makeup1.Type = value;
+        }
+
+        #endregion
+
+        #region Colors 1
+
+        Color ICharacterAppearanceProperties.LeftEyeColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.LeftEyeColor);
+            set => _native.CharacterAppearance.LeftEyeColor = value.ToRgbaBytes();
+        }
+
+        Color ICharacterAppearanceProperties.RightEyeColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.RightEyeColor);
+            set => _native.CharacterAppearance.RightEyeColor = value.ToRgbaBytes();
+        }
+
+        Color ICharacterAppearanceProperties.EyebrowColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.EyebrowColor);
+            set => _native.CharacterAppearance.EyebrowColor = value.ToRgbaBytes();
+        }
+
+        Color ICharacterAppearanceProperties.FacialHairColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.FacialHairColor);
+            set => _native.CharacterAppearance.FacialHairColor = value.ToRgbaBytes();
+        }
+
+        #endregion
+
+        #region Types 1
+
+        byte ICharacterAppearanceProperties.EyeWidth
+        {
+            get => _native.CharacterAppearance.EyeWidth;
+            set => _native.CharacterAppearance.EyeWidth = value;
+        }
+
+        byte ICharacterAppearanceProperties.EyeHeight
+        {
+            get => _native.CharacterAppearance.EyeHeight;
+            set => _native.CharacterAppearance.EyeHeight = value;
+        }
+
+        byte ICharacterAppearanceProperties.SkinColorX
+        {
+            get => _native.CharacterAppearance.SkinColorX;
+            set => _native.CharacterAppearance.SkinColorX = value;
+        }
+
+        byte ICharacterAppearanceProperties.SkinColorY
+        {
+            get => _native.CharacterAppearance.SkinColorY;
+            set => _native.CharacterAppearance.SkinColorY = value;
+        }
+
+        byte ICharacterAppearanceProperties.Age
+        {
+            get => _native.CharacterAppearance.Age;
+            set => _native.CharacterAppearance.Age = value;
+        }
+
+        byte ICharacterAppearanceProperties.Wrinkles
+        {
+            get => _native.CharacterAppearance.Wrinkles;
+            set => _native.CharacterAppearance.Wrinkles = value;
+        }
+
+        byte ICharacterAppearanceProperties.NoseHeight
+        {
+            get => _native.CharacterAppearance.NoseHeight;
+            set => _native.CharacterAppearance.NoseHeight = value;
+        }
+
+        byte ICharacterAppearanceProperties.MouthHeight
+        {
+            get => _native.CharacterAppearance.MouthHeight;
+            set => _native.CharacterAppearance.MouthHeight = value;
+        }
+
+        #endregion
+
+        #region Gender
+
+        Gender ICharacterAppearanceProperties.Gender
+        {
+            get => _native.CharacterAppearance.Gender;
+            set => _native.CharacterAppearance.Gender = value;
+        }
+
+        #endregion
+
+        #region Types 2
+
+        byte ICharacterAppearanceProperties.BrowType
+        {
+            get => _native.CharacterAppearance.BrowType;
+            set => _native.CharacterAppearance.BrowType = value;
+        }
+
+        byte ICharacterAppearanceProperties.FaceType
+        {
+            get => _native.CharacterAppearance.FaceType;
+            set => _native.CharacterAppearance.FaceType = value;
+        }
+
+        byte ICharacterAppearanceProperties.EyeType
+        {
+            get => _native.CharacterAppearance.EyeType;
+            set => _native.CharacterAppearance.EyeType = value;
+        }
+
+        byte ICharacterAppearanceProperties.NoseType
+        {
+            get => _native.CharacterAppearance.NoseType;
+            set => _native.CharacterAppearance.NoseType = value;
+        }
+
+        byte ICharacterAppearanceProperties.MouthType
+        {
+            get => _native.CharacterAppearance.MouthType;
+            set => _native.CharacterAppearance.MouthType = value;
+        }
+
+        byte ICharacterAppearanceProperties.EyebrowType
+        {
+            get => _native.CharacterAppearance.EyebrowType;
+            set => _native.CharacterAppearance.EyebrowType = value;
+        }
+
+        EyelashLength ICharacterAppearanceProperties.EyelashLength
+        {
+            get => _native.CharacterAppearance.EyelashLength;
+            set => _native.CharacterAppearance.EyelashLength = value;
+        }
+
+        byte ICharacterAppearanceProperties.FacialHairType
+        {
+            get => _native.CharacterAppearance.FacialHairType;
+            set => _native.CharacterAppearance.FacialHairType = value;
+        }
+
+        #endregion
+
+        #region Colors 2
+
+        Color ICharacterAppearanceProperties.HairColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.HairColor);
+            set => _native.CharacterAppearance.HairColor = value.ToRgbaBytes();
+        }
+
+        Color ICharacterAppearanceProperties.ClothingColor
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.ClothingColor);
+            set => _native.CharacterAppearance.ClothingColor = value.ToRgbaBytes();
+        }
+
+        #endregion
+
+        #region Types 3
+
+        short ICharacterAppearanceProperties.HairType
+        {
+            get => _native.CharacterAppearance.HairType;
+            set => _native.CharacterAppearance.HairType = value;
+        }
+
+        byte ICharacterAppearanceProperties.ClothingType
+        {
+            get => _native.CharacterAppearance.ClothingType;
+            set => _native.CharacterAppearance.ClothingType = value;
+        }
+
+        byte ICharacterAppearanceProperties.Voice
+        {
+            get => _native.CharacterAppearance.Voice;
+            set => _native.CharacterAppearance.Voice = value;
+        }
+
+        int ICharacterAppearanceProperties.Expression
+        {
+            get => _native.CharacterAppearance.Expression;
+            set => _native.CharacterAppearance.Expression = value;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Palico Appearance
+
+        public IPalicoAppearanceProperties PalicoAppearance => (IPalicoAppearanceProperties)this;
+
+        Color IPalicoAppearanceProperties.PatternColor1
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor1);
+            set => _native.PalicoAppearance.PatternColor1 = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.PatternColor2
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor2);
+            set => _native.PalicoAppearance.PatternColor2 = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.PatternColor3
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor3);
+            set => _native.PalicoAppearance.PatternColor3 = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.FurColor
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.FurColor);
+            set => _native.PalicoAppearance.FurColor = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.LeftEyeColor
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.LeftEyeColor);
+            set => _native.PalicoAppearance.LeftEyeColor = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.RightEyeColor
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.RightEyeColor);
+            set => _native.PalicoAppearance.RightEyeColor = value.ToRgbaBytes();
+        }
+
+        Color IPalicoAppearanceProperties.ClothingColor
+        {
+            get => Utility.RGBAToColor(_native.PalicoAppearance.ClothingColor);
+            set => _native.PalicoAppearance.ClothingColor = value.ToRgbaBytes();
+        }
+
+        float IPalicoAppearanceProperties.FurLength
+        {
+            get => _native.PalicoAppearance.FurLength;
+            set => _native.PalicoAppearance.FurLength = value;
+        }
+
+        float IPalicoAppearanceProperties.FurThickness
+        {
+            get => _native.PalicoAppearance.FurThickness;
+            set => _native.PalicoAppearance.FurThickness = value;
+        }
+
+        byte IPalicoAppearanceProperties.PatternType
+        {
+            get => _native.PalicoAppearance.PatternType;
+            set => _native.PalicoAppearance.PatternType = value;
+        }
+
+        byte IPalicoAppearanceProperties.EyeType
+        {
+            get => _native.PalicoAppearance.EyeType;
+            set => _native.PalicoAppearance.EyeType = value;
+        }
+
+        byte IPalicoAppearanceProperties.EarType
+        {
+            get => _native.PalicoAppearance.EarType;
+            set => _native.PalicoAppearance.EarType = value;
+        }
+
+        byte IPalicoAppearanceProperties.TailType
+        {
+            get => _native.PalicoAppearance.TailType;
+            set => _native.PalicoAppearance.TailType = value;
+        }
+
+        PalicoVoiceType IPalicoAppearanceProperties.VoiceType
+        {
+            get => _native.PalicoAppearance.VoiceType;
+            set => _native.PalicoAppearance.VoiceType = value;
+        }
+
+        PalicoVoicePitch IPalicoAppearanceProperties.VoicePitch
+        {
+            get => _native.PalicoAppearance.VoicePitch;
+            set => _native.PalicoAppearance.VoicePitch = value;
+        }
+
+        #endregion
     }
 }

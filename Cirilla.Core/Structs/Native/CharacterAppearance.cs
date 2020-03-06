@@ -24,8 +24,8 @@ namespace Cirilla.Core.Structs.Native
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CharacterAppearance
     {
-        CharacterMakeup Makeup2;
-        CharacterMakeup Makeup1;
+        public CharacterMakeup Makeup2;
+        public CharacterMakeup Makeup1;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 40, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk1;
