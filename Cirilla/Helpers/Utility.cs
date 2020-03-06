@@ -14,7 +14,6 @@ namespace Cirilla.Helpers
                 { typeof(GMD), typeof(GMDViewModel) },
                 { typeof(ITM), typeof(ITMViewModel) },
                 { typeof(NBSC), typeof(NBSCViewModel) },
-                { typeof(SaveData), typeof(SaveDataViewModel) },
                 { typeof(EquipmentCrafting), typeof(EquipmentCraftingViewModel) },
             };
 

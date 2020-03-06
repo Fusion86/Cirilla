@@ -27,8 +27,7 @@ namespace Cirilla.Core.Models
         private BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
         private SaveData_Header _header;
         private long[] _sectionOffsets;
-        private byte[] _unk1;
-        private byte[] _unk4;
+        private byte[] _sections;
 
         public SaveData(string path) : base(path)
         {
@@ -66,14 +65,14 @@ namespace Cirilla.Core.Models
                 _sectionOffsets[2] = br.ReadInt64();
                 _sectionOffsets[3] = br.ReadInt64();
 
-                // There are 3 unk blocks here, to keep things simple we combine it into one block for now
-                _unk1 = br.ReadBytes((int)(_sectionOffsets[3] - _sectionOffsets[0]));
-                _unk4 = br.ReadBytes(20);
+                // See misc/savedata_ib.bt
+                _sections = br.ReadBytes(3149948);
 
                 // Load SaveSlots
+                SaveSlots = new SaveSlot[3];
                 for (int i = 0; i < 3; i++)
                 {
-                    SaveSlots[0] = new SaveSlot(this, ms);
+                    SaveSlots[i] = new SaveSlot(this, ms);
                 }
             }
 
@@ -114,18 +113,16 @@ namespace Cirilla.Core.Models
                 bw.Write(_sectionOffsets[2]);
                 bw.Write(_sectionOffsets[3]);
 
-                bw.Write(_unk1);
-                bw.Write(_unk4);
+                bw.Write(_sections);
 
                 // Write SaveSlots
-                //foreach(SaveSlot slot in SaveSlots)
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < SaveSlots.Length; i++)
                 {
                     bw.Write(SaveSlots[i].Native.ToBytes());
                 }
 
                 // Fill with zeroes (default array value)
-                bytes = new byte[3_267_796];
+                bytes = new byte[1_724_356];
                 bw.Write(bytes);
 
                 // Copy full stream into array so that we can (encrypt and) return it
@@ -169,7 +166,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ICloneable
+    public class SaveSlot : ICloneable
     {
         public SaveData SaveData { get; }
 
@@ -217,7 +214,6 @@ namespace Cirilla.Core.Models
 
             set
             {
-                // Not sure if it is needed to make the array exactly 64 bytes large
                 byte[] bytes = new byte[64];
                 byte[] cStr = Encoding.UTF8.GetBytes(value);
 
@@ -283,10 +279,8 @@ namespace Cirilla.Core.Models
             set => _native.PlayTime = value;
         }
 
-        #region Character Appearance
-
         // Group all Appearance getters/setters
-        public ICharacterAppearanceProperties CharacterAppearance => this;
+        //public ICharacterAppearanceProperties CharacterAppearance => this;
 
         // NOTE TO FUTURE SELF:
         // public ICharacterAppearanceProperties CharacterAppearance => new SomeWrapperClass(ref _native.CharacterAppearance);
@@ -294,289 +288,5 @@ namespace Cirilla.Core.Models
 
         //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup2;
         //Cirilla.Core.Models.CharacterMakeup ICharacterAppearanceProperties.Makeup1;
-
-        #region Colors 1
-
-        Color ICharacterAppearanceProperties.LeftEyeColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.LeftEyeColor);
-            set => _native.CharacterAppearance.LeftEyeColor = value.ToRgbaBytes();
-        }
-
-        Color ICharacterAppearanceProperties.RightEyeColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.RightEyeColor);
-            set => _native.CharacterAppearance.RightEyeColor = value.ToRgbaBytes();
-        }
-
-        Color ICharacterAppearanceProperties.EyebrowColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.EyebrowColor);
-            set => _native.CharacterAppearance.EyebrowColor = value.ToRgbaBytes();
-        }
-
-        Color ICharacterAppearanceProperties.FacialHairColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.FacialHairColor);
-            set => _native.CharacterAppearance.FacialHairColor = value.ToRgbaBytes();
-        }
-
-        #endregion
-
-        #region Types 1
-
-        byte ICharacterAppearanceProperties.EyeWidth
-        {
-            get => _native.CharacterAppearance.EyeWidth;
-            set => _native.CharacterAppearance.EyeWidth = value;
-        }
-
-        byte ICharacterAppearanceProperties.EyeHeight
-        {
-            get => _native.CharacterAppearance.EyeHeight;
-            set => _native.CharacterAppearance.EyeHeight = value;
-        }
-
-        byte ICharacterAppearanceProperties.SkinColorX
-        {
-            get => _native.CharacterAppearance.SkinColorX;
-            set => _native.CharacterAppearance.SkinColorX = value;
-        }
-
-        byte ICharacterAppearanceProperties.SkinColorY
-        {
-            get => _native.CharacterAppearance.SkinColorY;
-            set => _native.CharacterAppearance.SkinColorY = value;
-        }
-
-        byte ICharacterAppearanceProperties.Age
-        {
-            get => _native.CharacterAppearance.Age;
-            set => _native.CharacterAppearance.Age = value;
-        }
-
-        byte ICharacterAppearanceProperties.Wrinkles
-        {
-            get => _native.CharacterAppearance.Wrinkles;
-            set => _native.CharacterAppearance.Wrinkles = value;
-        }
-
-        byte ICharacterAppearanceProperties.NoseHeight
-        {
-            get => _native.CharacterAppearance.NoseHeight;
-            set => _native.CharacterAppearance.NoseHeight = value;
-        }
-
-        byte ICharacterAppearanceProperties.MouthHeight
-        {
-            get => _native.CharacterAppearance.MouthHeight;
-            set => _native.CharacterAppearance.MouthHeight = value;
-        }
-
-        #endregion
-
-        #region Gender
-
-        Gender ICharacterAppearanceProperties.Gender
-        {
-            get => (Gender)_native.CharacterAppearance.Gender;
-            set => _native.CharacterAppearance.Gender = (int)value;
-        }
-
-        #endregion
-
-        #region Types 2
-
-        byte ICharacterAppearanceProperties.BrowType
-        {
-            get => _native.CharacterAppearance.BrowType;
-            set => _native.CharacterAppearance.BrowType = value;
-        }
-
-        byte ICharacterAppearanceProperties.FaceType
-        {
-            get => _native.CharacterAppearance.FaceType;
-            set => _native.CharacterAppearance.FaceType = value;
-        }
-
-        byte ICharacterAppearanceProperties.EyeType
-        {
-            get => _native.CharacterAppearance.EyeType;
-            set => _native.CharacterAppearance.EyeType = value;
-        }
-
-        byte ICharacterAppearanceProperties.NoseType
-        {
-            get => _native.CharacterAppearance.NoseType;
-            set => _native.CharacterAppearance.NoseType = value;
-        }
-
-        byte ICharacterAppearanceProperties.MouthType
-        {
-            get => _native.CharacterAppearance.MouthType;
-            set => _native.CharacterAppearance.MouthType = value;
-        }
-
-        byte ICharacterAppearanceProperties.EyebrowType
-        {
-            get => _native.CharacterAppearance.EyebrowType;
-            set => _native.CharacterAppearance.EyebrowType = value;
-        }
-
-        EyelashLength ICharacterAppearanceProperties.EyelashLength
-        {
-            get => (EyelashLength)_native.CharacterAppearance.EyelashLength;
-            set => _native.CharacterAppearance.EyelashLength = (byte)value;
-        }
-
-        byte ICharacterAppearanceProperties.FacialHairType
-        {
-            get => _native.CharacterAppearance.FacialHairType;
-            set => _native.CharacterAppearance.FacialHairType = value;
-        }
-
-        #endregion
-
-        #region Colors 2
-
-        Color ICharacterAppearanceProperties.HairColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.HairColor);
-            set => _native.CharacterAppearance.HairColor = value.ToRgbaBytes();
-        }
-
-        Color ICharacterAppearanceProperties.ClothingColor
-        {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.ClothingColor);
-            set => _native.CharacterAppearance.ClothingColor = value.ToRgbaBytes();
-        }
-
-        #endregion
-
-        #region Types 3
-
-        short ICharacterAppearanceProperties.HairType
-        {
-            get => _native.CharacterAppearance.HairType;
-            set => _native.CharacterAppearance.HairType = value;
-        }
-
-        byte ICharacterAppearanceProperties.ClothingType
-        {
-            get => _native.CharacterAppearance.ClothingType;
-            set => _native.CharacterAppearance.ClothingType = value;
-        }
-
-        byte ICharacterAppearanceProperties.Voice
-        {
-            get => _native.CharacterAppearance.Voice;
-            set => _native.CharacterAppearance.Voice = value;
-        }
-
-        int ICharacterAppearanceProperties.Expression
-        {
-            get => _native.CharacterAppearance.Expression;
-            set => _native.CharacterAppearance.Expression = value;
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Palico Appearance
-
-        public IPalicoAppearanceProperties PalicoAppearance => (IPalicoAppearanceProperties)this;
-
-        Color IPalicoAppearanceProperties.PatternColor1
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor1);
-            set => _native.PalicoAppearance.PatternColor1 = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.PatternColor2
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor2);
-            set => _native.PalicoAppearance.PatternColor2 = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.PatternColor3
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor3);
-            set => _native.PalicoAppearance.PatternColor3 = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.FurColor
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.FurColor);
-            set => _native.PalicoAppearance.FurColor = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.LeftEyeColor
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.LeftEyeColor);
-            set => _native.PalicoAppearance.LeftEyeColor = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.RightEyeColor
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.RightEyeColor);
-            set => _native.PalicoAppearance.RightEyeColor = value.ToRgbaBytes();
-        }
-
-        Color IPalicoAppearanceProperties.ClothingColor
-        {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.ClothingColor);
-            set => _native.PalicoAppearance.ClothingColor = value.ToRgbaBytes();
-        }
-
-        float IPalicoAppearanceProperties.FurLength
-        {
-            get => _native.PalicoAppearance.FurLength;
-            set => _native.PalicoAppearance.FurLength = value;
-        }
-
-        float IPalicoAppearanceProperties.FurThickness
-        {
-            get => _native.PalicoAppearance.FurThickness;
-            set => _native.PalicoAppearance.FurThickness = value;
-        }
-
-        byte IPalicoAppearanceProperties.PatternType
-        {
-            get => _native.PalicoAppearance.PatternType;
-            set => _native.PalicoAppearance.PatternType = value;
-        }
-
-        byte IPalicoAppearanceProperties.EyeType
-        {
-            get => _native.PalicoAppearance.EyeType;
-            set => _native.PalicoAppearance.EyeType = value;
-        }
-
-        byte IPalicoAppearanceProperties.EarType
-        {
-            get => _native.PalicoAppearance.EarType;
-            set => _native.PalicoAppearance.EarType = value;
-        }
-
-        byte IPalicoAppearanceProperties.TailType
-        {
-            get => _native.PalicoAppearance.TailType;
-            set => _native.PalicoAppearance.TailType = value;
-        }
-
-        PalicoVoiceType IPalicoAppearanceProperties.VoiceType
-        {
-            get => _native.PalicoAppearance.VoiceType;
-            set => _native.PalicoAppearance.VoiceType = value;
-        }
-
-        PalicoVoicePitch IPalicoAppearanceProperties.VoicePitch
-        {
-            get => _native.PalicoAppearance.VoicePitch;
-            set => _native.PalicoAppearance.VoicePitch = value;
-        }
-
-        #endregion
     }
 }

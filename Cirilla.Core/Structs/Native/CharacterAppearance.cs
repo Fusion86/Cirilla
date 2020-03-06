@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿// See misc/savedata_ib.bt
+
+using Cirilla.Core.Enums;
+using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Structs.Native
 {
@@ -24,6 +27,9 @@ namespace Cirilla.Core.Structs.Native
         CharacterMakeup Makeup2;
         CharacterMakeup Makeup1;
 
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 40, ArraySubType = UnmanagedType.U1)]
+        private byte[] Unk1;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] LeftEyeColor;
 
@@ -44,16 +50,16 @@ namespace Cirilla.Core.Structs.Native
         public byte Wrinkles;
         public byte NoseHeight;
         public byte MouthHeight;
-        public int Gender; // 0 = male, 1 = female
+        public Gender Gender;
         public byte BrowType;
         public byte FaceType;
         public byte EyeType;
         public byte NoseType;
         public byte MouthType;
         public byte EyebrowType;
-        public byte EyelashLength; // 0 = short, 1 = average, 2 = long
+        public EyelashLength EyelashLength;
         public byte FacialHairType;
-        public int Unk1; // Unused?
+        private int Zero1;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] HairColor;

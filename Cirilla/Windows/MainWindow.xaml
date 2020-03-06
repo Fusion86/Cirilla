@@ -56,26 +56,6 @@
                         <uc:NBSCEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>
 
-                    <DataTemplate DataType="{x:Type vm:SaveDataViewModel}">
-                        <Grid Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="140"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Selected hunter"/>
-                                <ComboBox ItemsSource="{Binding Items}" DisplayMemberPath="HunterName" SelectedItem="{Binding SelectedItem}"/>
-
-                                <TextBlock Text="SteamID" Margin="0, 10, 0, 0"/>
-                                <TextBlock Text="{Binding SteamId}"/>
-                            </StackPanel>
-
-                            <uc:SaveSlotEditor Grid.Column="2" DataContext="{Binding SelectedItem}"/>
-                        </Grid>
-                    </DataTemplate>
-
                     <DataTemplate DataType="{x:Type vm:EquipmentCraftingViewModel}">
                         <uc:EquipmentCraftingEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>

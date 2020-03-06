@@ -1,0 +1,167 @@
+//------------------------------------------------
+//--- 010 Editor v8.0 Binary Template
+//
+//      File: 
+//   Authors: Fusion86 and many others.
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// Notes:
+// SaveSlot size 2136768 (0x209AC0)
+
+// Unchanged from base
+struct HEADER {
+    byte magic[4];
+    uint unk1;
+    uint unk2;
+    byte hash[20];
+    uint64 datasize;
+    uint64 steamid;
+    byte padding[16];
+};
+
+struct CHARACTER_MAKEUP {
+    int unk;
+    ubyte color[4];
+    float posX;
+    float posY;
+    float sizeX;
+    float sizeY;
+    float glossy;
+    float metallic;
+    int type;
+};
+
+// int32, aka 4 bytes
+enum CHARACTER_GENDER {
+    genderMale = 0,
+    genderFemale = 1
+};
+
+struct CHARACTER_APPEARANCE {
+    CHARACTER_MAKEUP makeup2;
+    CHARACTER_MAKEUP makeup1;
+    byte unk1[40];
+
+    ubyte leftEyeColor[4];
+    ubyte rightEyeColor[4];
+    ubyte eyebrowColor[4];
+    ubyte facialHairColor[4];
+
+    ubyte eyeWidth;
+    ubyte eyeHeight;
+    ubyte skinColorX;
+    ubyte skinColorY;
+    ubyte age;
+    ubyte wrinkles;
+    ubyte noseHeight;
+    ubyte mouthHeight;
+
+    CHARACTER_GENDER gender;
+
+    ubyte browType;
+    ubyte faceType;
+    ubyte eyeType;
+    ubyte noseType;
+
+    ubyte mouthType;
+    ubyte eyebrowType;
+    ubyte eyelashLength;
+    ubyte facialHairType;
+
+    int zero0;
+
+    ubyte hairColor[4];
+    ubyte clothingColor[4];
+    ushort hairType;
+
+    ubyte clothingType;
+    ubyte voice;
+    int expression;
+};
+
+struct PALICO_APPEARANCE {
+    ubyte patternColor1[4];
+    ubyte patternColor2[4];
+    ubyte patternColor3[4];
+    ubyte furColor[4];
+    ubyte leftEyeColor[4];
+    ubyte rightEyeColor[4];
+    ubyte clothingColor[4];
+    
+    float furLength;
+    float furThickness;
+
+    ubyte patternType;
+    ubyte eyeType;
+    ubyte earType;
+    ubyte tailType;
+
+    ubyte voiceType;
+    ubyte voicePitch;
+    ushort unk1;
+};
+
+struct GUILDCARD {
+    uint64 steamId;
+    uint64 createdOn; // Timestamp
+    byte unk1;
+    uint hunterRank;
+    uint playTimeSec;
+    uint64 lastUpdated;
+    uint zero1;
+
+    char hunterName[64];
+    char primaryGroup[54];
+    byte unk2[16];
+    CHARACTER_APPEARANCE characterAppearance;
+    byte unk3[212];
+
+    char palicoName[64];
+    uint palicoRank;
+    byte unk4[338]; // Probably palico stats + quest/arena completion counter
+
+    char greeting[256];
+    char title[256];
+    byte unk5[6318];
+};
+
+struct SAVEDATA_SAVESLOT {
+    char hunterName[64];
+    int hunterRank;
+    int unk1;
+    int zeni;
+    int researchPoints;
+    int hunterXp;
+    int unk2;
+    int timePlayedSec;
+
+    CHARACTER_APPEARANCE characterAppearance;
+    byte unk3[382];
+    PALICO_APPEARANCE palicoAppearance;
+
+    GUILDCARD guildCard;
+    GUILDCARD collectedGuildCards[100];
+
+    byte unk4[969962];
+    char palicoName[64];
+    byte unk5[379569];
+};
+
+struct SAVEDATA {
+    HEADER header;
+    uint64 offsets[4];
+
+    byte section1[3145744]; // offsets[1] - offsets[0]
+    byte section2[4112]; // offsets[2] - offsets[1]
+    byte section3[72]; // offsets[3] - offsets[2]
+    byte section4[20]; // 20
+
+    SAVEDATA_SAVESLOT saveslots[3];
+    byte zero[1724356];
+} savedata <open=true>;

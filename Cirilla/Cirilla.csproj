@@ -113,7 +113,6 @@
     <Compile Include="UserControls\SaveSlotEditor.xaml.cs">
       <DependentUpon>SaveSlotEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AppearanceViewModel.cs" />
     <Compile Include="ViewModels\EquipmentCraftingEntryViewModel.cs" />
     <Compile Include="ViewModels\EquipmentCraftingViewModel.cs" />
     <Compile Include="ViewModels\GMDEntryViewModel.cs" />
@@ -128,8 +127,6 @@
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\FileTypeTabItemViewModelBase.cs" />
     <Compile Include="ViewModels\ObjectValuesDiffViewModel.cs" />
-    <Compile Include="ViewModels\SaveDataViewModel.cs" />
-    <Compile Include="ViewModels\SaveSlotViewModel.cs" />
     <Compile Include="Windows\ImportCsvWindow.xaml.cs">
       <DependentUpon>ImportCsvWindow.xaml</DependentUpon>
     </Compile>

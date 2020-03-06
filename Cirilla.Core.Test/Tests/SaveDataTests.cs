@@ -1,6 +1,7 @@
 ﻿using Cirilla.Core.Models;
 using Cirilla.Core.Structs.Native;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Test.Tests
@@ -45,16 +46,22 @@ namespace Cirilla.Core.Test.Tests
         {
             SaveData save = new SaveData(@"L:\Sync\MHW Mods\test_dataset\" + filename);
             Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
+            Assert.AreEqual("Sjonnie Jan", save.SaveSlots[0].PalicoName);
+            Assert.AreEqual("Fusion", save.SaveSlots[1].HunterName);
         }
 
-        [TestMethod]
-        public void Rebuild__SAVEDATA1000()
+        [DataTestMethod]
+        [DataRow("SAVEDATA1000_ib_dec", false)]
+        [DataRow("SAVEDATA1000_ib_dec_1", false)]
+        [DataRow("SAVEDATA1000_ib_dec", true)]
+        [DataRow("SAVEDATA1000_ib_dec_1", true)]
+        public void Rebuild__SAVEDATA1000(string filename, bool encrypt)
         {
-            string origPath = @"C:/Steam/userdata/112073240/582010/remote/SAVEDATA1000";
-            string rebuildPath = "rebuild__SAVEDATA1000";
+            string origPath = @"L:\Sync\MHW Mods\test_dataset\" + filename;
+            string rebuildPath = "rebuild__" + filename + "_" + (encrypt ? "enc" : "dec");
 
             SaveData save = new SaveData(origPath);
-            save.Save(rebuildPath);
+            save.Save(rebuildPath, encrypt, false);
 
             if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
                 Assert.Fail("Hash doesn't match!");
