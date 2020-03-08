@@ -132,6 +132,14 @@ namespace Cirilla.Core.Models
                 bytes = ms.ToArray();
             }
 
+            if (encrypt)
+            {
+                IcebornCrypto.EncryptRegion(bytes, 0x70, 0xDA50);
+                IcebornCrypto.EncryptRegion(bytes, 0x3010D8, 0x2098C0);
+                IcebornCrypto.EncryptRegion(bytes, 0x50AB98, 0x2098C0);
+                IcebornCrypto.EncryptRegion(bytes, 0x714658, 0x2098C0);
+            }
+
             if (fixChecksum)
             {
                 // Update hash
@@ -291,7 +299,7 @@ namespace Cirilla.Core.Models
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
 
         #region Makeup2
-        
+
         // HACK: Makeup is not enclassed (like in native struct) because I'm lazy
         Color ICharacterAppearanceProperties.Makeup2Color
         {

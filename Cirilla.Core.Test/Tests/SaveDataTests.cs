@@ -52,12 +52,9 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [DataTestMethod]
-        [DataRow("SAVEDATA1000_ib", false)]
+        [DataRow("SAVEDATA1000_ib", true)]
         [DataRow("SAVEDATA1000_ib_dec", false)]
         [DataRow("SAVEDATA1000_ib_dec_1", false)]
-        [DataRow("SAVEDATA1000_ib", true)]
-        [DataRow("SAVEDATA1000_ib_dec", true)]
-        [DataRow("SAVEDATA1000_ib_dec_1", true)]
         public void Rebuild__SAVEDATA1000(string filename, bool encrypt)
         {
             string origPath = @"L:\Sync\MHW Mods\test_dataset\" + filename;

@@ -135,7 +135,7 @@ namespace Cirilla.Core.Crypto
             0x4e3595f9, 0x1116dae3, 0xd11678a6, 0x08c6cbb4, 0x44059f2c, 0xc739889f, 0x04187a3f, 0xd2462954, 0x9d9f66f6, 0x04eca5a6, 0xd5f25077, 0x75bfaed8, 0xc189a2dd, 0x9efaa7e4, 0x0f4d5dc1, 0xed7328f4, 0x905978a5, 0x383609d0, 0x9aa26d07, 0xc88edd26, 0x15f12f5b, 0x1090455f, 0x0b85de45, 0x4181b5df, 0x3afe1280, 0x059aa558, 0x28534255, 0x01dcb829, 0xb112909d, 0x4def0002, 0x57accf3c, 0x793525c0,
             0x0204a9af, 0xce454a9a, 0xe49ae322, 0x81707968, 0xc87e7338, 0xb775fb96, 0xf57e0360, 0xe8fb020f, 0x17c089cb, 0x2e18a1a3, 0x04251c26, 0x03f29aaa, 0xb9e291dc, 0x55edd914, 0xe3826cbb, 0xe2278e3e, 0x4862a221, 0xc0135edf, 0xc1da6e1b, 0xb78d2161, 0xddbb6d10, 0x3d102593, 0x7afdc8b1, 0x85d0d60a, 0x6f9e43f6, 0xe0752045, 0x5e7e1b56, 0xb6899a3c, 0x4fa21007, 0xad53c90a, 0x1e33b83f, 0x6426b760,
             0x13f2ea5f, 0x006e2b71, 0xb03a41ee, 0xf3b2eb3f, 0x999d2af8, 0x8d2c6656, 0x2e1abd3b, 0x7da5cefc, 0x60d36aa3, 0x965c8734, 0x6ad0d853, 0xb93d248f, 0x0e58d231, 0xd7797aee, 0x628c9bc3, 0xa4bbb4f0, 0xc080c6e0, 0x454088dd, 0x03203e6d, 0x2005e1b8, 0xf7a6ddf9, 0xdb820df2, 0x45a2e231, 0xbe0bcf8d, 0x35923b66, 0x422c2292, 0xe2cc0c18, 0x03f48beb, 0x0701c163, 0x25d019d1, 0x88a74c7b, 0x7e9cb72e
-    };
+        };
 
         private static float[] FLOAT_CONSTANTS = {
             0.120002F, 0.98657F, 0.722385F, 0.167307F, 0.01099F, 0.69451F, 0.783851F, 0.676534F, 0.205887F, 0.347737F, 0.686114F, 0.434551F, 0.302053F, 0.549133F, 0.225536F, 0.483361F, 0.693883F, 0.799498F, 0.065586F, 0.671937F, 0.693111F, 0.246235F, 0.607265F, 0.353497F, 0.501309F, 0.988425F, 0.338359F, 0.1549F, 0.48125F, 0.310782F, 0.786255F, 0.16761F,
@@ -266,7 +266,7 @@ namespace Cirilla.Core.Crypto
             0.735454F, 0.013013F, 6.59E-4F, 0.887968F, 0.456439F, 0.78952F, 0.378604F, 0.368727F, 0.838967F, 0.205754F, 0.998544F, 0.067883F, 0.765159F, 0.950196F, 0.337813F, 0.245447F, 0.478228F, 0.281824F, 0.518263F, 0.714497F, 0.816484F, 0.688991F, 0.98921F, 0.27915F, 0.96219F, 0.144469F, 0.93726F, 0.840014F, 0.886744F, 0.388978F, 0.746467F, 0.689903F,
             0.295462F, 0.707838F, 0.467594F, 0.397633F, 0.050383F, 0.725771F, 0.248658F, 0.613526F, 0.006592F, 0.791893F, 0.75247F, 0.516905F, 0.802497F, 0.318101F, 0.054779F, 0.182632F, 0.208239F, 0.028364F, 0.016549F, 0.822479F, 0.467512F, 0.632887F, 0.672444F, 0.452504F, 0.890913F, 0.94528F, 0.820986F, 0.37279F, 0.371278F, 0.975212F, 0.0441F, 0.713906F,
             0.715411F, 0.602545F, 0.065763F, 0.787931F, 0.33961F, 0.221024F, 0.277892F, 0.293257F, 0.542782F, 0.686109F, 0.115156F, 0.658741F, 0.980804F, 0.091177F, 0.728526F, 0.256006F, 0.873865F, 0.278029F, 0.287839F, 0.516331F, 0.700478F, 0.061656F, 0.945882F, 0.545822F, 0.384741F, 0.928869F, 0.037488F, 0.165914F, 0.316321F, 0.078455F, 0.155139F, 0.516342F,
-    };
+        };
 
         public static void DecryptRegion(byte[] data, int offset, int length)
         {
@@ -316,6 +316,61 @@ namespace Cirilla.Core.Crypto
                     data[dataOffset + branch + 9] ^= salt[saltOffset + 5 & 0x1FF];
                     data[dataOffset + branch + 10] ^= salt[saltOffset + 6 & 0x1FF];
                     data[dataOffset + branch + 11] ^= salt[saltOffset + 7 & 0x1FF];
+
+                    saltOffset += 4;
+                    dataOffset += 16;
+                }
+            }
+        }
+
+        public static void EncryptRegion(byte[] data, int offset, int length)
+        {
+            var aes = new AesManaged
+            {
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.None
+            };
+
+            byte[] salt = new byte[0x200];
+            byte[][] keys = new byte[0x20][];
+            int[] keyLength = new int[0x20];
+            uint keySalt = Crc32(0xA37A55D7, data, offset + length, 0x200);
+            int dataOffset = offset;
+
+            GenerateSalt(salt, keySalt);
+            GenerateKeys(keys, keySalt, salt);
+            GenerateKeyLength(keyLength, keySalt, length);
+
+            for (int i = 0; i < 32; ++i)
+            {
+                int saltOffset = 0;
+                aes.Key = keys[i];
+                using var encryptor = aes.CreateEncryptor();
+
+                while (dataOffset < keyLength[i] + offset)
+                {
+                    int branch = (salt[saltOffset & 0x1FF] & 1) == 0 ? 4 : 0;
+                    data[dataOffset + branch + 0] ^= salt[saltOffset + 0 & 0x1FF];
+                    data[dataOffset + branch + 1] ^= salt[saltOffset + 1 & 0x1FF];
+                    data[dataOffset + branch + 2] ^= salt[saltOffset + 2 & 0x1FF];
+                    data[dataOffset + branch + 3] ^= salt[saltOffset + 3 & 0x1FF];
+
+                    data[dataOffset + branch + 8] ^= salt[saltOffset + 4 & 0x1FF];
+                    data[dataOffset + branch + 9] ^= salt[saltOffset + 5 & 0x1FF];
+                    data[dataOffset + branch + 10] ^= salt[saltOffset + 6 & 0x1FF];
+                    data[dataOffset + branch + 11] ^= salt[saltOffset + 7 & 0x1FF];
+
+                    encryptor.TransformBlock(data, dataOffset, 16, data, dataOffset);
+
+                    data[dataOffset - branch + 4] ^= salt[saltOffset + 8 & 0x1FF];
+                    data[dataOffset - branch + 5] ^= salt[saltOffset + 9 & 0x1FF];
+                    data[dataOffset - branch + 6] ^= salt[saltOffset + 10 & 0x1FF];
+                    data[dataOffset - branch + 7] ^= salt[saltOffset + 11 & 0x1FF];
+
+                    data[dataOffset - branch + 12] ^= salt[saltOffset + 12 & 0x1FF];
+                    data[dataOffset - branch + 13] ^= salt[saltOffset + 13 & 0x1FF];
+                    data[dataOffset - branch + 14] ^= salt[saltOffset + 14 & 0x1FF];
+                    data[dataOffset - branch + 15] ^= salt[saltOffset + 15 & 0x1FF];
 
                     saltOffset += 4;
                     dataOffset += 16;
@@ -413,7 +468,7 @@ namespace Cirilla.Core.Crypto
         /// <param name="bytes">Byte buffer</param>
         /// <param name="ptr">Offset</param>
         /// <returns></returns>
-        public static uint ReadInt(byte[] bytes, int ptr)
+        private static uint ReadInt(byte[] bytes, int ptr)
         {
             return (bytes[ptr]) | (uint)(bytes[ptr + 1] << 8) | (uint)(bytes[ptr + 2] << 16) | (uint)(bytes[ptr + 3] << 24);
         }
