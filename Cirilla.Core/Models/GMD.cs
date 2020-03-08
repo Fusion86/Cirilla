@@ -77,7 +77,7 @@ namespace Cirilla.Core.Models
 
                 // Keys, this skips over the GMD_EntryWithoutKey entries
                 foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
-                    entry.Key = br.ReadStringZero(ExEncoding.ASCII);
+                    entry.Key = br.ReadStringZero(ExEncoding.UTF8);
 
                 // Strings
                 string[] strings = new string[_header.StringCount];
@@ -131,7 +131,7 @@ namespace Cirilla.Core.Models
                 // Keys, excludes GMD_EntryWithoutKey
                 foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
                 {
-                    bw.Write(ExEncoding.ASCII.GetBytes(entry.Key));
+                    bw.Write(ExEncoding.UTF8.GetBytes(entry.Key));
                     bw.Write((byte)0); // szString end of string
                 }
 
@@ -171,7 +171,7 @@ namespace Cirilla.Core.Models
 
             foreach (var entry in realEntries)
             {
-                byte[] keyBytes = ExEncoding.ASCII.GetBytes(entry.Key);
+                byte[] keyBytes = ExEncoding.UTF8.GetBytes(entry.Key);
 
                 // Hash 1
                 byte[] input1 = new byte[keyBytes.Length * 2];
