@@ -8,7 +8,6 @@ using Cirilla.Core.Interfaces;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;

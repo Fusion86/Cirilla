@@ -427,8 +427,8 @@ namespace Cirilla.Core.Crypto
             {
                 uint a = INTEGER_CONSTANTS[(keySalt + i) & 0xFFF ^ 0x5d7];
                 float b = FLOAT_CONSTANTS[a & 0xFFF ^ 0x885] - 0.5F;
-                float c = (b * averageLength) + expectedLength + 0xF;
-                keyLength[i] = (int)((uint)c & 0xFFFFFFF0);
+                float c = (int)(b * averageLength) + expectedLength + 0xF & 0xFFFFFFF0;
+                keyLength[i] = (int)c;
                 expectedLength += averageLength;
             }
 
