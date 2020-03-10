@@ -13,6 +13,7 @@ Edit .gmd files in an okayish GUI.
 ## Thanks to
 
 - ID-Daemon and dynaomi
+- legendff - Crypto reverse engineering
 - MHVuze - [WorldChunkTool](https://github.com/mhvuze/WorldChunkTool) and documentation
 - Delutto - GMD documentation
 - izayoi - Documentation
