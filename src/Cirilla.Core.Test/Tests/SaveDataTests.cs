@@ -51,6 +51,13 @@ namespace Cirilla.Core.Test.Tests
             Assert.AreEqual("Knor", save.SaveSlots[1].PalicoName);
         }
 
+        [TestMethod]
+        public void Load__SAVEDATA1000_remote()
+        {
+            SaveData save = new SaveData(@"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000");
+            save.Save("dec", false, false);
+        }
+
         [DataTestMethod]
         [DataRow("SAVEDATA1000_ib", true)]
         [DataRow("SAVEDATA1000_ib_dec", false)]

@@ -7,8 +7,6 @@ namespace Cirilla.Core.Structs.Native
 {
     public struct CharacterMakeup
     {
-        private int Unk;
-
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] Color;
 
@@ -18,16 +16,18 @@ namespace Cirilla.Core.Structs.Native
         public float SizeY;
         public float Glossy;
         public float Metallic;
+        private int Zero;
         public int Type;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CharacterAppearance
     {
+        private int Unk2;
         public CharacterMakeup Makeup2;
         public CharacterMakeup Makeup1;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 40, ArraySubType = UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk1;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]

@@ -26,7 +26,6 @@ struct HEADER {
 };
 
 struct CHARACTER_MAKEUP {
-    int unk;
     ubyte color[4];
     float posX;
     float posY;
@@ -34,6 +33,7 @@ struct CHARACTER_MAKEUP {
     float sizeY;
     float glossy;
     float metallic;
+    int zero;
     int type;
 };
 
@@ -44,9 +44,10 @@ enum CHARACTER_GENDER {
 };
 
 struct CHARACTER_APPEARANCE {
+    int unk2;
     CHARACTER_MAKEUP makeup2;
     CHARACTER_MAKEUP makeup1;
-    byte unk1[40];
+    byte unk1[36];
 
     ubyte leftEyeColor[4];
     ubyte rightEyeColor[4];

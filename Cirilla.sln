@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Test", "Cirilla.Core.Test\Cirilla.Core.Test.csproj", "{504B74E1-6B52-4710-AB83-F08CD8B08782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Test", "src\Cirilla.Core.Test\Cirilla.Core.Test.csproj", "{504B74E1-6B52-4710-AB83-F08CD8B08782}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla", "Cirilla\Cirilla.csproj", "{FD8304BD-F468-4229-8627-543085351B56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla", "src\Cirilla\Cirilla.csproj", "{FD8304BD-F468-4229-8627-543085351B56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core", "Cirilla.Core\Cirilla.Core.csproj", "{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core", "src\Cirilla.Core\Cirilla.Core.csproj", "{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Benchmark", "Cirilla.Core.Benchmark\Cirilla.Core.Benchmark.csproj", "{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Benchmark", "src\Cirilla.Core.Benchmark\Cirilla.Core.Benchmark.csproj", "{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "src\GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveTool", "SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveTool", "src\SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceEditPalette", "FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceEditPalette", "src\FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
