@@ -13,6 +13,11 @@
 
 // Notes:
 // SaveSlot size 2136768 (0x209AC0)
+//
+// HairStyles:
+// 4-2  = 119
+// 23-2 = 29
+// 32-3 = 40
 
 // Unchanged from base
 struct HEADER {
@@ -31,9 +36,9 @@ struct CHARACTER_MAKEUP {
     float posY;
     float sizeX;
     float sizeY;
-    float glossy;
+    float glossy; // Inverted?
     float metallic;
-    int zero;
+    float luminescent;
     int type;
 };
 
@@ -47,7 +52,7 @@ struct CHARACTER_APPEARANCE {
     int unk2;
     CHARACTER_MAKEUP makeup2;
     CHARACTER_MAKEUP makeup1;
-    byte unk1[36];
+    CHARACTER_MAKEUP makeup3; // Yes this is the correct order
 
     ubyte leftEyeColor[4];
     ubyte rightEyeColor[4];
@@ -75,7 +80,7 @@ struct CHARACTER_APPEARANCE {
     ubyte eyelashLength;
     ubyte facialHairType;
 
-    int zero0;
+    int unk1;
 
     ubyte hairColor[4];
     ubyte clothingColor[4];
@@ -95,8 +100,8 @@ struct PALICO_APPEARANCE {
     ubyte rightEyeColor[4];
     ubyte clothingColor[4];
     
-    float furLength;
-    float furThickness;
+    float furLength; // Max 0.7
+    float furThickness; // Max 3
 
     ubyte patternType;
     ubyte eyeType;
@@ -105,7 +110,7 @@ struct PALICO_APPEARANCE {
 
     ubyte voiceType;
     ubyte voicePitch;
-    ushort unk1;
+    ushort unk1; // Outline/face and pupils?
 };
 
 struct GUILDCARD {
