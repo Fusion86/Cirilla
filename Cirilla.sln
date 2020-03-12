@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "src\GMDTool\GMDT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveTool", "src\SaveTool\SaveTool.csproj", "{CF26C1F8-5F6E-461D-A115-C00C87ED9996}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceEditPalette", "src\FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceEditPalette", "src\FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

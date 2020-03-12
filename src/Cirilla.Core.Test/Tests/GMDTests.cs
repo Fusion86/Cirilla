@@ -32,20 +32,6 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [TestMethod]
-        public void Load__action_trial_eng()
-        {
-            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd"));
-            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
-        }
-
-        [TestMethod]
-        public void Load__action_trial_ara()
-        {
-            GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/action_trial_ara.gmd"));
-            //Assert.AreEqual(gmd.Entries[3].Value, "©CAPCOM CO., LTD. ALL RIGHTS RESERVED.");
-        }
-
-        [TestMethod]
         public void Load__cm_facility_eng()
         {
             GMD gmd = new GMD(Utility.GetFullPath(@"chunk0/common/text/cm_facility_eng.gmd"));
@@ -100,19 +86,6 @@ namespace Cirilla.Core.Test.Tests
         {
             string origPath = Utility.GetFullPath(@"chunk0/common/text/item_eng.gmd");
             string rebuildPath = "rebuild__item_eng.gmd";
-
-            GMD gmd = new GMD(origPath);
-            gmd.Save(rebuildPath);
-
-            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
-                Assert.Fail("Hash doesn't match!");
-        }
-
-        [TestMethod]
-        public void Rebuild__action_trial_eng()
-        {
-            string origPath = Utility.GetFullPath(@"chunk0/common/text/action_trial_eng.gmd");
-            string rebuildPath = "rebuild__action_trial_eng.gmd";
 
             GMD gmd = new GMD(origPath);
             gmd.Save(rebuildPath);

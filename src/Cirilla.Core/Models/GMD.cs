@@ -163,7 +163,9 @@ namespace Cirilla.Core.Models
             for (int i = 1; i < realEntries.Count; i++) // Start at 1
             {
                 realEntries[i].InfoTableEntry.StringIndex = Entries.IndexOf(realEntries[i]);
-                realEntries[i].InfoTableEntry.KeyOffset = realEntries[i - 1].InfoTableEntry.KeyOffset + realEntries[i - 1].Key.Length + 1; // +1 for szString end
+                int prevKeyOffset = realEntries[i - 1].InfoTableEntry.KeyOffset;
+                int prevKeySize = ExEncoding.UTF8.GetByteCount(realEntries[i - 1].Key) + 1; // +1 for szString end
+                realEntries[i].InfoTableEntry.KeyOffset = prevKeyOffset + prevKeySize;
             }
 
             // Check and update hashes (CRC32 with bitwise complement, aka reverse each bit)
@@ -225,8 +227,8 @@ namespace Cirilla.Core.Models
             // KeyBlockSize
             Logger.Info("Current KeyBlockSize = " + _header.KeyBlockSize);
 
-            // ASCII.GetByteCount() is not needed because all chars are exactly one byte large
-            _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + realEntries.Last().Key.Length + 1; // +1 for szString end
+            int lastKeySize = ExEncoding.UTF8.GetByteCount(realEntries.Last().Key) + 1; // +1 for szString end
+            _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + lastKeySize;
 
             Logger.Info("New KeyBlockSize = " + _header.KeyBlockSize);
         }
