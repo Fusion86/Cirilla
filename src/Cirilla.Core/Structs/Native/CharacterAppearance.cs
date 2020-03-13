@@ -26,9 +26,7 @@ namespace Cirilla.Core.Structs.Native
         private int Unk2;
         public CharacterMakeup Makeup2;
         public CharacterMakeup Makeup1;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36, ArraySubType = UnmanagedType.U1)]
-        private byte[] Unk1;
+        public CharacterMakeup Makeup3;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] LeftEyeColor;

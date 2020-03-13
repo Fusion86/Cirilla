@@ -73,5 +73,18 @@ namespace Cirilla.Core.Test.Tests
             if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
                 Assert.Fail("Hash doesn't match!");
         }
+
+        [TestMethod]
+        public void Rebuild__SAVEDATA1000_remote()
+        {
+            string origPath = @"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000";
+            string rebuildPath = "rebuild__SAVEDATA1000_remote";
+
+            SaveData save = new SaveData(origPath);
+            save.Save(rebuildPath);
+
+            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+                Assert.Fail("Hash doesn't match!");
+        }
     }
 }

@@ -222,7 +222,7 @@ namespace Cirilla.Core.Models
         public string HunterName
         {
             // TODO: Trim everything after the \0
-            get => Encoding.UTF8.GetString(_native.HunterName).TrimEnd('\0');
+            get => Encoding.UTF8.GetString(_native.HunterName).TrimZeroTerminator();
 
             set
             {
@@ -240,7 +240,7 @@ namespace Cirilla.Core.Models
         public string PalicoName
         {
             // TODO: Trim everything after the \0
-            get => Encoding.UTF8.GetString(_native.PalicoName).TrimEnd('\0');
+            get => Encoding.UTF8.GetString(_native.PalicoName).TrimZeroTerminator();
 
             set
             {

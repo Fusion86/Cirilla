@@ -12,5 +12,12 @@ namespace Cirilla.Core.Extensions
                 bytes[i / 2] = Convert.ToByte(str.Substring(i, 2), 16);
             return bytes;
         }
+
+        public static string TrimZeroTerminator(this string str)
+        {
+            int pos = str.IndexOf('\0');
+            if (pos >= 0) return str.Substring(0, pos);
+            else return str;
+        }
     }
 }
