@@ -16,7 +16,15 @@ namespace Cirilla.Core.Models
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly static byte[] CMP_MAGIC = new byte[] { 0x07, 0x00 };
+        /// <summary>
+        /// Magic for base version of the game (pre-Iceborne).
+        /// </summary>
+        private readonly static byte[] CMP_BASE_MAGIC = new byte[] { 0x07, 0x00 };
+
+        /// <summary>
+        /// Magic for Iceborne version of the game.
+        /// </summary>
+        private readonly static byte[] CMP_ICEBORNE_MAGIC = new byte[] { 0x01, 0x10 };
 
         private CharacterAppearance _native;
 
@@ -24,16 +32,16 @@ namespace Cirilla.Core.Models
         {
             Logger.Info($"Loading '{path}'");
 
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (BinaryReader br = new BinaryReader(fs))
-            {
-                byte[] magic = br.ReadBytes(2);
+            using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using BinaryReader br = new BinaryReader(fs);
 
-                if (magic.SequenceEqual(CMP_MAGIC) == false)
-                    throw new Exception("Not a CMP file!");
-
+            byte[] magic = br.ReadBytes(2);
+            if (magic.SequenceEqual(CMP_BASE_MAGIC))
+                _native = br.ReadStruct<Structs.Native.Compat.CharacterAppearance>();
+            else if (magic.SequenceEqual(CMP_ICEBORNE_MAGIC))
                 _native = br.ReadStruct<CharacterAppearance>();
-            }
+            else
+                throw new Exception("Not a CMP file!");
         }
 
         public CMP(CharacterAppearance characterAppearance) : base(null)
@@ -44,12 +52,11 @@ namespace Cirilla.Core.Models
 
         public void Save(string path)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Create))
-            using (BinaryWriter bw = new BinaryWriter(fs))
-            {
-                bw.Write(CMP_MAGIC);
-                bw.Write(_native.ToBytes());
-            }
+            using FileStream fs = new FileStream(path, FileMode.Create);
+            using BinaryWriter bw = new BinaryWriter(fs);
+
+            bw.Write(CMP_ICEBORNE_MAGIC);
+            bw.Write(_native.ToBytes());
         }
 
         //
@@ -180,6 +187,65 @@ namespace Cirilla.Core.Models
         {
             get => _native.Makeup1.Type;
             set => _native.Makeup1.Type = value;
+        }
+
+        #endregion
+
+        #region Makeup3
+
+        // HACK: Makeup is not enclassed (like in native struct) because I'm lazy
+        Color ICharacterAppearanceProperties.Makeup3Color
+        {
+            get => Utility.RGBAToColor(_native.Makeup3.Color);
+            set => _native.Makeup3.Color = value.ToRgbaBytes();
+        }
+
+        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
+        float ICharacterAppearanceProperties.Makeup3PosX
+        {
+            get => _native.Makeup3.PosX;
+            set => _native.Makeup3.PosX = value;
+        }
+
+        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
+        float ICharacterAppearanceProperties.Makeup3PosY
+        {
+            get => _native.Makeup3.PosY;
+            set => _native.Makeup3.PosY = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup3SizeX
+        {
+            get => _native.Makeup3.SizeX;
+            set => _native.Makeup3.SizeX = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup3SizeY
+        {
+            get => _native.Makeup3.SizeY;
+            set => _native.Makeup3.SizeY = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
+        float ICharacterAppearanceProperties.Makeup3Glossy
+        {
+            get => _native.Makeup3.Glossy;
+            set => _native.Makeup3.Glossy = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
+        float ICharacterAppearanceProperties.Makeup3Metallic
+        {
+            get => _native.Makeup3.Metallic;
+            set => _native.Makeup3.Metallic = value;
+        }
+
+        int ICharacterAppearanceProperties.Makeup3Type
+        {
+            get => _native.Makeup3.Type;
+            set => _native.Makeup3.Type = value;
         }
 
         #endregion

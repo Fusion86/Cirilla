@@ -36,6 +36,15 @@ namespace Cirilla.Core.Interfaces
         float Makeup1Metallic { get; set; }
         int Makeup1Type { get; set; }
 
+        Color Makeup3Color { get; set; }
+        float Makeup3PosX { get; set; }
+        float Makeup3PosY { get; set; }
+        float Makeup3SizeX { get; set; }
+        float Makeup3SizeY { get; set; }
+        float Makeup3Glossy { get; set; }
+        float Makeup3Metallic { get; set; }
+        int Makeup3Type { get; set; }
+
         Color LeftEyeColor { get; set; }
         Color RightEyeColor { get; set; }
         Color EyebrowColor { get; set; }

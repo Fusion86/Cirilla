@@ -13,11 +13,6 @@
 
 // Notes:
 // SaveSlot size 2136768 (0x209AC0)
-//
-// HairStyles:
-// 4-2  = 119
-// 23-2 = 29
-// 32-3 = 40
 
 // Unchanged from base
 struct HEADER {

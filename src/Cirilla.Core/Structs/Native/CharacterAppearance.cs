@@ -16,17 +16,32 @@ namespace Cirilla.Core.Structs.Native
         public float SizeY;
         public float Glossy;
         public float Metallic;
-        private int Zero;
+        public int Luminescent; // New in Iceborne
         public int Type;
+
+        public static implicit operator CharacterMakeup(Compat.CharacterMakeup compat)
+        {
+            return new CharacterMakeup
+            {
+                Color = compat.Color,
+                PosX = compat.PosX,
+                PosY = compat.PosX,
+                SizeX = compat.SizeX,
+                SizeY = compat.SizeY,
+                Glossy = compat.Glossy,
+                Metallic = compat.Metallic,
+                Type = compat.Type
+            };
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CharacterAppearance
     {
-        private int Unk2;
+        private int Unk2; // New in Iceborne
         public CharacterMakeup Makeup2;
         public CharacterMakeup Makeup1;
-        public CharacterMakeup Makeup3;
+        public CharacterMakeup Makeup3; // New in Iceborne
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] LeftEyeColor;
@@ -69,5 +84,40 @@ namespace Cirilla.Core.Structs.Native
         public byte ClothingType;
         public byte Voice;
         public int Expression;
+
+        public static implicit operator CharacterAppearance(Compat.CharacterAppearance compat)
+        {
+            return new CharacterAppearance
+            {
+                Makeup2 = compat.Makeup2,
+                Makeup1 = compat.Makeup1,
+                LeftEyeColor = compat.LeftEyeColor,
+                RightEyeColor = compat.RightEyeColor,
+                EyebrowColor = compat.EyebrowColor,
+                FacialHairColor = compat.FacialHairColor,
+                EyeWidth = compat.EyeWidth,
+                EyeHeight = compat.EyeHeight,
+                SkinColorX = compat.SkinColorY,
+                Age = compat.Age,
+                Wrinkles = compat.Wrinkles,
+                NoseHeight = compat.NoseHeight,
+                MouthHeight = compat.MouthHeight,
+                Gender = compat.Gender,
+                BrowType = compat.BrowType,
+                FaceType = compat.FaceType,
+                EyeType = compat.EyeType,
+                NoseType = compat.NoseType,
+                MouthType = compat.MouthType,
+                EyebrowType = compat.EyebrowType,
+                EyelashLength = compat.EyelashLength,
+                FacialHairType = compat.FacialHairType,
+                HairColor = compat.HairColor,
+                ClothingColor = compat.ClothingColor,
+                HairType = compat.HairType,
+                ClothingType = compat.ClothingType,
+                Voice = compat.Voice,
+                Expression = compat.Expression,
+            };
+        }
     }
 }

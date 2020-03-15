@@ -16,7 +16,7 @@ namespace Cirilla.Core.Structs.Native
 
         /// <remarks>
         /// Base Game Data Size = 9438368
-        /// Iceborn Data Size = 11284640
+        /// Iceborne Data Size = 11284640
         /// </remarks>
         public long DataSize;
 

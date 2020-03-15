@@ -45,10 +45,10 @@ namespace Cirilla.Core.Models
                 bytes = _blowfish.Decrypt_ECB(bytes);
                 bytes = SwapBytes(bytes);
 
-                IcebornCrypto.DecryptRegion(bytes, 0x70, 0xDA50); // Not a clue what this is, but it's not important for my use cases
-                IcebornCrypto.DecryptRegion(bytes, 0x3010D8, 0x2098C0); // Saveslot 1
-                IcebornCrypto.DecryptRegion(bytes, 0x50AB98, 0x2098C0); // Saveslot 2
-                IcebornCrypto.DecryptRegion(bytes, 0x714658, 0x2098C0); // Saveslot 3
+                IceborneCrypto.DecryptRegion(bytes, 0x70, 0xDA50); // Not a clue what this is, but it's not important for my use cases
+                IceborneCrypto.DecryptRegion(bytes, 0x3010D8, 0x2098C0); // Saveslot 1
+                IceborneCrypto.DecryptRegion(bytes, 0x50AB98, 0x2098C0); // Saveslot 2
+                IceborneCrypto.DecryptRegion(bytes, 0x714658, 0x2098C0); // Saveslot 3
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
@@ -59,7 +59,7 @@ namespace Cirilla.Core.Models
                 if (_header.Magic[0] != 0x01 || _header.Magic[1] != 0x00 || _header.Magic[2] != 0x00 || _header.Magic[3] != 0x00)
                     throw new Exception("Decryption failed or this isn't a valid SAVEDATA file.");
 
-                if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborn SAVEDATA, which is not supported anymore. Try using an older version of this tool.");
+                if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborne SAVEDATA, which is not supported anymore. Try using an older version of this tool.");
                 else if (_header.DataSize != 11284640) throw new Exception("Unexpected DataSize, meaning that this version can't work with this SAVEDATA.");
 
                 _sectionOffsets = new long[4];
@@ -134,10 +134,10 @@ namespace Cirilla.Core.Models
 
             if (encrypt)
             {
-                IcebornCrypto.EncryptRegion(bytes, 0x70, 0xDA50);
-                IcebornCrypto.EncryptRegion(bytes, 0x3010D8, 0x2098C0);
-                IcebornCrypto.EncryptRegion(bytes, 0x50AB98, 0x2098C0);
-                IcebornCrypto.EncryptRegion(bytes, 0x714658, 0x2098C0);
+                IceborneCrypto.EncryptRegion(bytes, 0x70, 0xDA50);
+                IceborneCrypto.EncryptRegion(bytes, 0x3010D8, 0x2098C0);
+                IceborneCrypto.EncryptRegion(bytes, 0x50AB98, 0x2098C0);
+                IceborneCrypto.EncryptRegion(bytes, 0x714658, 0x2098C0);
             }
 
             if (fixChecksum)
@@ -413,6 +413,64 @@ namespace Cirilla.Core.Models
         {
             get => _native.CharacterAppearance.Makeup1.Type;
             set => _native.CharacterAppearance.Makeup1.Type = value;
+        }
+
+        #endregion
+
+        #region Makeup3
+
+        Color ICharacterAppearanceProperties.Makeup3Color
+        {
+            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup3.Color);
+            set => _native.CharacterAppearance.Makeup3.Color = value.ToRgbaBytes();
+        }
+
+        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
+        float ICharacterAppearanceProperties.Makeup3PosX
+        {
+            get => _native.CharacterAppearance.Makeup3.PosX;
+            set => _native.CharacterAppearance.Makeup3.PosX = value;
+        }
+
+        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
+        float ICharacterAppearanceProperties.Makeup3PosY
+        {
+            get => _native.CharacterAppearance.Makeup3.PosY;
+            set => _native.CharacterAppearance.Makeup3.PosY = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup3SizeX
+        {
+            get => _native.CharacterAppearance.Makeup3.SizeX;
+            set => _native.CharacterAppearance.Makeup3.SizeX = value;
+        }
+
+        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
+        float ICharacterAppearanceProperties.Makeup3SizeY
+        {
+            get => _native.CharacterAppearance.Makeup3.SizeY;
+            set => _native.CharacterAppearance.Makeup3.SizeY = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
+        float ICharacterAppearanceProperties.Makeup3Glossy
+        {
+            get => _native.CharacterAppearance.Makeup3.Glossy;
+            set => _native.CharacterAppearance.Makeup3.Glossy = value;
+        }
+
+        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
+        float ICharacterAppearanceProperties.Makeup3Metallic
+        {
+            get => _native.CharacterAppearance.Makeup3.Metallic;
+            set => _native.CharacterAppearance.Makeup3.Metallic = value;
+        }
+
+        int ICharacterAppearanceProperties.Makeup3Type
+        {
+            get => _native.CharacterAppearance.Makeup3.Type;
+            set => _native.CharacterAppearance.Makeup3.Type = value;
         }
 
         #endregion
