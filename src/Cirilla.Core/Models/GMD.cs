@@ -13,9 +13,13 @@ namespace Cirilla.Core.Models
 {
     public class GMD : FileTypeBase
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Read-Only header.
+        /// </summary>
         public GMD_Header Header => _header;
+
         public string Filename { get; }
         public List<IGMD_Entry> Entries { get; }
 
@@ -24,7 +28,7 @@ namespace Cirilla.Core.Models
 
         public GMD(string path) : base(path)
         {
-            Logger.Info($"Loading '{path}'");
+            log.Info($"Loading '{path}'");
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader br = new BinaryReader(fs))
@@ -39,11 +43,11 @@ namespace Cirilla.Core.Models
                 if (Enum.IsDefined(typeof(EmLanguage), _header.Language))
                 {
                     EmLanguage language = (EmLanguage)_header.Language;
-                    Logger.Info("Language: " + language);
+                    log.Info("Language: " + language);
                 }
                 else
                 {
-                    Logger.Warn($"Unknown language: 0x{_header.Language:X04} ({_header.Language})");
+                    log.Warn($"Unknown language: 0x{_header.Language:X04} ({_header.Language})");
                 }
 
                 // Filename
@@ -87,18 +91,18 @@ namespace Cirilla.Core.Models
                 {
                     if (fs.Position == fs.Length)
                     {
-                        Logger.Warn($"Expected to read {_header.StringCount - i} more strings (for a total of {_header.StringCount}). But we already are at the end of the stream!");
+                        log.Warn($"Expected to read {_header.StringCount - i} more strings (for a total of {_header.StringCount}). But we already are at the end of the stream!");
                         break;
                     }
 
                     strings[i] = br.ReadStringZero(ExEncoding.UTF8);
                 }
 
-                Logger.Info("Expected StringBlockSize = " + _header.StringBlockSize);
-                Logger.Info("Actual StringBlockSize = " + (fs.Position - startOfStringBlock));
+                log.Info("Expected StringBlockSize = " + _header.StringBlockSize);
+                log.Info("Actual StringBlockSize = " + (fs.Position - startOfStringBlock));
 
                 if (_header.StringBlockSize != (fs.Position - startOfStringBlock))
-                    Logger.Warn("Actual StringBlockSize is not the same as the expected StringBlockSize!");
+                    log.Warn("Actual StringBlockSize is not the same as the expected StringBlockSize!");
 
                 for (int i = 0; i < _header.StringCount; i++)
                     Entries[i].Value = strings[i];
@@ -107,14 +111,14 @@ namespace Cirilla.Core.Models
 
         public void Save(string path)
         {
-            Logger.Info($"Saving {Filename} to '{path}'");
+            log.Info($"Saving {Filename} to '{path}'");
 
             Update();
 
             using (FileStream fs = File.Create(path))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
-                Logger.Info("Writing bytes...");
+                log.Info("Writing bytes...");
 
                 bw.Write(_header.ToBytes());
                 bw.Write(ExEncoding.ASCII.GetBytes(Filename));
@@ -143,7 +147,7 @@ namespace Cirilla.Core.Models
                 }
             }
 
-            Logger.Info("Saved file!");
+            log.Info("Saved file!");
         }
 
         /// <summary>
@@ -152,7 +156,7 @@ namespace Cirilla.Core.Models
         /// </summary>
         private void Update()
         {
-            Logger.Info("Updating entries...");
+            log.Info("Updating entries...");
 
             var realEntries = Entries.OfType<GMD_Entry>().ToList();
 
@@ -169,7 +173,7 @@ namespace Cirilla.Core.Models
             }
 
             // Check and update hashes (CRC32 with bitwise complement, aka reverse each bit)
-            Logger.Info("Checking and updating hashes...");
+            log.Info("Checking and updating hashes...");
 
             foreach (var entry in realEntries)
             {
@@ -184,7 +188,7 @@ namespace Cirilla.Core.Models
 
                 if (entry.InfoTableEntry.Hash1 != hash1)
                 {
-                    Logger.Info($"Hash1 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash1:X04}\nNew hash: {hash1:X04}");
+                    log.Info($"Hash1 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash1:X04}\nNew hash: {hash1:X04}");
                     entry.InfoTableEntry.Hash1 = hash1;
                 }
 
@@ -199,38 +203,38 @@ namespace Cirilla.Core.Models
                 // If hash1 doesn't match then this hash obviously doesn't match as well since they have the same input (InfoTableEntry.Key)
                 if (entry.InfoTableEntry.Hash2 != hash2)
                 {
-                    Logger.Info($"Hash2 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash2:X04}\nNew hash: {hash2:X04}");
+                    log.Info($"Hash2 doesn't match, using new hash\nOld hash: {entry.InfoTableEntry.Hash2:X04}\nNew hash: {hash2:X04}");
                     entry.InfoTableEntry.Hash2 = hash2;
                 }
             }
 
-            Logger.Info("Updating header...");
+            log.Info("Updating header...");
 
             // String Count
-            Logger.Info("Current StringCount = " + _header.StringCount);
+            log.Info("Current StringCount = " + _header.StringCount);
             _header.StringCount = Entries.Count;
-            Logger.Info("New StringCount = " + _header.StringCount); // Key Count
-            Logger.Info("Current KeyCount = " + _header.KeyCount);
+            log.Info("New StringCount = " + _header.StringCount); // Key Count
+            log.Info("Current KeyCount = " + _header.KeyCount);
             _header.KeyCount = realEntries.Count;
-            Logger.Info("New KeyCount = " + _header.KeyCount);
+            log.Info("New KeyCount = " + _header.KeyCount);
 
             // StringBlockSize
-            Logger.Info("Current StringBlockSize = " + _header.StringBlockSize);
+            log.Info("Current StringBlockSize = " + _header.StringBlockSize);
 
             int newSize = 0;
             foreach (IGMD_Entry entry in Entries)
                 newSize += ExEncoding.UTF8.GetByteCount(entry.Value) + 1; // +1 because szString
 
             _header.StringBlockSize = newSize;
-            Logger.Info("New StringBlockSize = " + _header.StringBlockSize);
+            log.Info("New StringBlockSize = " + _header.StringBlockSize);
 
             // KeyBlockSize
-            Logger.Info("Current KeyBlockSize = " + _header.KeyBlockSize);
+            log.Info("Current KeyBlockSize = " + _header.KeyBlockSize);
 
             int lastKeySize = ExEncoding.UTF8.GetByteCount(realEntries.Last().Key) + 1; // +1 for szString end
             _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + lastKeySize;
 
-            Logger.Info("New KeyBlockSize = " + _header.KeyBlockSize);
+            log.Info("New KeyBlockSize = " + _header.KeyBlockSize);
         }
 
         /// <summary>
