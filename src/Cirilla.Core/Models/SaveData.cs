@@ -60,7 +60,7 @@ namespace Cirilla.Core.Models
                     throw new Exception("Decryption failed or this isn't a valid SAVEDATA file.");
 
                 if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborne SAVEDATA, which is not supported anymore. Try using an older version of this tool.");
-                else if (_header.DataSize != 11284640) throw new Exception("Unexpected DataSize, meaning that this version can't work with this SAVEDATA.");
+                else if (_header.DataSize != 11284640) throw new Exception("Unexpected DataSize, meaning that this tool can't load this SAVEDATA.");
 
                 _sectionOffsets = new long[4];
                 _sectionOffsets[0] = br.ReadInt64();
