@@ -148,8 +148,9 @@ struct GUILDCARD {
     WEAPON_USAGE highRank;
     WEAPON_USAGE investigations;
     WEAPON_USAGE masterRank;
+    WEAPON_USAGE guidingLands;
 
-    byte unk5[32];
+    byte unk5[4];
 
     char greeting[256];
     char title[256];
