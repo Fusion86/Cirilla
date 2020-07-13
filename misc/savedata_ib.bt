@@ -1,14 +1,14 @@
 //------------------------------------------------
 //--- 010 Editor v8.0 Binary Template
 //
-//      File: 
+//      File:
 //   Authors: Fusion86 and many others.
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
-//   History: 
+//   Version:
+//   Purpose:
+//  Category:
+// File Mask:
+//  ID Bytes:
+//   History:
 //------------------------------------------------
 
 // Notes:
@@ -94,7 +94,7 @@ struct PALICO_APPEARANCE {
     ubyte leftEyeColor[4];
     ubyte rightEyeColor[4];
     ubyte clothingColor[4];
-    
+
     float furLength; // Max 0.7
     float furThickness; // Max 3
 
@@ -106,6 +106,23 @@ struct PALICO_APPEARANCE {
     ubyte voiceType;
     ubyte voicePitch;
     ushort unk1; // Outline/face and pupils?
+};
+
+struct WEAPON_USAGE {
+    ushort greatSword;
+    ushort longSword;
+    ushort swordAndShield;
+    ushort dualBlades;
+    ushort hammer;
+    ushort huntingHorn;
+    ushort lance;
+    ushort gunlance;
+    ushort switchAxe;
+    ushort chargeBlade;
+    ushort insectGlaive;
+    ushort lightBowgun;
+    ushort heavyBowgun;
+    ushort bow;
 };
 
 struct GUILDCARD {
@@ -125,7 +142,14 @@ struct GUILDCARD {
 
     char palicoName[64];
     uint palicoRank;
-    byte unk4[338]; // Probably palico stats + quest/arena completion counter
+    byte unk4[194]; // Probably palico stats + quest/arena completion counter
+
+    WEAPON_USAGE lowRank;
+    WEAPON_USAGE highRank;
+    WEAPON_USAGE investigations;
+    WEAPON_USAGE masterRank;
+
+    byte unk5[32];
 
     char greeting[256];
     char title[256];
@@ -135,7 +159,7 @@ struct GUILDCARD {
 struct SAVEDATA_SAVESLOT {
     char hunterName[64];
     int hunterRank;
-    int unk1;
+    int masterRank;
     int zeni;
     int researchPoints;
     int hunterXp;
