@@ -154,7 +154,7 @@ struct GUILDCARD {
 
     char greeting[256];
     char title[256];
-    byte unk5[6318];
+    byte unk6[6318];
 };
 
 struct SAVEDATA_SAVESLOT {
