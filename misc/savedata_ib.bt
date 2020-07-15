@@ -125,6 +125,74 @@ struct WEAPON_USAGE {
     ushort bow;
 };
 
+// Monster indexes for guild card (captured, slayed, largest, smallest and researchLevel)
+//  0 = Great Jagras
+//  1 = Kulu-Ya-Ku
+//  2 = Pukei-Pukei
+//  3 = Barroth
+//  4 = Jyuratodus
+//  5 = Tobi-Kadachi
+//  6 = Anjanath
+//  7 = Rathian
+//  8 = Tzitzi-Ya-Ku
+//  9 = Paolumu
+// 10 = Great Girros
+// 11 = Radobaan
+// 12 = Legiana
+// 13 = Odogaron
+// 14 = Rathalos
+// 15 = Diablos
+// 16 = Kirin
+// 17 = Zorah Magdaros
+// 18 = Dodogama
+// 19 = Pink Rathian
+// 20 = Bazelgeuse
+// 21 = Lavasioth
+// 22 = Uragaan
+// 23 = Azure Rathalos
+// 24 = Black Diablos
+// 25 = Nergigante
+// 26 = Teostra
+// 27 = Kushala Daora
+// 28 = Vaal Hazak
+// 29 = Xeno'jiiva
+// 30 = Deviljho
+// 31 = Kulve Taroth
+// 32 = Lunastra
+// 33 = Behemoth
+// 34 = Leshen
+// 35 = Ancient Leshen
+// 36 = Beotodus
+// 37 = Banbaro
+// 38 = Viper Tobi-Kadachi
+// 39 = Nightshade Paolumu
+// 40 = Coral Pukei-Pukei
+// 41 = Barioth
+// 42 = Nargacuga
+// 43 = Glavenus
+// 44 = Tigrex
+// 45 = Brachydios
+// 46 = Acidic Glavenus
+// 47 = Shrieking Legiana
+// 48 = Fulgur Anjanath
+// 49 = Ebony Odogaron
+// 50 = Velkhana
+// 51 = Seething Bazelgeuse
+// 52 = Blackveil Vaal Hazak
+// 53 = Namielle
+// 54 = Savage Deviljho
+// 55 = Ruiner Nergigante
+// 56 = Shara Ishvalda
+// 57 = Zinogre
+// 58 = Yian Garuga
+// 60 = Brute Tigrex
+// 61 = Gold Rathian
+// 62 = Silver Rathalos
+// 63 = Rajang
+// 64 = Stygian Zinogre
+// 65 = Safi'jiiva
+// 69 = Alatreon
+
 struct GUILDCARD {
     uint64 steamId;
     uint64 createdOn; // Timestamp
@@ -154,7 +222,14 @@ struct GUILDCARD {
 
     char greeting[256];
     char title[256];
-    byte unk6[6318];
+
+    byte unk6[5454];
+
+    ushort captured[96];
+    ushort slayed[96];
+    ushort largest[96];
+    ushort smallest[96];
+    byte researchLevel[96];
 };
 
 struct SAVEDATA_SAVESLOT {
