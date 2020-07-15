@@ -11,10 +11,9 @@ namespace Cirilla.Core.Test
         {
             Logging.LogProvider.SetCurrentLogProvider(new LogProvider());
 
-            if (testContext.Properties.TryGetValue("mhwExtractedDataRoot", out object obj))
+            var mhwExtractedDataRoot = testContext.Properties["mhwExtractedDataRoot"];
+            if (mhwExtractedDataRoot is string str)
             {
-                string str = (string)obj;
-
                 if (!Directory.Exists(str))
                     Assert.Fail($"mhwExtractedDataRoot '{str}' doesn't exist!");
 

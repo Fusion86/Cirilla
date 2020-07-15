@@ -40,15 +40,8 @@ namespace Cirilla.Core.Models
 
             if (!isUnencrypted)
             {
-                // BlowFish decryption is rather slow, maybe C would be faster (using P/Invoke)?
-                bytes = SwapBytes(bytes);
-                bytes = _blowfish.Decrypt_ECB(bytes);
-                bytes = SwapBytes(bytes);
-
-                IceborneCrypto.DecryptRegion(bytes, 0x70, 0xDA50); // Not a clue what this is, but it's not important for my use cases
-                IceborneCrypto.DecryptRegion(bytes, 0x3010D8, 0x2098C0); // Saveslot 1
-                IceborneCrypto.DecryptRegion(bytes, 0x50AB98, 0x2098C0); // Saveslot 2
-                IceborneCrypto.DecryptRegion(bytes, 0x714658, 0x2098C0); // Saveslot 3
+                var c = new TanukiSharpCrypto();
+                c.Decrypt(bytes);
             }
 
             using (MemoryStream ms = new MemoryStream(bytes))
