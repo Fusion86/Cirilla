@@ -10,6 +10,7 @@ using Cirilla.Core.Structs.Native;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -127,46 +128,27 @@ namespace Cirilla.Core.Models
 
             if (encrypt)
             {
-                IceborneCrypto.EncryptRegion(bytes, 0x70, 0xDA50);
-                IceborneCrypto.EncryptRegion(bytes, 0x3010D8, 0x2098C0);
-                IceborneCrypto.EncryptRegion(bytes, 0x50AB98, 0x2098C0);
-                IceborneCrypto.EncryptRegion(bytes, 0x714658, 0x2098C0);
+                IceborneCrypto.EncryptRegion(bytes, 0x70, 0xDA50, 3);
+                IceborneCrypto.EncryptRegion(bytes, 0x3010D8, 0x2098C0, 0);
+                IceborneCrypto.EncryptRegion(bytes, 0x50AB98, 0x2098C0, 1);
+                IceborneCrypto.EncryptRegion(bytes, 0x714658, 0x2098C0, 2);
             }
 
             if (fixChecksum)
             {
-                // Update hash
-                // TODO: We can probably do this inside the MemoryStream, without array copying etc
-                byte[] checksum = new byte[20];
-                SHA1.Create()
-                    .ComputeHash(bytes, 64, bytes.Length - 64)
-                    .CopyTo(checksum, 0);
-
-                checksum = SwapBytes(checksum);
+                // Update checksum for the whole save data (same as pre-iceborne)
+                byte[] checksum = IceborneCrypto.GenerateHash(bytes);
                 Array.Copy(checksum, 0, bytes, 12, 20);
             }
 
             if (encrypt)
             {
-                bytes = SwapBytes(bytes);
+                bytes = IceborneCrypto.SwapBytes(bytes);
                 bytes = _blowfish.Encrypt_ECB(bytes);
-                bytes = SwapBytes(bytes);
+                bytes = IceborneCrypto.SwapBytes(bytes);
             }
 
             return bytes;
-        }
-
-        private static byte[] SwapBytes(byte[] bytes)
-        {
-            var swapped = new byte[bytes.Length];
-            for (var i = 0; i < bytes.Length; i += 4)
-            {
-                swapped[i] = bytes[i + 3];
-                swapped[i + 1] = bytes[i + 2];
-                swapped[i + 2] = bytes[i + 1];
-                swapped[i + 3] = bytes[i];
-            }
-            return swapped;
         }
     }
 
@@ -182,10 +164,8 @@ namespace Cirilla.Core.Models
             SaveData = saveData;
 
             // Don't close stream
-            using (BinaryReader br = new BinaryReader(stream, Encoding.UTF8, true))
-            {
-                _native = br.ReadStruct<SaveData_SaveSlot>();
-            }
+            using BinaryReader br = new BinaryReader(stream, Encoding.UTF8, true);
+            _native = br.ReadStruct<SaveData_SaveSlot>();
         }
 
         public SaveSlot(SaveData saveData, SaveData_SaveSlot native)

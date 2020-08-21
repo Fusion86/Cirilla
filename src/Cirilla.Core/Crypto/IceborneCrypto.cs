@@ -1,5 +1,6 @@
 ﻿// Ported from https://github.com/LEGENDFF/mhw-Savecrypt/blob/master/src/main/java/io/github/legendff/mhw/save/Savecrypt.java
 
+using System;
 using System.Security.Cryptography;
 
 namespace Cirilla.Core.Crypto
@@ -268,7 +269,7 @@ namespace Cirilla.Core.Crypto
             0.715411F, 0.602545F, 0.065763F, 0.787931F, 0.33961F, 0.221024F, 0.277892F, 0.293257F, 0.542782F, 0.686109F, 0.115156F, 0.658741F, 0.980804F, 0.091177F, 0.728526F, 0.256006F, 0.873865F, 0.278029F, 0.287839F, 0.516331F, 0.700478F, 0.061656F, 0.945882F, 0.545822F, 0.384741F, 0.928869F, 0.037488F, 0.165914F, 0.316321F, 0.078455F, 0.155139F, 0.516342F,
         };
 
-        public static void DecryptRegion(byte[] data, int offset, int length)
+        public static void DecryptRegion(byte[] data, int offset, int length, int saveSlot)
         {
             var aes = new AesManaged
             {
@@ -294,6 +295,7 @@ namespace Cirilla.Core.Crypto
 
                 while (dataOffset < keyLength[i] + offset)
                 {
+                    // if current salt is even, then salt 1st and 3rd word, decrypt, then salt 2nd and 4th word, otherwise do opposite
                     int branch = (salt[saltOffset & 0x1FF] & 1) == 0 ? 4 : 0;
                     data[dataOffset - branch + 4] ^= salt[saltOffset + 8 & 0x1FF];
                     data[dataOffset - branch + 5] ^= salt[saltOffset + 9 & 0x1FF];
@@ -323,7 +325,7 @@ namespace Cirilla.Core.Crypto
             }
         }
 
-        public static void EncryptRegion(byte[] data, int offset, int length)
+        public static void EncryptRegion(byte[] data, int offset, int length, int saveSlot)
         {
             var aes = new AesManaged
             {
@@ -334,7 +336,12 @@ namespace Cirilla.Core.Crypto
             byte[] salt = new byte[0x200];
             byte[][] keys = new byte[0x20][];
             int[] keyLength = new int[0x20];
-            uint keySalt = Crc32(0xA37A55D7, data, offset + length, 0x200);
+
+            // Calculate and set slot specific checksum
+            byte[] checksum = GenerateSaveSlotChecksum(data, offset, length, saveSlot);
+            Buffer.BlockCopy(checksum, 0, data, offset + length, 0x200);
+
+            uint keySalt = Crc32(0xA37A55D7, checksum, 0, 0x200);
             int dataOffset = offset;
 
             GenerateSalt(salt, keySalt);
@@ -349,6 +356,7 @@ namespace Cirilla.Core.Crypto
 
                 while (dataOffset < keyLength[i] + offset)
                 {
+                    // if current salt is even, then salt 2nd and 4th word, encrypt, then salt 1st and 3rd word, otherwise do opposite
                     int branch = (salt[saltOffset & 0x1FF] & 1) == 0 ? 4 : 0;
                     data[dataOffset + branch + 0] ^= salt[saltOffset + 0 & 0x1FF];
                     data[dataOffset + branch + 1] ^= salt[saltOffset + 1 & 0x1FF];
@@ -376,6 +384,119 @@ namespace Cirilla.Core.Crypto
                     dataOffset += 16;
                 }
             }
+        }
+
+        private static byte[] GenerateSaveSlotChecksum(byte[] data, int offset, int length, int saveSlot)
+        {
+            byte[] checksum = new byte[0x200];
+            uint[] constants = { 0x55012174, 0x9FA3690, 0x4F5AE762, 0xA37A55D7 };
+            int[] slotConstantsGenerator = { 0x2EA10CEB, 0x204DE35E, 0x4BF0CF23, 0x72B401FD, 0x5CDD1F19, 0x681BA6CF, 0x626B4CA, 0x7C8B3AF0 };
+            int lengthInt = length >> 3;
+
+            int[] hashLookup = new int[8];
+            int[] partialCrcs = new int[8];
+            int[] crcLengths = new int[8];
+            int[] slotConstants = new int[8];
+
+            for (int i = 0; i < 8; ++i)
+            {
+                slotConstants[i] = (int)(slotConstantsGenerator[i] ^ constants[-saveSlot - i - 1 & 3]);
+            }
+
+            for (int i = 0; i < 7; ++i)
+            {
+                float variation = FLOAT_CONSTANTS[(slotConstants[i] + INTEGER_CONSTANTS[slotConstants[i] & 0xfff]) & 0xfff];
+                crcLengths[i] = (int)((variation - 0.5F) * (float)lengthInt) + (i + 1) * lengthInt;
+            }
+            crcLengths[7] = length;
+
+            int crcInit = slotConstants[0];
+            int currentLength = crcLengths[0];
+            for (int i = 0; i < 8; ++i)
+            {
+                partialCrcs[i] = (int)Crc32((uint)crcInit, data, offset, currentLength);
+                if (i < 7)
+                {
+                    offset += currentLength;
+                    currentLength = crcLengths[i + 1] - crcLengths[i];
+                    crcInit = partialCrcs[i] ^ slotConstants[i + 1];
+                }
+            }
+
+            for (int i = 0; i < 7; ++i)
+            {
+                hashLookup[i] = slotConstants[i] ^ partialCrcs[i] ^ partialCrcs[7];
+            }
+            hashLookup[7] = slotConstants[7] ^ partialCrcs[7];
+
+            int nextIndex = (int)Crc32(Crc32(0xA37A55D7 ^ constants[3 - saveSlot], slotConstants, 0, 8), partialCrcs, 0, 8);
+            int currentIndex;
+            int jump = (int)((uint)nextIndex >> 24) + (nextIndex >> 16 & 0xFF) + (nextIndex >> 8 & 0xFF) + (nextIndex & 0xFF);
+            for (int i = 0; i < 0x200; i += 4)
+            {
+                currentIndex = nextIndex & 0xFFF;
+                nextIndex = (nextIndex + jump + 1) & 0xFFF;
+                int checksumInt = (int)(INTEGER_CONSTANTS[currentIndex] ^ hashLookup[(INTEGER_CONSTANTS[currentIndex] + saveSlot) & 7]);
+                if ((INTEGER_CONSTANTS[currentIndex] & 0x7) == 1)
+                    checksumInt ^= 0xBD75F29; // = crc32(0x1079000F, "ONSTER HUNTER WORLD: ICEBORNE".getBytes(StandardCharsets.UTF_8), 0, 0x1D)
+                checksum[i] = (byte)checksumInt;
+                checksum[i + 1] = (byte)(checksumInt >> 0x8);
+                checksum[i + 2] = (byte)(checksumInt >> 0x10);
+                checksum[i + 3] = (byte)(checksumInt >> 0x18);
+            }
+
+            return checksum;
+        }
+
+        public static byte[] GenerateHash(byte[] bytes)
+        {
+            byte[] checksum = new byte[20];
+            SHA1.Create()
+                .ComputeHash(bytes, 64, bytes.Length - 64)
+                .CopyTo(checksum, 0);
+            checksum = SwapBytes(checksum);
+            return checksum;
+        }
+
+        public static byte[] SwapBytes(byte[] bytes)
+        {
+            var swapped = new byte[bytes.Length];
+            for (var i = 0; i < bytes.Length; i += 4)
+            {
+                swapped[i] = bytes[i + 3];
+                swapped[i + 1] = bytes[i + 2];
+                swapped[i + 2] = bytes[i + 1];
+                swapped[i + 3] = bytes[i];
+            }
+            return swapped;
+        }
+
+        private static uint Crc32(uint iv, int[] data, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; ++i)
+            {
+                for (int j = 0; j < 4; ++j)
+                {
+                    uint temp = (uint)((iv ^ (data[i] >> (8 * j))) & 0xFF);
+
+                    for (int k = 0; k < 8; ++k)
+                    {
+                        if ((temp & 1) == 1)
+                        {
+                            temp >>= 1;
+                            temp ^= 0xEDB88320;
+                        }
+                        else
+                        {
+                            temp >>= 1;
+                        }
+                    }
+
+                    iv >>= 8;
+                    iv ^= temp;
+                }
+            }
+            return iv;
         }
 
         private static uint Crc32(uint iv, byte[] data, int offset, int length)
@@ -406,19 +527,19 @@ namespace Cirilla.Core.Crypto
         private static void GenerateSalt(byte[] salt, uint keySalt)
         {
             uint c = keySalt ^ 0x4bf0cf23;
-            uint s = 0;
+            uint saltInt = 0;
             uint offset = 0x5d7;
             uint offsetChange = (keySalt >> 0x18) + (keySalt >> 0x10 & 0xFF) + (keySalt >> 0x8 & 0xFF) + (keySalt & 0xFF) + 1;
             for (int i = 0; i < 0x200; i += 4)
             {
-                s = INTEGER_CONSTANTS[offset & 0xFFF] ^ c;
-                if (((-(s & 0x7)) + 1) == 0)
-                    s ^= 0xbd75f29;
+                saltInt = INTEGER_CONSTANTS[offset & 0xFFF] ^ c;
+                if ((saltInt & 0x7) == 1)
+                    saltInt ^= 0xbd75f29; // = crc32(0x1079000F, "MONSTER HUNTER WORLD: ICEBORNE".getBytes(StandardCharsets.UTF_8), 0, 0x1D)
 
-                salt[i] = (byte)s;
-                salt[i + 1] = (byte)(s >> 0x8);
-                salt[i + 2] = (byte)(s >> 0x10);
-                salt[i + 3] = (byte)(s >> 0x18);
+                salt[i] = (byte)saltInt;
+                salt[i + 1] = (byte)(saltInt >> 0x8);
+                salt[i + 2] = (byte)(saltInt >> 0x10);
+                salt[i + 3] = (byte)(saltInt >> 0x18);
 
                 offset += offsetChange;
             }
@@ -426,16 +547,17 @@ namespace Cirilla.Core.Crypto
 
         private static void GenerateKeys(byte[][] keys, uint keySalt, byte[] salt)
         {
-            uint c1 = 0x5A8B79A9 ^ keySalt;
-            uint c2 = 0x34616F90 ^ keySalt;
-            uint c3 = 0xC4C638DF ^ keySalt;
-            uint c4 = 0x94FB64E8 ^ keySalt;
+            uint c1 = 0x5A8B79A9 ^ keySalt; //0x5A8B79A9 = 0x84AFC3C8(INTEGER_CONSTANTS[0x5D7]) ^ 0xA37A55D7 ^ 0x7D5EEFB6
+            uint c2 = 0x34616F90 ^ keySalt; //0x5A8B79A9 = 0xEB9000B7(INTEGER_CONSTANTS[0x821]) ^ 0xA37A55D7 ^ 0x7C8B3AF0
+            uint c3 = 0xC4C638DF ^ keySalt; //0x5A8B79A9 = 0x3A226A4A(INTEGER_CONSTANTS[0xA6B]) ^ 0xA37A55D7 ^ 0x5D9E0742
+            uint c4 = 0x94FB64E8 ^ keySalt; //0x5A8B79A9 = 0x479C6C57(INTEGER_CONSTANTS[0xCB5]) ^ 0xA37A55D7 ^ 0x701D5D68
 
             for (int i = 0; i < 32; ++i)
             {
                 keys[i] = new byte[0x10];
 
-                uint encodedKeyIndex = ReadInt(salt, i << 2);
+                //uint encodedKeyIndex = ReadInt(salt, i << 2);
+                uint encodedKeyIndex = (uint)((salt[(i << 2)] & 0xFF) | ((salt[(i << 2) + 1] & 0xFF) << 8) | ((salt[(i << 2) + 2] & 0xFF) << 16) | ((salt[(i << 2) + 3] & 0xFF) << 24));
                 uint k = encodedKeyIndex ^ c1;
                 keys[i][0] = (byte)(k);
                 keys[i][1] = (byte)(k >> 0x8);

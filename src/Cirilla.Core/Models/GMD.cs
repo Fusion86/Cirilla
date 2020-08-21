@@ -30,83 +30,82 @@ namespace Cirilla.Core.Models
         {
             log.Info($"Loading '{path}'");
 
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (BinaryReader br = new BinaryReader(fs))
+            using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using BinaryReader br = new BinaryReader(fs);
+            
+            // Header
+            _header = br.ReadStruct<GMD_Header>();
+
+            if (_header.MagicString != "GMD")
+                throw new Exception("Not a GMD file!");
+
+            // Log some info about the GMD language
+            if (Enum.IsDefined(typeof(EmLanguage), _header.Language))
             {
-                // Header
-                _header = br.ReadStruct<GMD_Header>();
+                EmLanguage language = (EmLanguage)_header.Language;
+                log.Info("Language: " + language);
+            }
+            else
+            {
+                log.Warn($"Unknown language: 0x{_header.Language:X04} ({_header.Language})");
+            }
 
-                if (_header.MagicString != "GMD")
-                    throw new Exception("Not a GMD file!");
+            // Filename
+            Filename = br.ReadStringZero(ExEncoding.ASCII);
 
-                // Log some info about the GMD language
-                if (Enum.IsDefined(typeof(EmLanguage), _header.Language))
-                {
-                    EmLanguage language = (EmLanguage)_header.Language;
-                    log.Info("Language: " + language);
-                }
-                else
-                {
-                    log.Warn($"Unknown language: 0x{_header.Language:X04} ({_header.Language})");
-                }
+            // Set Entries initial capacity
+            Entries = new List<IGMD_Entry>(_header.StringCount);
 
-                // Filename
-                Filename = br.ReadStringZero(ExEncoding.ASCII);
+            // Info Table
+            for (int i = 0; i < _header.KeyCount; i++)
+            {
+                GMD_Entry entry = new GMD_Entry { InfoTableEntry = br.ReadStruct<GMD_InfoTableEntry>() };
 
-                // Set Entries initial capacity
-                Entries = new List<IGMD_Entry>(_header.StringCount);
+                int lastStringIndex = 0;
+                if (Entries.OfType<GMD_Entry>().Count() > 0)
+                    lastStringIndex = Entries.OfType<GMD_Entry>().Last().InfoTableEntry.StringIndex;
 
-                // Info Table
-                for (int i = 0; i < _header.KeyCount; i++)
-                {
-                    GMD_Entry entry = new GMD_Entry { InfoTableEntry = br.ReadStruct<GMD_InfoTableEntry>() };
-
-                    int lastStringIndex = 0;
-                    if (Entries.OfType<GMD_Entry>().Count() > 0)
-                        lastStringIndex = Entries.OfType<GMD_Entry>().Last().InfoTableEntry.StringIndex;
-
-                    for (int j = lastStringIndex + 1; j < entry.InfoTableEntry.StringIndex; j++)
-                        Entries.Add(new GMD_EntryWithoutKey());
-
-                    Entries.Add(entry);
-                }
-
-                // If there are "Invalid Message" entries after the last valid entry then the above code won't add GMD_EntryWithoutKey's for those entries
-                // So here we add GMD_EntryWithoutKey entries till we have {StringCount} amount of them
-                for (int i = Entries.Count; i < _header.StringCount; i++)
+                for (int j = lastStringIndex + 1; j < entry.InfoTableEntry.StringIndex; j++)
                     Entries.Add(new GMD_EntryWithoutKey());
 
-                // Block with unknown data
-                _unk1 = br.ReadBytes(0x800);
+                Entries.Add(entry);
+            }
 
-                // Keys, this skips over the GMD_EntryWithoutKey entries
-                foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
-                    entry.Key = br.ReadStringZero(ExEncoding.UTF8);
+            // If there are "Invalid Message" entries after the last valid entry then the above code won't add GMD_EntryWithoutKey's for those entries
+            // So here we add GMD_EntryWithoutKey entries till we have {StringCount} amount of them
+            for (int i = Entries.Count; i < _header.StringCount; i++)
+                Entries.Add(new GMD_EntryWithoutKey());
 
-                // Strings
-                string[] strings = new string[_header.StringCount];
-                long startOfStringBlock = fs.Position;
+            // Block with unknown data
+            _unk1 = br.ReadBytes(0x800);
 
-                for (int i = 0; i < _header.StringCount; i++)
+            // Keys, this skips over the GMD_EntryWithoutKey entries
+            foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
+                entry.Key = br.ReadStringZero(ExEncoding.UTF8);
+
+            // Strings
+            string[] strings = new string[_header.StringCount];
+            long startOfStringBlock = fs.Position;
+
+            for (int i = 0; i < _header.StringCount; i++)
+            {
+                if (fs.Position == fs.Length)
                 {
-                    if (fs.Position == fs.Length)
-                    {
-                        log.Warn($"Expected to read {_header.StringCount - i} more strings (for a total of {_header.StringCount}). But we already are at the end of the stream!");
-                        break;
-                    }
-
-                    strings[i] = br.ReadStringZero(ExEncoding.UTF8);
+                    log.Warn($"Expected to read {_header.StringCount - i} more strings (for a total of {_header.StringCount}). But we already are at the end of the stream!");
+                    break;
                 }
 
-                log.Info("Expected StringBlockSize = " + _header.StringBlockSize);
-                log.Info("Actual StringBlockSize = " + (fs.Position - startOfStringBlock));
-
-                if (_header.StringBlockSize != (fs.Position - startOfStringBlock))
-                    log.Warn("Actual StringBlockSize is not the same as the expected StringBlockSize!");
-
-                for (int i = 0; i < _header.StringCount; i++)
-                    Entries[i].Value = strings[i];
+                strings[i] = br.ReadStringZero(ExEncoding.UTF8);
             }
+
+            log.Info("Expected StringBlockSize = " + _header.StringBlockSize);
+            log.Info("Actual StringBlockSize = " + (fs.Position - startOfStringBlock));
+
+            if (_header.StringBlockSize != (fs.Position - startOfStringBlock))
+                log.Warn("Actual StringBlockSize is not the same as the expected StringBlockSize!");
+
+            for (int i = 0; i < _header.StringCount; i++)
+                Entries[i].Value = strings[i];
         }
 
         public void Save(string path)

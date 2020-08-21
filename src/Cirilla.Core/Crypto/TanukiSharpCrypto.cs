@@ -22,12 +22,12 @@ namespace Cirilla.Core.Crypto
         private uint[] bf_s2;
         private uint[] bf_s3;
 
-        private static readonly (int offset, int size)[] encryptedRegions = new[]
+        private static readonly (int offset, int size, int saveSlot)[] encryptedRegions = new[]
         {
-            (0x70, 0xDA50),
-            (0x3010D8, 0x2098C0),
-            (0x50AB98, 0x2098C0),
-            (0x714658, 0x2098C0)
+            (0x70, 0xDA50, 3),
+            (0x3010D8, 0x2098C0, 0),
+            (0x50AB98, 0x2098C0, 1),
+            (0x714658, 0x2098C0, 2)
         };
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Cirilla.Core.Crypto
                 i => BlockDecrypt(buffer, i)
             );
 
-            Parallel.ForEach(encryptedRegions, region => IceborneCrypto.DecryptRegion(buffer, region.offset, region.size));
+            Parallel.ForEach(encryptedRegions, region => IceborneCrypto.DecryptRegion(buffer, region.offset, region.size, region.saveSlot));
         }
 
         /// <summary>
