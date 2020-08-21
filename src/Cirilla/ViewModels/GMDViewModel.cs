@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -134,7 +135,7 @@ namespace Cirilla.ViewModels
             {
                 using (FileStream fs = new FileStream(sfd.FileName, FileMode.Create))
                 using (TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8))
-                using (CsvWriter writer = new CsvWriter(tw))
+                using (CsvWriter writer = new CsvWriter(tw, CultureInfo.InvariantCulture))
                 {
                     writer.Configuration.Delimiter = ";";
 

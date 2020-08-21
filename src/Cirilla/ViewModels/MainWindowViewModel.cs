@@ -42,8 +42,10 @@ namespace Cirilla.ViewModels
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.CheckFileExists = true;
+            ofd.Multiselect = true;
             if (ofd.ShowDialog() == true)
-                OpenFile(ofd.FileName);
+                foreach (var file in ofd.FileNames)
+                    OpenFile(file);
         }
 
         public void OpenFile(string path)

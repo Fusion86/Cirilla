@@ -6,6 +6,7 @@ using Serilog;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -68,7 +69,7 @@ namespace Cirilla.ViewModels
 
                 using (FileStream fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (TextReader tr = new StreamReader(fs, ExEncoding.UTF8))
-                using (CsvReader csv = new CsvReader(tr))
+                using (CsvReader csv = new CsvReader(tr, CultureInfo.InvariantCulture))
                 {
                     csv.Configuration.HasHeaderRecord = false;
                     csv.Configuration.Delimiter = ";";
