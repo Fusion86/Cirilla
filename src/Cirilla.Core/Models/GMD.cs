@@ -57,13 +57,13 @@ namespace Cirilla.Core.Models
             Entries = new List<IGMD_Entry>(_header.StringCount);
 
             // Info Table
+            GMD_Entry lastEntry = null;
             for (int i = 0; i < _header.KeyCount; i++)
             {
                 GMD_Entry entry = new GMD_Entry { InfoTableEntry = br.ReadStruct<GMD_InfoTableEntry>() };
 
-                int lastStringIndex = 0;
-                if (Entries.OfType<GMD_Entry>().Count() > 0)
-                    lastStringIndex = Entries.OfType<GMD_Entry>().Last().InfoTableEntry.StringIndex;
+                int lastStringIndex = lastEntry?.InfoTableEntry.StringIndex ?? 0;
+                lastEntry = entry;
 
                 for (int j = lastStringIndex + 1; j < entry.InfoTableEntry.StringIndex; j++)
                     Entries.Add(new GMD_EntryWithoutKey());

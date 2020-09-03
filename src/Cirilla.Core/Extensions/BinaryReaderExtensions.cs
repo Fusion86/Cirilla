@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -9,8 +8,6 @@ namespace Cirilla.Core.Extensions
 {
     public static class BinaryReaderExtensions
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         public static T ReadStruct<T>(this BinaryReader br)
         {
 #if DEBUG
@@ -33,12 +30,12 @@ namespace Cirilla.Core.Extensions
         /// <returns></returns>
         public static string ReadStringZero(this BinaryReader br, Encoding encoding)
         {
-            byte b;
+            long length = br.BaseStream.Length;
             List<byte> szBytes = new List<byte>();
 
-            while (br.BaseStream.Position != br.BaseStream.Length)
+            while (br.BaseStream.Position != length)
             {
-                b = br.ReadByte();
+                byte b = br.ReadByte();
 
                 if (b == 0)
                 {
