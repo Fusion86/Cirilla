@@ -1,0 +1,22 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Menu Background="Black">
+                <MenuItem Header="File"/>
+                <MenuItem Header="Edit"/>
+                <MenuItem Header="View"/>
+            </Menu>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Menu">
+        <Setter Property="Background" Value="{DynamicResource FusionDark3Color}"/>
+    </Style>
+
+    <Style Selector="MenuItem">
+        <Setter Property="Padding" Value="8,4,8,4"/>
+        <Setter Property="Background" Value="{DynamicResource FusionDark3Color}"/>
+    </Style>
+</Styles>

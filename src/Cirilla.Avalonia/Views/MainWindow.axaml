@@ -1,0 +1,92 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:Cirilla.Avalonia.Views;assembly=Cirilla.Avalonia"
+        xmlns:vm="clr-namespace:Cirilla.Avalonia.ViewModels;assembly=Cirilla.Avalonia"
+        xmlns:vc="clr-namespace:Cirilla.Avalonia.ValueConverters;assembly=Cirilla.Avalonia"
+        xmlns:rxui="http://reactiveui.net"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Cirilla.Avalonia.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{Binding Title}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Resources>
+        <vc:CalculatorValueConverter x:Key="CalculatorConverter"/>
+    </Window.Resources>
+
+    <DockPanel Background="{DynamicResource FusionDark1Brush}">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open File..." InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
+                <Separator/>
+                <MenuItem Header="Save"/>
+                <MenuItem Header="Save As..."/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit"></MenuItem>
+            <MenuItem Header="View"></MenuItem>
+            <MenuItem Header="Tools"></MenuItem>
+        </Menu>
+
+        <Grid ColumnDefinitions="*,5,2*">
+            <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}">
+                <Grid Margin="0,8,0,16">
+                    <ListBox BorderThickness="0"
+                             Margin="0"
+                             Padding="0"
+                             Background="Transparent"
+                             Items="{Binding OpenFiles}"
+                             SelectedItem="{Binding SelectedItem}"
+                             HorizontalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,5,Auto,5,*"
+                                      Margin="0,3,0,3"
+                                      MaxWidth="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource CalculatorConverter}, ConverterParameter=-16}">
+
+                                    <Button Grid.Column="0"
+                                            Margin="0"
+                                            Padding="0"
+                                            BorderThickness="0"
+                                            Width="{Binding $self.Bounds.Height}"
+                                            VerticalAlignment="Stretch"
+                                            Content="×"
+                                            Command="{Binding $parent[Window].DataContext.CloseFileCommand}"
+                                            CommandParameter="{Binding}"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Info.Name}"/>
+                                    <TextBlock Grid.Column="4"
+                                               Opacity="0.5"
+                                               HorizontalAlignment="Stretch"
+                                               TextTrimming="CharacterEllipsis"
+                                               Text="{Binding Info.Directory.FullName}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1"
+                          Background="{DynamicResource FusionDark2Brush}"/>
+
+            <Grid Grid.Column="2">
+                <ContentControl Content="{Binding SelectedItem}">
+                    <ContentControl.DataTemplates>
+                        <DataTemplate DataType="{x:Type vm:GmdViewModel}">
+                            <v:GmdEditView DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ContentControl.DataTemplates>
+                </ContentControl>
+            </Grid>
+        </Grid>
+    </DockPanel>
+
+</Window>

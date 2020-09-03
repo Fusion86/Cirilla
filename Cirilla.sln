@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Test", "src\Ci
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla", "src\Cirilla\Cirilla.csproj", "{FD8304BD-F468-4229-8627-543085351B56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla", "src\Cirilla\Cirilla.csproj", "{FD8304BD-F468-4229-8627-543085351B56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core", "src\Cirilla.Core\Cirilla.Core.csproj", "{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "src\GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceEditPalette", "src\FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.Avalonia", "src\Cirilla.Avalonia\Cirilla.Avalonia.csproj", "{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BC469D8-2521-40EE-82F8-3510FBEAFF67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{FD8304BD-F468-4229-8627-543085351B56} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{0BC469D8-2521-40EE-82F8-3510FBEAFF67} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}
