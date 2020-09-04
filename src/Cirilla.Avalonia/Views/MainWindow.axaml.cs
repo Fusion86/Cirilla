@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace Cirilla.Avalonia.Views
@@ -17,6 +18,12 @@ namespace Cirilla.Avalonia.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        private void MenuExit_Click(object? sender, RoutedEventArgs e)
+        {
+            // TODO: Check for unsaved changes
+            Close();
         }
     }
 }

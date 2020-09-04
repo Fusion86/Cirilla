@@ -8,9 +8,10 @@
 
     <Application.Styles>
         <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
 
         <StyleInclude Source="avares://Cirilla.Avalonia/Styles/Themes/CadetDark.axaml"/>
+        <StyleInclude Source="avares://Cirilla.Avalonia/Styles/Button.axaml"/>
+        <StyleInclude Source="avares://Cirilla.Avalonia/Styles/DataGrid.axaml"/>
         <StyleInclude Source="avares://Cirilla.Avalonia/Styles/Menu.axaml"/>
     </Application.Styles>
 </Application>

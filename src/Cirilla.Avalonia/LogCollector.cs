@@ -9,14 +9,14 @@ using System.Reactive.Linq;
 
 namespace Cirilla.Avalonia.Services
 {
-    public class LogCollectorService : ILogEventSink
+    public class LogCollector : ILogEventSink
     {
         public ReadOnlyObservableCollection<LogEventModel> Events => eventsBinding;
 
         private readonly ReadOnlyObservableCollection<LogEventModel> eventsBinding;
         private readonly SourceList<LogEventModel> eventsList = new SourceList<LogEventModel>();
 
-        public LogCollectorService()
+        public LogCollector()
         {
             eventsList.Connect()
                 .ObserveOn(RxApp.MainThreadScheduler)

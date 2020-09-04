@@ -18,6 +18,14 @@ namespace Cirilla.Avalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Constructor for design time preview. Shouldn't be used in your actual code.
+        /// </summary>
+        public MainWindowViewModel()
+        {
+
+        }
+
         public MainWindowViewModel(Window window)
         {
             this.window = window;

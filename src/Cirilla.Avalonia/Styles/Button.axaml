@@ -1,0 +1,14 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <StackPanel Margin="20" Spacing="8">
+            <Button Content="Content"/>
+            <Button Content="Content"/>
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <Style Selector="Button">
+        <Setter Property="Padding" Value="8,4,8,4"/>
+    </Style>
+</Styles>

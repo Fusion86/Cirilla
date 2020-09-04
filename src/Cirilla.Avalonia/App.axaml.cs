@@ -20,7 +20,7 @@ namespace Cirilla.Avalonia
 
         public override void OnFrameworkInitializationCompleted()
         {
-            var logCollector = new LogCollectorService();
+            var logCollector = new LogCollector();
             string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] <{SourceContext}> {Message:lj}{NewLine}{Exception}";
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(outputTemplate: outputTemplate)
@@ -28,8 +28,6 @@ namespace Cirilla.Avalonia
                 .WriteTo.File(new RenderedCompactJsonFormatter(), "log.json")
                 .WriteTo.Sink(logCollector)
                 .CreateLogger();
-
-            //Locator.CurrentMutable.Register(() => new GmdEditView(), typeof(IViewFor<GmdViewModel>));
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

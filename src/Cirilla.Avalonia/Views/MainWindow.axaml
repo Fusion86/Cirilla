@@ -19,74 +19,107 @@
         <vc:CalculatorValueConverter x:Key="CalculatorConverter"/>
     </Window.Resources>
 
-    <DockPanel Background="{DynamicResource FusionDark1Brush}">
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Open File..." InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
-                <Separator/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Save As..."/>
-                <Separator/>
-                <MenuItem Header="Exit"/>
-            </MenuItem>
-            <MenuItem Header="Edit"></MenuItem>
-            <MenuItem Header="View"></MenuItem>
-            <MenuItem Header="Tools"></MenuItem>
-        </Menu>
+    <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
+    <Grid ColumnDefinitions="*,10*,*">
+        <!-- Main Content -->
+        <DockPanel Grid.ColumnSpan="3" Background="{DynamicResource FusionDark1Brush}" Opacity="0.5">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Open File..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Save"/>
+                    <MenuItem Header="Save As..."/>
+                    <Separator/>
+                    <!-- HotKey doens't seem to work for Alt+F4 -->
+                    <MenuItem Header="Exit" InputGesture="Alt+F4" Click="MenuExit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Edit"></MenuItem>
+                <MenuItem Header="View"></MenuItem>
+                <MenuItem Header="Tools"></MenuItem>
+            </Menu>
 
-        <Grid ColumnDefinitions="*,5,2*">
-            <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}">
-                <Grid Margin="0,8,0,16">
-                    <ListBox BorderThickness="0"
-                             Margin="0"
-                             Padding="0"
-                             Background="Transparent"
-                             Items="{Binding OpenFiles}"
-                             SelectedItem="{Binding SelectedItem}"
-                             HorizontalAlignment="Stretch">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,5,Auto,5,*"
-                                      Margin="0,3,0,3"
-                                      MaxWidth="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource CalculatorConverter}, ConverterParameter=-16}">
+            <Grid ColumnDefinitions="*,5,2*">
+                <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}">
+                    <Grid Margin="0,8,0,16">
+                        <ListBox BorderThickness="0"
+                                 Margin="0"
+                                 Padding="0"
+                                 Background="Transparent"
+                                 Items="{Binding OpenFiles}"
+                                 SelectedItem="{Binding SelectedItem}"
+                                 HorizontalAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="Auto,5,Auto,5,*"
+                                          Margin="0,3,0,3"
+                                          MaxWidth="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource CalculatorConverter}, ConverterParameter=-16}">
 
-                                    <Button Grid.Column="0"
-                                            Margin="0"
-                                            Padding="0"
-                                            BorderThickness="0"
-                                            Width="{Binding $self.Bounds.Height}"
-                                            VerticalAlignment="Stretch"
-                                            Content="×"
-                                            Command="{Binding $parent[Window].DataContext.CloseFileCommand}"
-                                            CommandParameter="{Binding}"/>
+                                        <Button Grid.Column="0"
+                                                Margin="0"
+                                                Padding="0"
+                                                BorderThickness="0"
+                                                Width="{Binding $self.Bounds.Height}"
+                                                VerticalAlignment="Stretch"
+                                                Content="×"
+                                                Command="{Binding $parent[Window].DataContext.CloseFileCommand}"
+                                                CommandParameter="{Binding}"/>
 
-                                    <TextBlock Grid.Column="2"
-                                               Text="{Binding Info.Name}"/>
-                                    <TextBlock Grid.Column="4"
-                                               Opacity="0.5"
-                                               HorizontalAlignment="Stretch"
-                                               TextTrimming="CharacterEllipsis"
-                                               Text="{Binding Info.Directory.FullName}"/>
-                                </Grid>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding Info.Name}"/>
+                                        <TextBlock Grid.Column="4"
+                                                   Opacity="0.5"
+                                                   HorizontalAlignment="Stretch"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{Binding Info.Directory.FullName}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+
+                <GridSplitter Grid.Column="1"
+                              Background="{DynamicResource FusionDark2Brush}"/>
+
+                <Grid Grid.Column="2">
+                    <ContentControl Content="{Binding SelectedItem}">
+                        <ContentControl.DataTemplates>
+                            <DataTemplate DataType="{x:Type vm:GmdViewModel}">
+                                <v:GmdEditView DataContext="{Binding}"/>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ContentControl.DataTemplates>
+                    </ContentControl>
+                </Grid>
+            </Grid>
+        </DockPanel>
+
+        <!-- Popup/flash alert -->
+        <!-- Background=Transparent to block user input. -->
+        <Grid Grid.Column="1" Background="Transparent">
+            <Border BorderThickness="5"
+                    BorderBrush="Red"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="AliceBlue">
+                <Grid RowDefinitions="Auto,8,Auto,Auto" Margin="8">
+                    <TextBlock Grid.Row="0"
+                               Text="Title"
+                               FontSize="{DynamicResource FontSizeLarge}"/>
+                    <TextBlock Grid.Row="2"
+                               Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                               TextWrapping="Wrap"/>
+                    <StackPanel Grid.Row="3"
+                                Spacing="5"
+                                Margin="0,8,0,0"
+                                Orientation="Horizontal">
+                        <Button Content="Ok"/>
+                        <Button Content="Yes"/>
+                        <Button Content="No"/>
+                        <Button Content="Cancel"/>
+                    </StackPanel>
                 </Grid>
             </Border>
-
-            <GridSplitter Grid.Column="1"
-                          Background="{DynamicResource FusionDark2Brush}"/>
-
-            <Grid Grid.Column="2">
-                <ContentControl Content="{Binding SelectedItem}">
-                    <ContentControl.DataTemplates>
-                        <DataTemplate DataType="{x:Type vm:GmdViewModel}">
-                            <v:GmdEditView DataContext="{Binding}"/>
-                        </DataTemplate>
-                    </ContentControl.DataTemplates>
-                </ContentControl>
-            </Grid>
         </Grid>
-    </DockPanel>
+    </Grid>
 
 </Window>
