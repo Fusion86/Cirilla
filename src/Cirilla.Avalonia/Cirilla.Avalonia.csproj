@@ -20,6 +20,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0010245-beta" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.999-cibuild0010245-beta" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.999-cibuild0010245-beta" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.0.0" />
     <PackageReference Include="ReactiveUI" Version="11.5.35" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.5.35" />
     <PackageReference Include="Serilog" Version="2.9.0" />

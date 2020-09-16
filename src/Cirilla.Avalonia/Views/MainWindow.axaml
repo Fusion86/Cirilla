@@ -19,10 +19,10 @@
         <vc:CalculatorValueConverter x:Key="CalculatorConverter"/>
     </Window.Resources>
 
-    <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
-    <Grid ColumnDefinitions="*,10*,*">
+    <Grid>
         <!-- Main Content -->
-        <DockPanel Grid.ColumnSpan="3" Background="{DynamicResource FusionDark1Brush}" Opacity="0.5">
+        <DockPanel Background="{DynamicResource FusionDark1Brush}"
+                   Opacity="{Binding ContentOpacity}">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
                     <MenuItem Header="Open File..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
@@ -95,28 +95,41 @@
 
         <!-- Popup/flash alert -->
         <!-- Background=Transparent to block user input. -->
-        <Grid Grid.Column="1" Background="Transparent">
-            <Border BorderThickness="5"
-                    BorderBrush="Red"
+        <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
+        <Grid IsVisible="{Binding FlashAlert.IsVisible}"
+              ColumnDefinitions="*,10*,*"
+              Background="Transparent">
+            <Border Grid.Column="1"
+                    BorderThickness="{DynamicResource ThemeBorderThickness}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="AliceBlue">
-                <Grid RowDefinitions="Auto,8,Auto,Auto" Margin="8">
+                    BorderBrush="{DynamicResource ThemeAccentBrush}"
+                    Background="{DynamicResource FusionDark2Brush}">
+                <Grid RowDefinitions="Auto,8,Auto,Auto" Margin="16">
                     <TextBlock Grid.Row="0"
-                               Text="Title"
+                               Text="{Binding FlashAlert.Title}"
                                FontSize="{DynamicResource FontSizeLarge}"/>
+
                     <TextBlock Grid.Row="2"
-                               Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                               Text="{Binding FlashAlert.Message}"
                                TextWrapping="Wrap"/>
-                    <StackPanel Grid.Row="3"
-                                Spacing="5"
-                                Margin="0,8,0,0"
-                                Orientation="Horizontal">
-                        <Button Content="Ok"/>
-                        <Button Content="Yes"/>
-                        <Button Content="No"/>
-                        <Button Content="Cancel"/>
-                    </StackPanel>
+
+                    <ItemsRepeater Grid.Row="3"
+                                   Margin="0,16,0,0"
+                                   Items="{Binding FlashAlert.Buttons}">
+                        <ItemsRepeater.Layout>
+                            <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal"/>
+                        </ItemsRepeater.Layout>
+
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Content}"
+                                        MinWidth="100"
+                                        Command="{Binding $parent[Window].DataContext.FlashAlert.ButtonClickCommand}"
+                                        CommandParameter="{Binding Result}"/>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
                 </Grid>
             </Border>
         </Grid>

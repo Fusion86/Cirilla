@@ -1,9 +1,9 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
-using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cirilla.Avalonia.ViewModels
@@ -42,16 +41,23 @@ namespace Cirilla.Avalonia.ViewModels
                 .Do(x => Debug.WriteLine(x))
                 .Select(x => x == null ? "Cirilla" : $"{x.Info.Name} - Cirilla")
                 .ToPropertyEx(this, x => x.Title);
+
+            this.WhenAnyValue(x => x.FlashAlert.IsVisible)
+                .Select(x => x ? (double)Application.Current.FindResource("ThemeDisabledOpacity")! : 1.0)
+                .Do(x => Console.WriteLine(x))
+                .ToPropertyEx(this, x => x.ContentOpacity);
         }
 
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
         public ReactiveCommand<IFileViewModel, Unit> CloseFileCommand { get; }
 
-        [Reactive] public IFileViewModel? SelectedItem { get; set; }
-
         public ReadOnlyObservableCollection<IFileViewModel> OpenFiles => openFilesBinding;
 
+        [Reactive] public IFileViewModel? SelectedItem { get; set; }
+        [Reactive] public FlashMessageViewModel FlashAlert { get; set; } = new FlashMessageViewModel();
+
         [ObservableAsProperty] public string Title { get; set; }
+        [ObservableAsProperty] public double ContentOpacity { get; set; }
 
         private static readonly ILogger logger = Log.ForContext<MainWindowViewModel>();
         private readonly Window window;
@@ -60,11 +66,10 @@ namespace Cirilla.Avalonia.ViewModels
 
         private async Task OpenFile()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.AllowMultiple = true;
+            OpenFileDialog ofd = new OpenFileDialog { AllowMultiple = true };
             ofd.Filters.Add(new FileDialogFilter
             {
-                Name = "GMD",
+                Name = "GMD Text File",
                 Extensions = new List<string> { "gmd" }
             });
 
@@ -91,7 +96,6 @@ namespace Cirilla.Avalonia.ViewModels
 
         private IFileViewModel? TryCreateViewModelForFile(FileInfo fileInfo)
         {
-            // TODO: Not the best way
             try
             {
                 var gmd = new GmdViewModel(fileInfo);
@@ -99,7 +103,7 @@ namespace Cirilla.Avalonia.ViewModels
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Could load GMD file, reason: " + ex.Message);
+                logger.Error(ex, "Could not load GMD file. Error: " + ex.Message);
                 return null;
             }
         }

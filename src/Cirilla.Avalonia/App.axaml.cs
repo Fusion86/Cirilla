@@ -4,7 +4,6 @@ using Avalonia.Markup.Xaml;
 using Cirilla.Avalonia.Services;
 using Cirilla.Avalonia.ViewModels;
 using Cirilla.Avalonia.Views;
-using ReactiveUI;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Splat;

@@ -11,4 +11,9 @@
     <Style Selector="Button">
         <Setter Property="Padding" Value="8,4,8,4"/>
     </Style>
+
+    <Style Selector="Button.Primary">
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+    </Style>
 </Styles>

@@ -9,6 +9,7 @@
         <DataGrid Items="{Binding Entries}" CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Value" Binding="{Binding Key}"/>
                 <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -14,10 +14,10 @@
         <SolidColorBrush x:Key="FusionDark4Brush" Color="{DynamicResource FusionDark4Color}"></SolidColorBrush>
 
         <!-- Override default colors -->
-        <Color x:Key="ThemeAccentColor">#FF6485AD</Color>
-        <Color x:Key="ThemeAccentColor2">#996485AD</Color>
-        <Color x:Key="ThemeAccentColor3">#666485AD</Color>
-        <Color x:Key="ThemeAccentColor4">#336485AD</Color>
+        <Color x:Key="ThemeAccentColor">#FF0E639C</Color>
+        <Color x:Key="ThemeAccentColor2">#990E639C</Color>
+        <Color x:Key="ThemeAccentColor3">#660E639C</Color>
+        <Color x:Key="ThemeAccentColor4">#330E639C</Color>
 
         <Color x:Key="ThemeBackgroundColor">#FF404040</Color>
         <Color x:Key="ThemeBorderLowColor">#FF505050</Color>

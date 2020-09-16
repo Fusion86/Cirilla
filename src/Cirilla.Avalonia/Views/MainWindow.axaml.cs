@@ -20,7 +20,7 @@ namespace Cirilla.Avalonia.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void MenuExit_Click(object? sender, RoutedEventArgs e)
+        public void MenuExit_Click(object? sender, RoutedEventArgs e)
         {
             // TODO: Check for unsaved changes
             Close();
