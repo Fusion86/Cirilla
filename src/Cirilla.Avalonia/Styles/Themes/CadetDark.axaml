@@ -1,13 +1,46 @@
 ﻿<Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Design.PreviewWith>
+        <StackPanel Margin="20" Spacing="5">
+            <Button Content="Button 1"/>
+            <Button Content="Button 2" Classes="Primary"/>
+
+            <ComboBox SelectedItem="Item 1">
+                <ComboBoxItem Content="Item 1"/>
+                <ComboBoxItem Content="Item 2"/>
+                <ComboBoxItem Content="Item 3"/>
+            </ComboBox>
+
+            <TextBox Height="100" Width="200">
+                Tekst
+                Content
+                Box
+            </TextBox>
+
+            <TabControl>
+                <TabItem Header="Test">
+                    <StackPanel Margin="5" Spacing="5">
+                        <TextBlock Text="Ok?"/>
+                        <TextBox />
+                        <Button Content="Ok"/>
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Test"/>
+                <TabItem Header="Test"/>
+            </TabControl>
+        </StackPanel>
+    </Design.PreviewWith>
+
     <Style.Resources>
         <!-- Add custom colors -->
         <Color x:Key="FusionDark1Color">#FF1E1E1E</Color>
         <Color x:Key="FusionDark2Color">#FF252525</Color>
         <Color x:Key="FusionDark3Color">#FF323232</Color>
         <Color x:Key="FusionDark4Color">#FF404040</Color>
-        
+
         <SolidColorBrush x:Key="FusionDark1Brush" Color="{DynamicResource FusionDark1Color}"></SolidColorBrush>
         <SolidColorBrush x:Key="FusionDark2Brush" Color="{DynamicResource FusionDark2Color}"></SolidColorBrush>
         <SolidColorBrush x:Key="FusionDark3Brush" Color="{DynamicResource FusionDark3Color}"></SolidColorBrush>

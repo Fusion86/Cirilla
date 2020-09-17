@@ -1,8 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-//using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
+using Serilog;
 
 namespace Cirilla.Avalonia
 {
@@ -11,14 +12,53 @@ namespace Cirilla.Avalonia
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        public static int Main(string[] args)
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            // The real main needs to be in a different method, see https://stackoverflow.com/a/25990979/2125072
+            return RealMain(args);
+        }
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
+        {
+            var config = AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToDebug()
                 .UseReactiveUI();
+
+            // Needed for correct display of Japanese/Chinese/etc characters
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                config.UseDirect2D1();
+
+            return config;
+        }
+
+        private static int RealMain(string[] args)
+        {
+            return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        {
+            var probingPath = Path.GetFullPath("lib");
+            var assyName = new AssemblyName(args.Name!);
+
+            var dllPath = Path.Combine(probingPath, assyName.Name!);
+            if (!dllPath.EndsWith(".dll"))
+                dllPath += ".dll";
+
+            if (File.Exists(dllPath))
+                return Assembly.LoadFile(dllPath);
+
+            return null!;
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var ex = e.ExceptionObject as Exception;
+            Log.Error(ex, $"Unhandled exception: {ex?.Message}");
+        }
     }
 }

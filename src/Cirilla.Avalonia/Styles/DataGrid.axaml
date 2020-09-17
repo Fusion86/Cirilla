@@ -119,7 +119,7 @@
 
     <Style Selector="DataGridRow /template/ Rectangle#BackgroundRectangle">
         <Setter Property="IsVisible" Value="False"/>
-        <Setter Property="Fill" Value="{DynamicResource HighlightBrush}" />
+        <Setter Property="Fill" Value="{DynamicResource ThemeAccentColor}" />
     </Style>
 
     <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
@@ -149,7 +149,7 @@
     </Style>
 
     <Style Selector="DataGridRowGroupHeader">
-        <Setter Property="Background" Value="{DynamicResource ThemeControlMidHighBrush}" />
+        <Setter Property="Background" Value="Red" />
         <Setter Property="Height" Value="20"/>
         <Setter Property="Template">
             <ControlTemplate>
