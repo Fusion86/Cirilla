@@ -8,21 +8,25 @@
     <AssemblyTitle>Cirilla Toolkit</AssemblyTitle>
     <Product>Cirilla Toolkit</Product>
     <Description>View and edit certain Monster Hunter World files in a frontend for the Cirilla.Core library.</Description>
-    <AssemblyVersion>0.7.2.0</AssemblyVersion>
-    <FileVersion>0.7.2.0</FileVersion>
+    <AssemblyVersion>0.7.3.0</AssemblyVersion>
+    <FileVersion>0.7.3.0</FileVersion>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Costura.Fody" Version="4.1.0">
+        <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
-    <PackageReference Include="Fody" Version="6.2.4">
+    <PackageReference Include="Fody" Version="6.2.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="1.1.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.9">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Design" />

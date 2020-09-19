@@ -11,13 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla", "src\Cirilla\Ciri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core", "src\Cirilla.Core\Cirilla.Core.csproj", "{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Benchmark", "src\Cirilla.Core.Benchmark\Cirilla.Core.Benchmark.csproj", "{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMDTool", "src\GMDTool\GMDTool.csproj", "{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceEditPalette", "src\FaceEditPalette\FaceEditPalette.csproj", "{0BC469D8-2521-40EE-82F8-3510FBEAFF67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.Avalonia", "src\Cirilla.Avalonia\Cirilla.Avalonia.csproj", "{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Avalonia", "src\Cirilla.Avalonia\Cirilla.Avalonia.csproj", "{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +35,6 @@ Global
 		{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90A5C5B9-B375-4966-8D78-8FEFFC4965C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE80D5D1-DA7F-4F34-9FD9-AAEEC46118C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39}.Release|Any CPU.ActiveCfg = Release|Any CPU

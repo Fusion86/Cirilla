@@ -73,6 +73,7 @@ namespace Cirilla.ViewModels
                 {
                     csv.Configuration.HasHeaderRecord = false;
                     csv.Configuration.Delimiter = ";";
+                    csv.Configuration.AllowComments = true; // Uses # to identify comments
 
                     values = csv.GetRecords<StringKeyValuePair>().ToList();
                 }
