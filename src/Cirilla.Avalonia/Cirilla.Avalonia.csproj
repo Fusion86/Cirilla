@@ -15,16 +15,16 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0010595-beta" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.999-cibuild0010595-beta" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0010595-beta" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.999-cibuild0010595-beta" />
-    <PackageReference Include="Avalonia.Direct2D1" Version="0.10.999-cibuild0010595-beta" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.999-cibuild0010595-beta" />
+    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0010873-beta" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.999-cibuild0010873-beta" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0010873-beta" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.999-cibuild0010873-beta" />
+    <PackageReference Include="Avalonia.Direct2D1" Version="0.10.999-cibuild0010873-beta" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.999-cibuild0010873-beta" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.0.0" />
     <PackageReference Include="ReactiveUI" Version="11.5.35" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.5.35" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />

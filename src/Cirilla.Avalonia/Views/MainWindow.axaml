@@ -17,6 +17,7 @@
 
     <Window.Resources>
         <vc:CalculatorValueConverter x:Key="CalculatorConverter"/>
+        <vc:NotNullOrEmptyValueConverter x:Key="NotNullOrEmptyConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -27,7 +28,7 @@
                 <MenuItem Header="File">
                     <MenuItem Header="Open File..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Save"/>
+                    <MenuItem Header="Save" HotKey="Ctrl+S" InputGesture="Ctrl+S" Command="{Binding SaveFileCommand}"/>
                     <MenuItem Header="Save As..."/>
                     <Separator/>
                     <!-- HotKey doens't seem to work for Alt+F4 -->
@@ -105,16 +106,19 @@
                     VerticalAlignment="Center"
                     BorderBrush="{DynamicResource ThemeAccentBrush}"
                     Background="{DynamicResource FusionDark2Brush}">
-                <Grid RowDefinitions="Auto,8,Auto,Auto" Margin="16">
+                <Grid RowDefinitions="Auto,Auto,Auto" Margin="16">
                     <TextBlock Grid.Row="0"
                                Text="{Binding FlashAlert.Title}"
                                FontSize="{DynamicResource FontSizeLarge}"/>
 
-                    <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="1"
+                               IsVisible="{Binding FlashAlert.Message, Converter={StaticResource NotNullOrEmptyConverter}}"
                                Text="{Binding FlashAlert.Message}"
+                               Margin="0,8,0,0"
                                TextWrapping="Wrap"/>
 
-                    <ItemsRepeater Grid.Row="3"
+                    <ItemsRepeater Grid.Row="2"
+                               IsVisible="{Binding FlashAlert.Buttons, Converter={StaticResource NotNullOrEmptyConverter}}"
                                    Margin="0,16,0,0"
                                    Items="{Binding FlashAlert.Buttons}">
                         <ItemsRepeater.Layout>

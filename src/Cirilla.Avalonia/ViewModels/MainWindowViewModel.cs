@@ -30,6 +30,7 @@ namespace Cirilla.Avalonia.ViewModels
             this.window = window;
 
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFile);
+            SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFile);
             CloseFileCommand = ReactiveCommand.Create<IFileViewModel>(CloseFile);
 
             openFilesList.Connect()
@@ -49,6 +50,7 @@ namespace Cirilla.Avalonia.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }
         public ReactiveCommand<IFileViewModel, Unit> CloseFileCommand { get; }
 
         public ReadOnlyObservableCollection<IFileViewModel> OpenFiles => openFilesBinding;
@@ -78,11 +80,44 @@ namespace Cirilla.Avalonia.ViewModels
             foreach (var file in files)
             {
                 var fileInfo = new FileInfo(file);
+
+                var popup = FlashAlert = new FlashMessageViewModel($"Loading {fileInfo.FullName} ...", buttons: FlashMessageButtons.None);
+                popup.Show();
+
                 var vm = TryCreateViewModelForFile(fileInfo);
 
                 if (vm != null)
                     openFilesList.Add(vm);
+
+                popup.Close();
             }
+        }
+
+        private async Task SaveFile()
+        {
+            if (SelectedItem == null) return;
+
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                InitialFileName = SelectedItem.Info.Name,
+                DefaultExtension = SelectedItem.Info.Extension,
+            };
+
+            sfd.Filters.Add(new FileDialogFilter
+            {
+                Name = "GMD Text File",
+                Extensions = new List<string> { "gmd" }
+            });
+
+            var name = await sfd.ShowAsync(window);
+            if (name == null) return;
+
+            FlashAlert = new FlashMessageViewModel($"Saving {name} ...", buttons: FlashMessageButtons.None);
+            FlashAlert.Show();
+
+            SelectedItem.Save(name);
+
+            FlashAlert.Close();
         }
 
         private void CloseFile(IFileViewModel vm)
@@ -103,7 +138,11 @@ namespace Cirilla.Avalonia.ViewModels
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Could not load GMD file. Error: " + ex.Message);
+                logger.Error(ex, "Could not load GMD file.");
+
+                FlashAlert = new FlashMessageViewModel("Could not load GMD file!", ex.Message, FlashMessageButtons.Ok);
+                FlashAlert.Show();
+
                 return null;
             }
         }

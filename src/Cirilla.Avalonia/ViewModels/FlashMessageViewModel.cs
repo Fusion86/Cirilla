@@ -9,12 +9,14 @@ namespace Cirilla.Avalonia.ViewModels
 {
     public enum FlashMessageButtons
     {
+        None,
         Ok,
         YesNoCancel
     }
 
     public enum FlashMessageResult
     {
+        None,
         Ok,
         Yes,
         No,
@@ -42,6 +44,7 @@ namespace Cirilla.Avalonia.ViewModels
 
             Buttons = buttons switch
             {
+                FlashMessageButtons.None => null,
                 FlashMessageButtons.Ok => new[] { new FlashMessageButtonViewModel("Ok", FlashMessageResult.Ok) },
                 FlashMessageButtons.YesNoCancel => new[] {
                     new FlashMessageButtonViewModel("Yes", FlashMessageResult.Yes),
@@ -51,33 +54,42 @@ namespace Cirilla.Avalonia.ViewModels
                 _ => throw new NotSupportedException("Unsupported FlashMessageButtons value!")
             };
 
-            ButtonClickCommand = ReactiveCommand.Create<FlashMessageResult>(ButtonClick);
+            ButtonClickCommand = ReactiveCommand.Create<FlashMessageResult>(Close);
         }
 
         public string Title { get; }
         public string Message { get; }
-        public FlashMessageButtonViewModel[] Buttons { get; }
+        public FlashMessageButtonViewModel[]? Buttons { get; }
 
-        [Reactive] public bool IsVisible { get; set; }
+        [Reactive] public bool IsVisible { get; private set; }
         [Reactive] public FlashMessageResult Result { get; private set; }
 
         public ReactiveCommand<FlashMessageResult, Unit> ButtonClickCommand { get; }
 
         private AsyncManualResetEvent resetEvent = new AsyncManualResetEvent();
 
-        private void ButtonClick(FlashMessageResult result)
+        public void Show()
         {
-            Result = result;
-            resetEvent.Set();
+            IsVisible = true;
         }
 
-        public async Task<FlashMessageResult> ShowPopup()
+        /// <summary>
+        /// Show alert and wait until a result is available.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<FlashMessageResult> ShowAsync()
         {
             IsVisible = true;
             resetEvent.Reset();
             await resetEvent.WaitAsync();
-            IsVisible = false;
             return Result;
+        }
+
+        public void Close(FlashMessageResult result = FlashMessageResult.None)
+        {
+            Result = result;
+            IsVisible = false;
+            resetEvent.Set();
         }
     }
 }
