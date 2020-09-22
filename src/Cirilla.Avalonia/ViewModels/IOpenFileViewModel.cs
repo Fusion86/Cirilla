@@ -2,7 +2,7 @@
 
 namespace Cirilla.Avalonia.ViewModels
 {
-    public interface IFileViewModel
+    public interface IOpenFileViewModel
     {
         FileInfo Info { get; }
         bool CanClose { get; }

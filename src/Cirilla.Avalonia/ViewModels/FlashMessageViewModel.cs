@@ -1,6 +1,4 @@
-﻿using Nito.AsyncEx;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+﻿using ReactiveUI;
 using System;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -57,39 +55,27 @@ namespace Cirilla.Avalonia.ViewModels
             ButtonClickCommand = ReactiveCommand.Create<FlashMessageResult>(Close);
         }
 
+        public event EventHandler<FlashMessageResult>? OnClose;
+
         public string Title { get; }
         public string Message { get; }
         public FlashMessageButtonViewModel[]? Buttons { get; }
-
-        [Reactive] public bool IsVisible { get; private set; }
-        [Reactive] public FlashMessageResult Result { get; private set; }
+        public FlashMessageResult Result { get; private set; }
 
         public ReactiveCommand<FlashMessageResult, Unit> ButtonClickCommand { get; }
-
-        private AsyncManualResetEvent resetEvent = new AsyncManualResetEvent();
-
-        public void Show()
-        {
-            IsVisible = true;
-        }
-
-        /// <summary>
-        /// Show alert and wait until a result is available.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<FlashMessageResult> ShowAsync()
-        {
-            IsVisible = true;
-            resetEvent.Reset();
-            await resetEvent.WaitAsync();
-            return Result;
-        }
 
         public void Close(FlashMessageResult result = FlashMessageResult.None)
         {
             Result = result;
-            IsVisible = false;
-            resetEvent.Set();
+            OnClose?.Invoke(this, result);
+        }
+
+        // Untested
+        public Task<FlashMessageResult> WaitForClose()
+        {
+            var tcs = new TaskCompletionSource<FlashMessageResult>();
+            OnClose += (sender, e) => tcs.SetResult(e);
+            return tcs.Task;
         }
     }
 }

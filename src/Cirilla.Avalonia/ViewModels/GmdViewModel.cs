@@ -10,7 +10,7 @@ using System.Reactive.Linq;
 
 namespace Cirilla.Avalonia.ViewModels
 {
-    public class GmdViewModel : ViewModelBase, IFileViewModel
+    public class GmdViewModel : ViewModelBase, IOpenFileViewModel
     {
         public GmdViewModel(FileInfo fileInfo)
         {

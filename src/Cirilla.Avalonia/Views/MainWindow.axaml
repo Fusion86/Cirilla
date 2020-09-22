@@ -21,15 +21,17 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Main Content -->
         <DockPanel Background="{DynamicResource FusionDark1Brush}"
                    Opacity="{Binding ContentOpacity}">
+            <!-- Menu -->
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File">
                     <MenuItem Header="Open File..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
                     <Separator/>
                     <MenuItem Header="Save" HotKey="Ctrl+S" InputGesture="Ctrl+S" Command="{Binding SaveFileCommand}"/>
                     <MenuItem Header="Save As..."/>
+                    <Separator/>
+                    <MenuItem Header="Add folder to browser" Command="{Binding AddFolderToBrowserCommand}"/>
                     <Separator/>
                     <!-- HotKey doens't seem to work for Alt+F4 -->
                     <MenuItem Header="Exit" InputGesture="Alt+F4" Click="MenuExit_Click"/>
@@ -39,10 +41,16 @@
                 <MenuItem Header="Tools"></MenuItem>
             </Menu>
 
-            <Grid ColumnDefinitions="*,5,2*">
+            <!-- Main Content -->
+            <Grid ColumnDefinitions="*,8,2*">
+
+                <!-- Left Sidebar -->
                 <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}">
-                    <Grid Margin="0,8,0,16">
-                        <ListBox BorderThickness="0"
+                    <Grid RowDefinitions="*,8,*" Margin="0,8,0,8">
+
+                        <!-- Open files -->
+                        <ListBox Grid.Row="0"
+                                 BorderThickness="0"
                                  Margin="0"
                                  Padding="0"
                                  Background="Transparent"
@@ -76,6 +84,36 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+
+                        <!-- Splitter -->
+                        <GridSplitter Grid.Row="1" Background="{DynamicResource FusionDark2Brush}"/>
+
+                        <!-- File/folder browser -->
+                        <TreeView x:Name="treeFileBrowser"
+                                  Grid.Row="2"
+                                  BorderThickness="0"
+                                  SelectionMode="Multiple"
+                                  Items="{Binding FileBrowserItems}"
+                                  SelectedItems="{Binding SelectedFileBrowserItems}">
+                            <TreeView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="{Binding SelectedFileBrowserItems.Count, StringFormat=Selected \{0\} items}"
+                                              IsEnabled="False"/>
+                                    <MenuItem Header="Open selected items" Command="{Binding OpenSelectedFileBrowserItemsCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Remove folder from list"/>
+                                </ContextMenu>
+                            </TreeView.ContextMenu>
+
+                            <TreeView.DataTemplates>
+                                <TreeDataTemplate DataType="vm:FolderEntryViewModel" ItemsSource="{Binding Items}">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </TreeDataTemplate>
+                                <DataTemplate DataType="vm:FileEntryViewModel">
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </TreeView.DataTemplates>
+                        </TreeView>
                     </Grid>
                 </Border>
 
@@ -97,7 +135,7 @@
         <!-- Popup/flash alert -->
         <!-- Background=Transparent to block user input. -->
         <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
-        <Grid IsVisible="{Binding FlashAlert.IsVisible}"
+        <Grid IsVisible="{Binding FlashMessages, Converter={StaticResource NotNullOrEmptyConverter}}"
               ColumnDefinitions="*,10*,*"
               Background="Transparent">
             <Border Grid.Column="1"
@@ -108,19 +146,19 @@
                     Background="{DynamicResource FusionDark2Brush}">
                 <Grid RowDefinitions="Auto,Auto,Auto" Margin="16">
                     <TextBlock Grid.Row="0"
-                               Text="{Binding FlashAlert.Title}"
+                               Text="{Binding FlashMessages[0].Title}"
                                FontSize="{DynamicResource FontSizeLarge}"/>
 
                     <TextBlock Grid.Row="1"
-                               IsVisible="{Binding FlashAlert.Message, Converter={StaticResource NotNullOrEmptyConverter}}"
-                               Text="{Binding FlashAlert.Message}"
+                               IsVisible="{Binding FlashMessages[0].Message, Converter={StaticResource NotNullOrEmptyConverter}}"
+                               Text="{Binding FlashMessages[0].Message}"
                                Margin="0,8,0,0"
                                TextWrapping="Wrap"/>
 
                     <ItemsRepeater Grid.Row="2"
-                               IsVisible="{Binding FlashAlert.Buttons, Converter={StaticResource NotNullOrEmptyConverter}}"
+                               IsVisible="{Binding FlashMessages[0].Buttons, Converter={StaticResource NotNullOrEmptyConverter}}"
                                    Margin="0,16,0,0"
-                                   Items="{Binding FlashAlert.Buttons}">
+                                   Items="{Binding FlashMessages[0].Buttons}">
                         <ItemsRepeater.Layout>
                             <WrapLayout HorizontalSpacing="5" VerticalSpacing="5" Orientation="Horizontal"/>
                         </ItemsRepeater.Layout>
@@ -129,7 +167,7 @@
                             <DataTemplate>
                                 <Button Content="{Binding Content}"
                                         MinWidth="100"
-                                        Command="{Binding $parent[Window].DataContext.FlashAlert.ButtonClickCommand}"
+                                        Command="{Binding $parent[Window].DataContext.FlashMessages[0].ButtonClickCommand}"
                                         CommandParameter="{Binding Result}"/>
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
