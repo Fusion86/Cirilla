@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Cirilla.Avalonia.Helpers;
+using System.IO;
 
 namespace Cirilla.Avalonia.ViewModels
 {
@@ -11,6 +12,7 @@ namespace Cirilla.Avalonia.ViewModels
 
         public string Name => fileInfo.Name;
         public string FullName => fileInfo.FullName;
+        public string FileSizeString => Utility.BytesToSizeString(fileInfo.Length);
 
         private readonly FileInfo fileInfo;
     }
