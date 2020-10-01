@@ -23,11 +23,6 @@
                     <MenuItem Header="File">
                         <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
                         <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
-                        <MenuItem Header="Save in Working Directory" Command="{Binding SaveInWorkingDirectoryCommand}"/>
-                    </MenuItem>
-
-                    <MenuItem Header="Edit">
-                        <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
                     </MenuItem>
 
                     <CollectionContainer Collection="{Binding Source={StaticResource ExtraMenuItems}}"/>
@@ -48,16 +43,8 @@
                         <uc:GMDEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>
 
-                    <DataTemplate DataType="{x:Type vm:ITMViewModel}">
-                        <uc:ITMEditor Margin="5" DataContext="{Binding}"/>
-                    </DataTemplate>
-
                     <DataTemplate DataType="{x:Type vm:NBSCViewModel}">
                         <uc:NBSCEditor Margin="5" DataContext="{Binding}"/>
-                    </DataTemplate>
-
-                    <DataTemplate DataType="{x:Type vm:EquipmentCraftingViewModel}">
-                        <uc:EquipmentCraftingEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>
                 </TabControl.Resources>
 

@@ -39,8 +39,8 @@ namespace Cirilla.ViewModels
             _context = new GMD(path);
 
             // Commands
-            AddEntryCommand = new RelayCommand(AddEntry, IsUnsafeModeEnabled);
-            AddEntryNoKeyCommand = new RelayCommand(AddEntryNoKey, IsUnsafeModeEnabled);
+            AddEntryCommand = new RelayCommand(AddEntry);
+            AddEntryNoKeyCommand = new RelayCommand(AddEntryNoKey);
             TriggerSearchCommand = new RelayCommand(TriggerSearch);
             ImportCsvCommand = new RelayCommand(ImportCsv, CanImportCsv);
             ExportCsvCommand = new RelayCommand(ExportCsv, CanExportCsv);
@@ -102,14 +102,6 @@ namespace Cirilla.ViewModels
         {
             GMDEntryViewModel vm = new GMDEntryViewModel(Entries.Count, new GMD_EntryWithoutKey());
             Entries.Add(vm);
-        }
-
-        public bool IsUnsafeModeEnabled()
-        {
-            if (Properties.Settings.Default.Config != null)
-                return Properties.Settings.Default.Config.UnsafeModeEnabled;
-
-            return false;
         }
 
         public void TriggerSearch()

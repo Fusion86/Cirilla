@@ -1,5 +1,4 @@
-﻿using Cirilla.Properties;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Cirilla
 {
@@ -8,12 +7,5 @@ namespace Cirilla
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-
-            if (Settings.Default.Config == null)
-                Settings.Default.Config = new Cirilla.CirillaConfig();
-        }
     }
 }
