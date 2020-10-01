@@ -15,7 +15,8 @@
             <TextBox Grid.Column="6" Text="{Binding ValueSearchQuery}"/>
         </Grid>
         
-        <DataGrid Grid.Row="1"
+        <DataGrid x:Name="dataGrid"
+                  Grid.Row="1"
                   Items="{Binding FilteredEntries}"
                   CanUserResizeColumns="True">
             <DataGrid.Columns>

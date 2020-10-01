@@ -149,7 +149,7 @@
     </Style>
 
     <Style Selector="DataGridRowGroupHeader">
-        <Setter Property="Background" Value="Red" />
+        <Setter Property="Background" Value="{DynamicResource ThemeControlMidHighBrush}" />
         <Setter Property="Height" Value="20"/>
         <Setter Property="Template">
             <ControlTemplate>

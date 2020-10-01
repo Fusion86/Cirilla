@@ -33,17 +33,10 @@ namespace Cirilla.Avalonia.ViewModels
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFile);
             SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFile);
             CloseFileCommand = ReactiveCommand.Create<IOpenFileViewModel>(CloseFile);
-            AddFolderToBrowserCommand = ReactiveCommand.CreateFromTask(AddFolderToBrowser);
-            OpenSelectedFileBrowserItemsCommand = ReactiveCommand.Create(OpenSelectedFileBrowserItems);
 
             openFilesList.Connect()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out openFilesBinding)
-                .Subscribe();
-
-            fileBrowserItems.Connect()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out fileBrowserItemsBinding)
                 .Subscribe();
 
             flashMessages.Connect()
@@ -68,11 +61,8 @@ namespace Cirilla.Avalonia.ViewModels
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }
         public ReactiveCommand<IOpenFileViewModel, Unit> CloseFileCommand { get; }
-        public ReactiveCommand<Unit, Unit> AddFolderToBrowserCommand { get; }
-        public ReactiveCommand<Unit, Unit> OpenSelectedFileBrowserItemsCommand { get; }
 
         public ReadOnlyObservableCollection<IOpenFileViewModel> OpenFiles => openFilesBinding;
-        public ReadOnlyObservableCollection<IFileSystemEntry> FileBrowserItems => fileBrowserItemsBinding;
         public ReadOnlyObservableCollection<FlashMessageViewModel> FlashMessages => flashMessagesBinding;
 
         public ObservableCollectionExtended<IFileSystemEntry> SelectedFileBrowserItems { get; } = new ObservableCollectionExtended<IFileSystemEntry>();
@@ -85,10 +75,8 @@ namespace Cirilla.Avalonia.ViewModels
         private static readonly ILogger logger = Log.ForContext<MainWindowViewModel>();
         private readonly Window window;
         private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
-        private readonly ReadOnlyObservableCollection<IFileSystemEntry> fileBrowserItemsBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
         private readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
-        private readonly SourceList<IFileSystemEntry> fileBrowserItems = new SourceList<IFileSystemEntry>();
         private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
 
         private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
@@ -104,8 +92,11 @@ namespace Cirilla.Avalonia.ViewModels
 
             var files = await ofd.ShowAsync(window);
 
-            foreach (var file in files)
-                OpenFile(file);
+            await Task.Run(() =>
+            {
+                foreach (var file in files)
+                    OpenFile(file);
+            });
         }
 
         private async Task SaveFile()
@@ -145,27 +136,6 @@ namespace Cirilla.Avalonia.ViewModels
             }
         }
 
-        private async Task AddFolderToBrowser()
-        {
-            OpenFolderDialog ofd = new OpenFolderDialog();
-            var dir = await ofd.ShowAsync(window);
-            if (dir != null)
-            {
-                try
-                {
-                    var alert = ShowFlashAlert($"Loading {dir} ...", buttons: FlashMessageButtons.None);
-                    var tree = BuildFileSystemTree(new DirectoryInfo(dir));
-                    fileBrowserItems.Add(tree);
-                    alert.Close();
-                }
-                catch (Exception ex)
-                {
-                    log.Error(ex, "Couldn't add folder to browser.");
-                    ShowFlashAlert($"Couldn't add folder to browser. Error: " + ex.Message);
-                }
-            }
-        }
-
         private IOpenFileViewModel? TryCreateViewModelForFile(FileInfo fileInfo)
         {
             try
@@ -199,21 +169,6 @@ namespace Cirilla.Avalonia.ViewModels
             {
                 throw new Exception("BuildFileSystemTree unexpected FileSystemInfo type.");
             }
-        }
-
-        private void OpenSelectedFileBrowserItems()
-        {
-            foreach (var item in SelectedFileBrowserItems)
-                RecursiveOpen(item);
-        }
-
-        private void RecursiveOpen(IFileSystemEntry entry)
-        {
-            if (entry is FileEntryViewModel fileEntry)
-                OpenFile(fileEntry.FullName);
-            else if (entry is FolderEntryViewModel folderEntry)
-                foreach (var item in folderEntry.Items)
-                    RecursiveOpen(item);
         }
 
         private void OpenFile(string filePath)

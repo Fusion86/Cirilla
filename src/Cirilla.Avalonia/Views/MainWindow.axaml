@@ -33,7 +33,7 @@
                     <Separator/>
                     <MenuItem Header="Add folder to browser" Command="{Binding AddFolderToBrowserCommand}"/>
                     <Separator/>
-                    <!-- HotKey doens't seem to work for Alt+F4 -->
+                    <!-- HotKeys don't seem to work for Alt+F4 -->
                     <MenuItem Header="Exit" InputGesture="Alt+F4" Click="MenuExit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit"></MenuItem>
@@ -45,79 +45,44 @@
             <Grid ColumnDefinitions="*,8,2*">
 
                 <!-- Left Sidebar -->
-                <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}">
-                    <Grid RowDefinitions="*,8,*" Margin="0,8,0,8">
+                <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}" Padding="0,8,0,8">
 
-                        <!-- Open files -->
-                        <ListBox Grid.Row="0"
-                                 BorderThickness="0"
-                                 Margin="0"
-                                 Padding="0"
-                                 Background="Transparent"
-                                 Items="{Binding OpenFiles}"
-                                 SelectedItem="{Binding SelectedItem}"
-                                 HorizontalAlignment="Stretch">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ColumnDefinitions="Auto,5,Auto,5,*"
-                                          Margin="0,3,0,3"
-                                          MaxWidth="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource CalculatorConverter}, ConverterParameter=-16}">
+                    <!-- Open files -->
+                    <ListBox Grid.Row="0"
+                             BorderThickness="0"
+                             Margin="0"
+                             Padding="0"
+                             Background="Transparent"
+                             Items="{Binding OpenFiles}"
+                             SelectedItem="{Binding SelectedItem}"
+                             HorizontalAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,5,Auto,5,*"
+                                      Margin="0,3,0,3"
+                                      MaxWidth="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource CalculatorConverter}, ConverterParameter=-16}">
 
-                                        <Button Grid.Column="0"
-                                                Margin="0"
-                                                Padding="0"
-                                                BorderThickness="0"
-                                                Width="{Binding $self.Bounds.Height}"
-                                                VerticalAlignment="Stretch"
-                                                Content="×"
-                                                Command="{Binding $parent[Window].DataContext.CloseFileCommand}"
-                                                CommandParameter="{Binding}"/>
+                                    <Button Grid.Column="0"
+                                            Margin="0"
+                                            Padding="0"
+                                            BorderThickness="0"
+                                            Width="{Binding $self.Bounds.Height}"
+                                            VerticalAlignment="Stretch"
+                                            Content="×"
+                                            Command="{Binding $parent[Window].DataContext.CloseFileCommand}"
+                                            CommandParameter="{Binding}"/>
 
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{Binding Info.Name}"/>
-                                        <TextBlock Grid.Column="4"
-                                                   Opacity="0.5"
-                                                   HorizontalAlignment="Stretch"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   Text="{Binding Info.Directory.FullName}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-
-                        <!-- Splitter -->
-                        <GridSplitter Grid.Row="1" Background="{DynamicResource FusionDark2Brush}"/>
-
-                        <!-- File/folder browser -->
-                        <TreeView x:Name="treeFileBrowser"
-                                  Grid.Row="2"
-                                  BorderThickness="0"
-                                  SelectionMode="Multiple"
-                                  Items="{Binding FileBrowserItems}"
-                                  SelectedItems="{Binding SelectedFileBrowserItems}">
-                            <TreeView.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="{Binding SelectedFileBrowserItems.Count, StringFormat=Selected \{0\} items}"
-                                              IsEnabled="False"/>
-                                    <MenuItem Header="Open selected items" Command="{Binding OpenSelectedFileBrowserItemsCommand}"/>
-                                    <Separator/>
-                                    <MenuItem Header="Remove folder from list"/>
-                                </ContextMenu>
-                            </TreeView.ContextMenu>
-
-                            <TreeView.DataTemplates>
-                                <TreeDataTemplate DataType="vm:FolderEntryViewModel" ItemsSource="{Binding Items}">
-                                    <TextBlock Text="{Binding Name}"/>
-                                </TreeDataTemplate>
-                                <DataTemplate DataType="vm:FileEntryViewModel">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text="{Binding FileSizeString}" Margin="8,0,0,0" Opacity="0.5" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </TreeView.DataTemplates>
-                        </TreeView>
-                    </Grid>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Info.Name}"/>
+                                    <TextBlock Grid.Column="4"
+                                               Opacity="0.5"
+                                               HorizontalAlignment="Stretch"
+                                               TextTrimming="CharacterEllipsis"
+                                               Text="{Binding Info.Directory.FullName}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Border>
 
                 <GridSplitter Grid.Column="1"
@@ -138,7 +103,7 @@
         <!-- Popup/flash alert -->
         <!-- Background=Transparent to block user input. -->
         <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
-        <Grid IsVisible="{Binding FlashMessages, Converter={StaticResource NotNullOrEmptyConverter}}"
+        <Grid IsVisible="{Binding !!FlashMessages.Count}"
               ColumnDefinitions="*,10*,*"
               Background="Transparent">
             <Border Grid.Column="1"
