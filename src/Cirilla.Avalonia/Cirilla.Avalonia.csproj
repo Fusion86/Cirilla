@@ -31,6 +31,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cirilla.MVVM\Cirilla.MVVM.csproj" />
     <ProjectReference Include="..\Cirilla.Core\Cirilla.Core.csproj" />
   </ItemGroup>
 </Project>

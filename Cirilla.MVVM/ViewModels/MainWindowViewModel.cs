@@ -1,5 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Cirilla.MVVM.Common;
+using Cirilla.MVVM.Interfaces;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
@@ -8,28 +8,19 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Cirilla.Avalonia.ViewModels
+namespace Cirilla.MVVM.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Constructor for design time preview. Shouldn't be used in your actual code.
-        /// </summary>
-        public MainWindowViewModel()
+        public MainWindowViewModel(IFrameworkService framework)
         {
-
-        }
-
-        public MainWindowViewModel(Window window)
-        {
-            this.window = window;
-
+            this.framework = framework;
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFile);
             SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFile);
             CloseFileCommand = ReactiveCommand.Create<IOpenFileViewModel>(CloseFile);
@@ -45,17 +36,16 @@ namespace Cirilla.Avalonia.ViewModels
                 .Subscribe();
 
             this.WhenAnyValue(x => x.SelectedItem)
-                .Do(x => Debug.WriteLine(x))
                 .Select(x => x == null ? "Cirilla" : $"{x.Info.Name} - Cirilla")
                 .ToPropertyEx(this, x => x.Title);
 
             var shouldShowFlashAlert = flashMessages.CountChanged
                 .Select(x => x > 0);
 
-            shouldShowFlashAlert
-                .Select(x => x ? (double)Application.Current.FindResource("ThemeDisabledOpacity")! : 1.0)
-                .Do(x => Console.WriteLine(x))
-                .ToPropertyEx(this, x => x.ContentOpacity);
+            //shouldShowFlashAlert
+            //    .Select(x => x ? (double)Application.Current.FindResource("ThemeDisabledOpacity")! : 1.0)
+            //    .Do(x => Console.WriteLine(x))
+            //    .ToPropertyEx(this, x => x.ContentOpacity);
         }
 
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
@@ -71,7 +61,7 @@ namespace Cirilla.Avalonia.ViewModels
         [ObservableAsProperty] public double ContentOpacity { get; set; }
 
         private static readonly ILogger logger = Log.ForContext<MainWindowViewModel>();
-        private readonly Window window;
+        private readonly IFrameworkService framework;
         private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
         private readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
@@ -81,14 +71,8 @@ namespace Cirilla.Avalonia.ViewModels
 
         private async Task OpenFile()
         {
-            OpenFileDialog ofd = new OpenFileDialog { AllowMultiple = true };
-            ofd.Filters.Add(new FileDialogFilter
-            {
-                Name = "GMD Text File",
-                Extensions = new List<string> { "gmd" }
-            });
-
-            var files = await ofd.ShowAsync(window);
+            var filters = new List<FileDialogFilter> { new FileDialogFilter("GMD Text File", new List<string> { "gmd" }) };
+            var files = await framework.OpenFileDialog(true, filters);
 
             await Task.Run(() =>
             {
@@ -101,19 +85,8 @@ namespace Cirilla.Avalonia.ViewModels
         {
             if (SelectedItem == null) return;
 
-            SaveFileDialog sfd = new SaveFileDialog()
-            {
-                InitialFileName = SelectedItem.Info.Name,
-                DefaultExtension = SelectedItem.Info.Extension,
-            };
-
-            sfd.Filters.Add(new FileDialogFilter
-            {
-                Name = "GMD Text File",
-                Extensions = new List<string> { "gmd" }
-            });
-
-            var name = await sfd.ShowAsync(window);
+            var filters = new List<FileDialogFilter> { new FileDialogFilter("GMD Text File", new List<string> { "gmd" }) };
+            var name = await framework.SaveFileDialog(SelectedItem.Info.Name, SelectedItem.Info.Extension, filters);
             if (name == null) return;
 
             var alert = ShowFlashAlert($"Saving {name} ...", buttons: FlashMessageButtons.None);

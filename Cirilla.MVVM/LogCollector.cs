@@ -1,4 +1,4 @@
-﻿using Cirilla.Avalonia.Models;
+﻿using Cirilla.MVVM.Common;
 using DynamicData;
 using ReactiveUI;
 using Serilog.Core;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 
-namespace Cirilla.Avalonia.Services
+namespace Cirilla.MVVM.Services
 {
     public class LogCollector : ILogEventSink
     {

@@ -19,5 +19,10 @@ namespace Cirilla.Core.Extensions
             if (pos >= 0) return str.Substring(0, pos);
             else return str;
         }
+
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source?.IndexOf(toCheck, comp) >= 0;
+        }
     }
 }

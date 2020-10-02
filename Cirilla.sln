@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceEditPalette", "src\Face
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Avalonia", "src\Cirilla.Avalonia\Cirilla.Avalonia.csproj", "{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.WPF", "src\Cirilla.WPF\Cirilla.WPF.csproj", "{3EB1B693-2035-4016-8F38-03AE7A688FF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.MVVM", "Cirilla.MVVM\Cirilla.MVVM.csproj", "{6F9B889E-5D63-4947-ACEB-FCEF2FD9F000}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,14 @@ Global
 		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EB1B693-2035-4016-8F38-03AE7A688FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EB1B693-2035-4016-8F38-03AE7A688FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EB1B693-2035-4016-8F38-03AE7A688FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EB1B693-2035-4016-8F38-03AE7A688FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F9B889E-5D63-4947-ACEB-FCEF2FD9F000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F9B889E-5D63-4947-ACEB-FCEF2FD9F000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F9B889E-5D63-4947-ACEB-FCEF2FD9F000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F9B889E-5D63-4947-ACEB-FCEF2FD9F000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +68,7 @@ Global
 		{2CFDDD6E-E73F-4EAB-B15D-B45A56CE2C39} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{0BC469D8-2521-40EE-82F8-3510FBEAFF67} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{3EB1B693-2035-4016-8F38-03AE7A688FF7} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}

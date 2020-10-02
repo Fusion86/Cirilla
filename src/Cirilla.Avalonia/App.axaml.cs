@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Cirilla.Avalonia.Services;
 using Cirilla.Avalonia.ViewModels;
 using Cirilla.Avalonia.Views;
+using Cirilla.MVVM.Services;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Splat;
