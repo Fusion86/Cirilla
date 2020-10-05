@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Cirilla.Core\Cirilla.Core.csproj" />
+    <ProjectReference Include="..\Cirilla.Core\Cirilla.Core.csproj" />
   </ItemGroup>
 
 </Project>

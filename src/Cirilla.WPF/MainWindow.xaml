@@ -6,7 +6,40 @@
         xmlns:local="clr-namespace:Cirilla.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
 
+    <Grid>
+        <!-- Popup/flash alert -->
+        <!-- Background=Transparent to block user input. -->
+        <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
+        <Grid Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="1"
+                    BorderThickness="{DynamicResource ThemeBorderThickness}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BorderBrush="{DynamicResource ThemeAccentBrush}"
+                    Background="{DynamicResource FusionDark2Brush}">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding FlashMessages[0].Title}"
+                               FontSize="{DynamicResource FontSizeLarge}"/>
+
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding FlashMessages[0].Message}"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"/>
+
+                    <!-- TODO: Display buttons in ItemsRepeater -->
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

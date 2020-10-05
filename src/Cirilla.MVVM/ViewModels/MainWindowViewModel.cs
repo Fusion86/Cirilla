@@ -1,7 +1,6 @@
 ﻿using Cirilla.MVVM.Common;
 using Cirilla.MVVM.Interfaces;
 using DynamicData;
-using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
@@ -11,13 +10,17 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public MainWindowViewModel() { }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
         public MainWindowViewModel(IFrameworkService framework)
         {
             this.framework = framework;
@@ -42,10 +45,10 @@ namespace Cirilla.MVVM.ViewModels
             var shouldShowFlashAlert = flashMessages.CountChanged
                 .Select(x => x > 0);
 
-            //shouldShowFlashAlert
-            //    .Select(x => x ? (double)Application.Current.FindResource("ThemeDisabledOpacity")! : 1.0)
-            //    .Do(x => Console.WriteLine(x))
-            //    .ToPropertyEx(this, x => x.ContentOpacity);
+            shouldShowFlashAlert
+                .Select(x => x ? (double)framework.FindResource("ThemeDisabledOpacity")! : 1.0)
+                .Do(x => Console.WriteLine(x))
+                .ToPropertyEx(this, x => x.ContentOpacity);
         }
 
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }

@@ -1,20 +1,19 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Cirilla.Avalonia.ViewModels;
+using Cirilla.MVVM.ViewModels;
 
 namespace Cirilla.Avalonia.Views
 {
     public class GmdEditView : UserControl
     {
-        private DataGrid dataGrid => this.FindControl<DataGrid>("dataGrid");
+        //private DataGrid dataGrid => this.FindControl<DataGrid>("dataGrid");
         private SolidColorBrush invalidMessageBrush = new SolidColorBrush(0x33ffff00);
         private SolidColorBrush emptyKeyBrush = new SolidColorBrush(0x66ff0000);
 
         public GmdEditView()
         {
             InitializeComponent();
-            dataGrid.LoadingRow += DataGrid_LoadingRow;
         }
 
         private void DataGrid_LoadingRow(object? sender, DataGridRowEventArgs e)

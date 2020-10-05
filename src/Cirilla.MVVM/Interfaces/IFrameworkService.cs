@@ -9,5 +9,6 @@ namespace Cirilla.MVVM.Interfaces
     {
         Task<string[]> OpenFileDialog(bool allowMultiple = false, List<FileDialogFilter>? filters = null);
         Task<string> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null);
+        object? FindResource(string key);
     }
 }

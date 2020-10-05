@@ -1,9 +1,9 @@
 ﻿using Serilog.Events;
 using System;
 
-namespace Cirilla.MVVM.Common
+namespace Cirilla.MVVM.ViewModels
 {
-    public class LogEventModel
+    public class LogEventViewModel
     {
         public DateTimeOffset Timestamp { get; }
         public LogEventLevel Level { get; }
@@ -12,7 +12,7 @@ namespace Cirilla.MVVM.Common
         public string? SourceContext { get; }
         public string? ShortSourceContext { get; }
 
-        public LogEventModel(LogEvent logEvent)
+        public LogEventViewModel(LogEvent logEvent)
         {
             Timestamp = logEvent.Timestamp;
             Level = logEvent.Level;

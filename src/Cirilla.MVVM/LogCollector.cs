@@ -1,4 +1,4 @@
-﻿using Cirilla.MVVM.Common;
+﻿using Cirilla.MVVM.ViewModels;
 using DynamicData;
 using ReactiveUI;
 using Serilog.Core;
@@ -11,10 +11,10 @@ namespace Cirilla.MVVM.Services
 {
     public class LogCollector : ILogEventSink
     {
-        public ReadOnlyObservableCollection<LogEventModel> Events => eventsBinding;
+        public ReadOnlyObservableCollection<LogEventViewModel> Events => eventsBinding;
 
-        private readonly ReadOnlyObservableCollection<LogEventModel> eventsBinding;
-        private readonly SourceList<LogEventModel> eventsList = new SourceList<LogEventModel>();
+        private readonly ReadOnlyObservableCollection<LogEventViewModel> eventsBinding;
+        private readonly SourceList<LogEventViewModel> eventsList = new SourceList<LogEventViewModel>();
 
         public LogCollector()
         {
@@ -26,7 +26,7 @@ namespace Cirilla.MVVM.Services
 
         public void Emit(LogEvent logEvent)
         {
-            eventsList.Add(new LogEventModel(logEvent));
+            eventsList.Add(new LogEventViewModel(logEvent));
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Cirilla.Avalonia.ViewModels;
 using Cirilla.Avalonia.Views;
 using Cirilla.MVVM.Services;
+using Cirilla.MVVM.ViewModels;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Splat;
@@ -31,7 +31,7 @@ namespace Cirilla.Avalonia
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow();
-                desktop.MainWindow.DataContext = new MainWindowViewModel(desktop.MainWindow);
+                desktop.MainWindow.DataContext = new MainWindowViewModel(new FrameworkService());
             }
 
             base.OnFrameworkInitializationCompleted();
