@@ -22,7 +22,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Value" Binding="{Binding Key}"/>
-                <ctrl:DataGridTextExColumn Header="Value" Binding="{Binding Value}" AcceptsReturn="True" ForceCrlf="True"/>
+                <ctrl:DataGridTextColumnEx Header="Value" Binding="{Binding Value}" AcceptsReturn="True" ForceCrlf="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

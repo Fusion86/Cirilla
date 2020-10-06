@@ -5,13 +5,13 @@ using System;
 
 namespace Cirilla.Avalonia.Controls
 {
-    public class DataGridTextExColumn : DataGridTextColumn
+    public class DataGridTextColumnEx : DataGridTextColumn
     {
         public static readonly StyledProperty<bool> AcceptsReturnProperty =
-            AvaloniaProperty.Register<DataGridTextExColumn, bool>(nameof(AcceptsReturn));
+            AvaloniaProperty.Register<DataGridTextColumnEx, bool>(nameof(AcceptsReturn));
 
         public static readonly StyledProperty<bool> ForceCrlfProperty =
-            AvaloniaProperty.Register<DataGridTextExColumn, bool>(nameof(ForceCrlf));
+            AvaloniaProperty.Register<DataGridTextColumnEx, bool>(nameof(ForceCrlf));
 
         public bool AcceptsReturn
         {
