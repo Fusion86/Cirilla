@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Cirilla.WPF
+namespace Cirilla.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LogViewer.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LogViewer : UserControl
     {
-        public MainWindow()
+        public LogViewer()
         {
             InitializeComponent();
         }

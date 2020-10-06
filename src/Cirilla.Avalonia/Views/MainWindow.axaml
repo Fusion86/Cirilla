@@ -48,8 +48,7 @@
                 <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}" Padding="0,8,0,8">
 
                     <!-- Open files -->
-                    <ListBox Grid.Row="0"
-                             BorderThickness="0"
+                    <ListBox BorderThickness="0"
                              Margin="0"
                              Padding="0"
                              Background="Transparent"

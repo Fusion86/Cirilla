@@ -1,4 +1,5 @@
 ﻿using Cirilla.Core.Models;
+using Serilog;
 
 namespace Cirilla.MVVM.ViewModels
 {
@@ -12,6 +13,7 @@ namespace Cirilla.MVVM.ViewModels
 
         public int Index { get; set; }
         private readonly IGMD_Entry entry;
+        private static readonly ILogger log = Log.ForContext<GmdEntryViewModel>();
 
         public string? Key
         {
@@ -21,6 +23,8 @@ namespace Cirilla.MVVM.ViewModels
             {
                 if (entry is GMD_Entry x)
                     x.Key = value;
+                else
+                    log.Error("Can't set 'Key' for entry of type 'GMD_EntryWithoutKey'.");
             }
         }
 

@@ -49,6 +49,7 @@ namespace Cirilla.MVVM.ViewModels
         public FileInfo Info { get; }
         public bool CanClose => true;
         public bool CanSave => true;
+        public string Title => Info.Name;
 
         private readonly GMD gmd;
         private readonly SourceList<GmdEntryViewModel> entries = new SourceList<GmdEntryViewModel>();

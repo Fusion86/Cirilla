@@ -14,11 +14,11 @@ namespace Cirilla.MVVM.Services
         public ReadOnlyObservableCollection<LogEventViewModel> Events => eventsBinding;
 
         private readonly ReadOnlyObservableCollection<LogEventViewModel> eventsBinding;
-        private readonly SourceList<LogEventViewModel> eventsList = new SourceList<LogEventViewModel>();
+        private readonly SourceList<LogEventViewModel> EventsList = new SourceList<LogEventViewModel>();
 
         public LogCollector()
         {
-            eventsList.Connect()
+            EventsList.Connect()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out eventsBinding)
                 .Subscribe();
@@ -26,7 +26,7 @@ namespace Cirilla.MVVM.Services
 
         public void Emit(LogEvent logEvent)
         {
-            eventsList.Add(new LogEventViewModel(logEvent));
+            EventsList.Add(new LogEventViewModel(logEvent));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Cirilla.MVVM.ViewModels
 {
-    public interface IOpenFileViewModel
+    public interface IOpenFileViewModel : ITitledViewModel
     {
         FileInfo Info { get; }
         bool CanClose { get; }
