@@ -178,7 +178,7 @@
                     </ContentControl.Resources>
 
                     <ContentControl.Content>
-                        <Binding Path="SelectedItem">
+                        <Binding Path="ContentViewModel">
                             <Binding.TargetNullValue>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock Text="Open a file to display it here." Opacity="{DynamicResource ThemeDisabledOpacity}"/>

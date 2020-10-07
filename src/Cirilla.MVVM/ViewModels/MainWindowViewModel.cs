@@ -29,6 +29,9 @@ namespace Cirilla.MVVM.ViewModels
             this.framework = framework;
             this.logCollector = logCollector;
 
+            if (logCollector != null)
+                logViewerViewModel = new LogViewerViewModel(logCollector);
+
             // True when one or more items have been selected in the openFilesList.
             var hasSelectedFile = this.WhenAnyValue(x => x.SelectedItem).Select(x => x != null && typeof(IOpenFileViewModel).IsAssignableFrom(x.GetType()));
 
@@ -73,6 +76,10 @@ namespace Cirilla.MVVM.ViewModels
                 .Select(x => x ? (double)framework.FindResource("ThemeDisabledOpacity")! : 1.0)
                 .ToPropertyEx(this, x => x.ContentOpacity);
 
+            this.WhenAnyValue(x => x.SelectedItem)
+                .Skip(1) // Skip initial value
+                .Subscribe(x => ContentViewModel = x);
+
             if (this.logCollector != null)
             {
                 // HACK: This code is absolutely tragic, but I haven't found a better way to do this.
@@ -104,7 +111,8 @@ namespace Cirilla.MVVM.ViewModels
         public ReadOnlyObservableCollection<FlashMessageViewModel> FlashMessages => flashMessagesBinding;
 
         [Reactive] public string StatusText { get; set; } = "";
-        [Reactive] public ITitledViewModel? SelectedItem { get; set; }
+        [Reactive] public IOpenFileViewModel? SelectedItem { get; set; }
+        [Reactive] public ITitledViewModel? ContentViewModel { get; set; }
 
         [ObservableAsProperty] public string? Title { get; }
         [ObservableAsProperty] public double ContentOpacity { get; }
@@ -112,6 +120,7 @@ namespace Cirilla.MVVM.ViewModels
         private static readonly ILogger logger = Log.ForContext<MainWindowViewModel>();
         private readonly IFrameworkService framework;
         private readonly LogCollector? logCollector;
+        private readonly LogViewerViewModel? logViewerViewModel;
         private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
         private readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
@@ -186,9 +195,13 @@ namespace Cirilla.MVVM.ViewModels
 
         private void ShowLogViewerHandler()
         {
-            // TODO: Unselect the selected item in the OpenFiles ListBox
             if (logCollector != null)
-                SelectedItem = new LogViewerViewModel(logCollector);
+            {
+                if (ContentViewModel != logViewerViewModel)
+                    ContentViewModel = logViewerViewModel;
+                else
+                    ContentViewModel = SelectedItem;
+            }
             else
                 log.Warning("Can't create LogViewerViewMOdel because no LogCollector was passed to the MainWindowViewModel.");
         }
