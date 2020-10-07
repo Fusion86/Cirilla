@@ -33,17 +33,20 @@ namespace Cirilla.MVVM.ViewModels
             var hasSelectedFile = this.WhenAnyValue(x => x.SelectedItem).Select(x => x != null && typeof(IOpenFileViewModel).IsAssignableFrom(x.GetType()));
 
             // True when the OpenFiles list has at least 1 item.
-            var hasFiles = openFilesList.CountChanged.ObserveOn(RxApp.MainThreadScheduler).Select(x => x > 0);
+            var hasFiles = openFilesList.CountChanged.Select(x => x > 0).ObserveOn(RxApp.MainThreadScheduler);
 
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileCommandHandler);
-            SaveSelectedFileCommand = ReactiveCommand.Create(SaveSelectedFileHandler, hasSelectedFile);
+            OpenFolderCommand = ReactiveCommand.CreateFromTask(OpenFolderHandler);
+            SaveSelectedFileCommand = ReactiveCommand.CreateFromTask(SaveSelectedFileHandler, hasSelectedFile);
             SaveSelectedFileAsCommand = ReactiveCommand.CreateFromTask(SaveSelectedFileAsHandler, hasSelectedFile);
+            SaveAllFilesCommand = ReactiveCommand.CreateFromTask(SaveAllFilesHandler, hasFiles);
             CloseSelectedFileCommand = ReactiveCommand.Create(CloseSelectedFileHandler, hasSelectedFile);
             CloseAllFilesCommand = ReactiveCommand.Create(CloseAllFilesHandler, hasFiles);
             ShowLogViewerCommand = ReactiveCommand.Create(ShowLogViewerHandler);
 
             CloseFileCommand = ReactiveCommand.Create<IOpenFileViewModel>(CloseFileHandler);
-            SaveFilesCommand = ReactiveCommand.Create<IList<IOpenFileViewModel>>(SaveFilesHandler, hasSelectedFile);
+            // The below commands have a hasSelectedFile because they always get openFileListBox.SelectedItems passed as CommandParameter
+            SaveFilesCommand = ReactiveCommand.CreateFromTask<IList<IOpenFileViewModel>>(SaveFilesHandler, hasSelectedFile);
             SaveFilesAsCommand = ReactiveCommand.CreateFromTask<IList<IOpenFileViewModel>>(SaveFilesAsHandler, hasSelectedFile);
             CloseFilesCommand = ReactiveCommand.Create<IList<IOpenFileViewModel>>(CloseFilesHandler, hasSelectedFile);
 
@@ -60,7 +63,7 @@ namespace Cirilla.MVVM.ViewModels
                 .Subscribe();
 
             this.WhenAnyValue(x => x.SelectedItem)
-                .Select(x => x == null ? "Cirilla" : $"{x.Title} - Cirilla")
+                .Select(x => x == null ? "Cirilla Toolkit" : $"{x.Title} - Cirilla Toolkit")
                 .ToPropertyEx(this, x => x.Title);
 
             var shouldShowFlashAlert = flashMessages.CountChanged
@@ -84,9 +87,11 @@ namespace Cirilla.MVVM.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+        public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowLogViewerCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSelectedFileCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSelectedFileAsCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveAllFilesCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseSelectedFileCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseAllFilesCommand { get; }
 
@@ -95,7 +100,7 @@ namespace Cirilla.MVVM.ViewModels
         public ReactiveCommand<IList<IOpenFileViewModel>, Unit> SaveFilesAsCommand { get; }
         public ReactiveCommand<IList<IOpenFileViewModel>, Unit> CloseFilesCommand { get; }
 
-        public ReadOnlyObservableCollection<IOpenFileViewModel> OpenFiles => openFilesBinding;
+        public ReadOnlyObservableCollection<IOpenFileViewModel> OpenFilesBinding => openFilesBinding;
         public ReadOnlyObservableCollection<FlashMessageViewModel> FlashMessages => flashMessagesBinding;
 
         [Reactive] public string StatusText { get; set; } = "";
@@ -119,17 +124,25 @@ namespace Cirilla.MVVM.ViewModels
             var filters = new List<FileDialogFilter> { new FileDialogFilter("GMD Text File", new List<string> { "gmd" }) };
             var files = await framework.OpenFileDialog(true, filters);
 
-            await Task.Run(() =>
-            {
-                foreach (var file in files)
-                    OpenFile(file);
-            });
+            await Task.Run(() => OpenFiles(files));
         }
 
-        private void SaveSelectedFileHandler()
+        private async Task OpenFolderHandler()
+        {
+            var folder = await framework.OpenFolderDialog();
+            if (folder != null)
+            {
+                var files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+                log.Information($"Opening folder '{folder}' which has {files.Length} files...");
+
+                await Task.Run(() => OpenFiles(files));
+            }
+        }
+
+        private async Task SaveSelectedFileHandler()
         {
             if (SelectedItem != null && SelectedItem is IOpenFileViewModel openFile)
-                SaveFile(openFile);
+                await SaveFile(openFile);
             else
                 log.Warning("No saveable item selected.");
         }
@@ -142,6 +155,21 @@ namespace Cirilla.MVVM.ViewModels
                 log.Warning("No saveable item selected.");
         }
 
+        private async Task SaveAllFilesHandler()
+        {
+            // TODO: Add cancel button
+            var alert = ShowFlashAlert(buttons: FlashMessageButtons.None);
+
+            for (int i = 0; i < OpenFilesBinding.Count; i++)
+            {
+                alert.Title = $"Saving file {i + 1}/{OpenFilesBinding.Count}";
+                alert.Message = $"Saving {OpenFilesBinding[i].Info.FullName} ...";
+                await OpenFilesBinding[i].Save(OpenFilesBinding[i].Info.FullName);
+            }
+
+            alert.Close();
+        }
+
         private void CloseSelectedFileHandler()
         {
             if (SelectedItem != null && SelectedItem is IOpenFileViewModel openFile)
@@ -152,7 +180,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private void CloseAllFilesHandler()
         {
-            foreach (var file in OpenFiles)
+            foreach (var file in OpenFilesBinding)
                 CloseFile(file);
         }
 
@@ -170,7 +198,7 @@ namespace Cirilla.MVVM.ViewModels
             CloseFile(obj);
         }
 
-        private void SaveFilesHandler(IList<IOpenFileViewModel> lst)
+        private async Task SaveFilesHandler(IList<IOpenFileViewModel> lst)
         {
             if (lst == null || lst.Count == 0)
             {
@@ -179,7 +207,7 @@ namespace Cirilla.MVVM.ViewModels
             else
             {
                 foreach (var file in lst)
-                    SaveFile(file);
+                    await SaveFile(file);
             }
         }
 
@@ -209,15 +237,22 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private void OpenFile(string filePath)
+        private void OpenFiles(string[] files)
         {
-            var fileInfo = new FileInfo(filePath);
+            // TODO: Add cancel button
+            var alert = ShowFlashAlert(buttons: FlashMessageButtons.None);
 
-            var alert = ShowFlashAlert($"Loading {fileInfo.FullName} ...", buttons: FlashMessageButtons.None);
-            var vm = TryCreateViewModelForFile(fileInfo);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fileInfo = new FileInfo(files[i]);
+                alert.Title = $"Loading file {i + 1}/{files.Length}";
+                alert.Message = $"Loading {fileInfo.FullName} ...";
 
-            if (vm != null)
-                openFilesList.Add(vm);
+                var vm = TryCreateViewModelForFile(fileInfo);
+
+                if (vm != null)
+                    openFilesList.Add(vm);
+            }
 
             alert.Close();
         }
@@ -233,7 +268,7 @@ namespace Cirilla.MVVM.ViewModels
             var name = await framework.SaveFileDialog(openFile.Info.Name, openFile.Info.Extension, filters);
 
             if (name != null)
-                SaveFile(openFile, name);
+                await SaveFile(openFile, name);
         }
 
         /// <summary>
@@ -258,7 +293,7 @@ namespace Cirilla.MVVM.ViewModels
         /// </summary>
         /// <param name="file"></param>
         /// <param name="savePath">Where to save the file. If left empty the file will be saved in-place (overwriting the old file).</param>
-        private void SaveFile(IOpenFileViewModel file, string? savePath = null)
+        private async Task SaveFile(IOpenFileViewModel file, string? savePath = null)
         {
             if (savePath == null)
             {
@@ -270,11 +305,10 @@ namespace Cirilla.MVVM.ViewModels
             }
 
             var alert = ShowFlashAlert($"Saving {savePath} ...", buttons: FlashMessageButtons.None);
-            flashMessages.Insert(0, alert);
 
             try
             {
-                file.Save(savePath);
+                await file.Save(savePath);
             }
             catch (Exception ex)
             {

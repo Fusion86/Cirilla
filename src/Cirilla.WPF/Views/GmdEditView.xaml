@@ -25,21 +25,24 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="Key" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="2" Text="{Binding KeySearchQuery}"/>
+            <TextBox Grid.Column="2" Text="{Binding KeySearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="4" Text="Value" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="6" Text="{Binding ValueSearchQuery}"/>
+            <TextBox Grid.Column="6" Text="{Binding ValueSearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
         <DataGrid x:Name="dataGrid"
                   Grid.Row="1"
+                  ColumnWidth="*"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding FilteredEntries}"
-                  CanUserResizeColumns="True">
+                  CanUserResizeColumns="True"
+                  CanUserDeleteRows="False"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Key" Binding="{Binding Key}"/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value}">
+                <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
+                <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.EditingElementStyle>
                         <Style TargetType="TextBox">
                             <Setter Property="AcceptsReturn" Value="true" />

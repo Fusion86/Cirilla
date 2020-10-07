@@ -23,6 +23,7 @@
 
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding OpenFolderCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveSelectedFileCommand}"/>
         <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding SaveSelectedFileAsCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="W" Command="{Binding CloseSelectedFileCommand}"/>
@@ -35,10 +36,11 @@
             <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
                 <MenuItem Header="File">
                     <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O"/>
+                    <MenuItem Header="Open Folder..." Command="{Binding OpenFolderCommand}" InputGestureText="Ctrl+Shift+O"/>
                     <Separator/>
                     <MenuItem Header="_Save" Command="{Binding SaveSelectedFileCommand}" InputGestureText="Ctrl+S"/>
                     <MenuItem Header="Save As..." Command="{Binding SaveSelectedFileAsCommand}" InputGestureText="Ctrl+Shift+S"/>
-                    <MenuItem Header="Save All" IsEnabled="False"/>
+                    <MenuItem Header="Save All" Command="{Binding SaveAllFilesCommand}"/>
                     <Separator/>
                     <MenuItem Header="Close File" Command="{Binding CloseSelectedFileCommand}" InputGestureText="Ctrl+W"/>
                     <MenuItem Header="Close All" Command="{Binding CloseAllFilesCommand}" InputGestureText="Ctrl+Shift+W"/>
@@ -48,12 +50,12 @@
                 </MenuItem>
 
                 <MenuItem Header="Edit">
-                    <MenuItem Header="Add Normal entry (with key)" Command="{Binding AddEntryCommand}"/>
-                    <MenuItem Header="Add Padding entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
+                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding AddEntryCommand}"/>
+                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="Batch Tools">
-                    <MenuItem/>
+                    <MenuItem Header="Search for text in all open files"/>
                 </MenuItem>
             </Menu>
 
@@ -86,7 +88,7 @@
                          BorderThickness="0"
                          Padding="0,8,0,0"
                          SelectionMode="Extended"
-                         ItemsSource="{Binding OpenFiles}"
+                         ItemsSource="{Binding OpenFilesBinding}"
                          SelectedItem="{Binding SelectedItem}"
                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                          HorizontalAlignment="Stretch">
@@ -203,7 +205,7 @@
                     VerticalAlignment="Center"
                     BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
                     Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BorderBrush}}">
-                <Grid Margin="16">
+                <Grid Margin="16" MinWidth="400">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

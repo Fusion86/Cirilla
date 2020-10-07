@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
@@ -59,9 +60,9 @@ namespace Cirilla.MVVM.ViewModels
             return true;
         }
 
-        public void Save(string path)
+        public async Task Save(string path)
         {
-
+            await Task.Run(() => gmd.Save(path));
         }
 
         private static Func<GmdEntryViewModel, bool> KeyFilterPredicate(string key)

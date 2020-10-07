@@ -19,6 +19,7 @@ namespace Cirilla.Core.Test.Tests
         [DataRow("common/text/cm_chat_eng.gmd")]
         [DataRow("common/text/steam/cm_chat_eng.gmd")]
         [DataRow("common/text/vfont/bow_eng.gmd")]
+        [DataRow("common/text/trace/tr_em011_01_eng.gmd")]
         public void Load(string str)
         {
             GMD gmd = new GMD(Utility.GetFullPath(str));
@@ -33,6 +34,7 @@ namespace Cirilla.Core.Test.Tests
         [DataRow("common/text/cm_status_eng.gmd")]
         [DataRow("common/text/cm_chat_eng.gmd")]
         [DataRow("common/text/steam/cm_chat_eng.gmd")]
+        [DataRow("common/text/trace/tr_em011_01_eng.gmd")]
         public void Rebuild(string str)
         {
             string origPath = Utility.GetFullPath(str);

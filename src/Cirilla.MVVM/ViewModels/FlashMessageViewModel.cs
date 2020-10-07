@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -57,8 +58,8 @@ namespace Cirilla.MVVM.ViewModels
 
         public event EventHandler<FlashMessageResult>? OnClose;
 
-        public string Title { get; }
-        public string Message { get; }
+        [Reactive] public string Title { get; set; }
+        [Reactive] public string Message { get; set; }
         public FlashMessageButtonViewModel[]? Buttons { get; }
         public FlashMessageResult Result { get; private set; }
 

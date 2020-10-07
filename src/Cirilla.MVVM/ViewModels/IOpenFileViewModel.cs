@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
@@ -14,6 +15,6 @@ namespace Cirilla.MVVM.ViewModels
         /// <returns><see langword="true"/> when successfully closed.</returns>
         bool Close();
 
-        void Save(string path);
+        Task Save(string path);
     }
 }

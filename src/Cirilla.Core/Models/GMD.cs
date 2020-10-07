@@ -32,7 +32,7 @@ namespace Cirilla.Core.Models
 
             using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             using BinaryReader br = new BinaryReader(fs);
-            
+
             // Header
             _header = br.ReadStruct<GMD_Header>();
 
@@ -76,8 +76,8 @@ namespace Cirilla.Core.Models
             for (int i = Entries.Count; i < _header.StringCount; i++)
                 Entries.Add(new GMD_EntryWithoutKey());
 
-            // Block with unknown data
-            _unk1 = br.ReadBytes(0x800);
+            if (_header.KeyCount > 0)
+                _unk1 = br.ReadBytes(0x800); // Block with unknown data
 
             // Keys, this skips over the GMD_EntryWithoutKey entries
             foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
@@ -129,7 +129,8 @@ namespace Cirilla.Core.Models
                     bw.Write(entry.InfoTableEntry.ToBytes());
                 }
 
-                bw.Write(_unk1);
+                if (_header.KeyCount > 0)
+                    bw.Write(_unk1);
 
                 // Keys, excludes GMD_EntryWithoutKey
                 foreach (GMD_Entry entry in Entries.OfType<GMD_Entry>())
@@ -159,9 +160,12 @@ namespace Cirilla.Core.Models
 
             var realEntries = Entries.OfType<GMD_Entry>().ToList();
 
-            // First info entry always has Index = 0 and KeyOffset = 0
-            realEntries[0].InfoTableEntry.StringIndex = 0;
-            realEntries[0].InfoTableEntry.KeyOffset = 0;
+            if (realEntries.Count > 0)
+            {
+                // First info entry always has Index = 0 and KeyOffset = 0
+                realEntries[0].InfoTableEntry.StringIndex = 0;
+                realEntries[0].InfoTableEntry.KeyOffset = 0;
+            }
 
             for (int i = 1; i < realEntries.Count; i++) // Start at 1
             {
@@ -230,8 +234,15 @@ namespace Cirilla.Core.Models
             // KeyBlockSize
             log.Info("Current KeyBlockSize = " + _header.KeyBlockSize);
 
-            int lastKeySize = ExEncoding.UTF8.GetByteCount(realEntries.Last().Key) + 1; // +1 for szString end
-            _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + lastKeySize;
+            if (_header.KeyCount > 0)
+            {
+                int lastKeySize = ExEncoding.UTF8.GetByteCount(realEntries.Last().Key) + 1; // +1 for szString end
+                _header.KeyBlockSize = realEntries.Last().InfoTableEntry.KeyOffset + lastKeySize;
+            }
+            else
+            {
+                _header.KeyBlockSize = 0;
+            }
 
             log.Info("New KeyBlockSize = " + _header.KeyBlockSize);
         }

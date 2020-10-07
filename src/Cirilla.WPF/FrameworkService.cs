@@ -1,6 +1,7 @@
 ﻿using Cirilla.MVVM.Common;
 using Cirilla.MVVM.Interfaces;
 using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,27 +15,31 @@ namespace Cirilla.WPF
             return Application.Current.FindResource(key);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<string[]> OpenFileDialog(bool allowMultiple = false, List<FileDialogFilter>? filters = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public Task<string[]> OpenFileDialog(bool allowMultiple = false, List<FileDialogFilter>? filters = null)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            var ofd = new OpenFileDialog
             {
                 Multiselect = allowMultiple,
                 Filter = GetFilter(filters)
             };
 
             if (ofd.ShowDialog() == true)
-                return ofd.FileNames;
+                return Task.FromResult(ofd.FileNames);
 
-            return new string[0];
+            return Task.FromResult(new string[0]);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public Task<string?> OpenFolderDialog()
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            var fbd = new VistaFolderBrowserDialog();
+            if (fbd.ShowDialog() == true && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                return Task.FromResult<string?>(fbd.SelectedPath);
+            return Task.FromResult<string?>(null);
+        }
+
+        public Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null)
+        {
+            var sfd = new SaveFileDialog
             {
                 FileName = defaultName,
                 DefaultExt = extension,
@@ -42,8 +47,8 @@ namespace Cirilla.WPF
             };
 
             if (sfd.ShowDialog() == true)
-                return sfd.FileName;
-            return null;
+                return Task.FromResult(sfd.FileName);
+            return Task.FromResult<string?>(null);
         }
 
         private string GetFilter(List<FileDialogFilter>? filters)
