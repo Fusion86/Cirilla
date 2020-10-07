@@ -14,7 +14,9 @@ namespace Cirilla.WPF
             return Application.Current.FindResource(key);
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<string[]> OpenFileDialog(bool allowMultiple = false, List<FileDialogFilter>? filters = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
@@ -28,7 +30,9 @@ namespace Cirilla.WPF
             return new string[0];
         }
 
-        public async Task<string> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null)
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             SaveFileDialog sfd = new SaveFileDialog
             {
@@ -38,8 +42,8 @@ namespace Cirilla.WPF
             };
 
             if (sfd.ShowDialog() == true)
-                return sfd.FileName ?? "";
-            return "";
+                return sfd.FileName;
+            return null;
         }
 
         private string GetFilter(List<FileDialogFilter>? filters)

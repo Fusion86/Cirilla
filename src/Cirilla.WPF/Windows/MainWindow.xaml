@@ -21,17 +21,27 @@
         <vc:VisibilityConverter x:Key="VisibilityConverter"/>
     </Window.Resources>
 
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveSelectedFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding SaveSelectedFileAsCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="W" Command="{Binding CloseSelectedFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="W" Command="{Binding CloseAllFilesCommand}"/>
+    </Window.InputBindings>
+
     <Grid>
         <DockPanel Opacity="{Binding ContentOpacity}">
             <!-- Main Menu -->
             <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
                 <MenuItem Header="File">
-                    <MenuItem Header="Open File..." Command="{Binding OpenFileCommand}"/>
+                    <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O"/>
                     <Separator/>
-                    <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
-                    <MenuItem Header="Save As..."/>
+                    <MenuItem Header="_Save" Command="{Binding SaveSelectedFileCommand}" InputGestureText="Ctrl+S"/>
+                    <MenuItem Header="Save As..." Command="{Binding SaveSelectedFileAsCommand}" InputGestureText="Ctrl+Shift+S"/>
+                    <MenuItem Header="Save All" IsEnabled="False"/>
                     <Separator/>
-                    <MenuItem Header="Add folder to browser" Command="{Binding AddFolderToBrowserCommand}"/>
+                    <MenuItem Header="Close File" Command="{Binding CloseSelectedFileCommand}" InputGestureText="Ctrl+W"/>
+                    <MenuItem Header="Close All" Command="{Binding CloseAllFilesCommand}" InputGestureText="Ctrl+Shift+W"/>
                     <Separator/>
                     <!-- HotKeys don't seem to work for Alt+F4 -->
                     <MenuItem Header="Exit" Click="MenuExit_Click"/>
@@ -71,13 +81,52 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Left Sidebar -->
-                <ListBox Grid.Column="0"
+                <ListBox x:Name="openFilesListBox"
+                         Grid.Column="0"
                          BorderThickness="0"
                          Padding="0,8,0,0"
+                         SelectionMode="Extended"
                          ItemsSource="{Binding OpenFiles}"
                          SelectedItem="{Binding SelectedItem}"
                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                          HorizontalAlignment="Stretch">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <!-- See https://stackoverflow.com/a/42589203/2125072 -->
+                            <MenuItem IsEnabled="False" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}">
+                                <MenuItem.Header>
+                                    <TextBlock>
+                                        <!-- These NEED to be on the same line, otherwise WPF adds some extra spaces between the (). -->
+                                        <Run Text="Selected Items ("/><Run Text="{Binding SelectedItems.Count, Mode=OneWay}"/><Run Text=")"/>
+                                    </TextBlock>
+                                </MenuItem.Header>
+                            </MenuItem>
+
+                            <Separator/>
+
+                            <!--
+                            The command binding is ONLY used for its CanExecute property, it does NOT get called. The Click method is what is being executed. 
+                            -->
+
+                            <MenuItem Header="Save Selected Files"
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.SaveFilesCommand}"
+                                      Click="SaveSelectedFiles_Click"/>
+
+                            <MenuItem Header="Save Selected Files As..."
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.SaveFilesAsCommand}"
+                                      Click="SaveSelectedFilesAs_Click"/>
+
+                            <Separator/>
+
+                            <MenuItem Header="Close Selected Files"
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.CloseFilesCommand}"
+                                      Click="CloseSelectedFiles_Click"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>

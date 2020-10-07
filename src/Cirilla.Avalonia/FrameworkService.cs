@@ -18,7 +18,7 @@ namespace Cirilla.Avalonia
             return await ofd.ShowAsync(GetMainWindow());
         }
 
-        public async Task<string> SaveFileDialog(string? defaultName = null, string? extension = null, List<MVVM.Common.FileDialogFilter>? filters = null)
+        public async Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<MVVM.Common.FileDialogFilter>? filters = null)
         {
             SaveFileDialog sfd = new SaveFileDialog
             {
