@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace Cirilla.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for LogViewer.xaml
+    /// Interaction logic for GmdCsvView.xaml
     /// </summary>
-    public partial class LogViewer : UserControl
+    public partial class GmdCsvView : UserControl
     {
-        public LogViewer()
+        public GmdCsvView()
         {
             InitializeComponent();
         }

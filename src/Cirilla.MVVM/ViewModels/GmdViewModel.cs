@@ -4,10 +4,13 @@ using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +25,8 @@ namespace Cirilla.MVVM.ViewModels
 
             for (int i = 0; i < gmd.Entries.Count; i++)
                 entries.Add(new GmdEntryViewModel(i, gmd.Entries[i]));
+
+            DeleteRowsCommand = ReactiveCommand.Create<IList<GmdEntryViewModel>>(DeleteRowsHandler);
 
             var keyFilter = this.WhenValueChanged(t => t.KeySearchQuery)
                 .Throttle(TimeSpan.FromMilliseconds(250))
@@ -41,8 +46,11 @@ namespace Cirilla.MVVM.ViewModels
                 .Subscribe();
         }
 
+        public ReactiveCommand<IList<GmdEntryViewModel>, Unit> DeleteRowsCommand { get; }
+
         [Reactive] public string KeySearchQuery { get; set; } = "";
         [Reactive] public string ValueSearchQuery { get; set; } = "";
+        [Reactive] public GmdEntryViewModel? SelectedEntry { get; set; }
 
         private readonly ReadOnlyObservableCollection<GmdEntryViewModel> filteredEntries;
         public ReadOnlyObservableCollection<GmdEntryViewModel> FilteredEntries => filteredEntries;
@@ -54,6 +62,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private readonly GMD gmd;
         private readonly SourceList<GmdEntryViewModel> entries = new SourceList<GmdEntryViewModel>();
+        private static readonly ILogger log = Log.ForContext<GmdViewModel>();
 
         public bool Close()
         {
@@ -63,6 +72,18 @@ namespace Cirilla.MVVM.ViewModels
         public async Task Save(string path)
         {
             await Task.Run(() => gmd.Save(path));
+        }
+
+        private void DeleteRowsHandler(IList<GmdEntryViewModel> rowsToDelete)
+        {
+            entries.Edit(x =>
+            {
+                foreach (var row in rowsToDelete)
+                {
+                    if (!x.Remove(row) || !gmd.Entries.Remove(row.entry))
+                        log.Error($"Could not remove row '{row.Key}'.");
+                }
+            });
         }
 
         private static Func<GmdEntryViewModel, bool> KeyFilterPredicate(string key)

@@ -336,13 +336,20 @@ namespace Cirilla.MVVM.ViewModels
         {
             try
             {
-                var gmd = new GmdViewModel(fileInfo);
-                return gmd;
+                //var gmd = new GmdViewModel(fileInfo);
+                //return gmd;
+
+                return fileInfo.Extension.ToLowerInvariant() switch
+                {
+                    ".gmd" => new GmdViewModel(fileInfo),
+                    ".csv" => new GmdCsvViewModel(fileInfo),
+                    _ => throw new NotSupportedException($"Unsupported extension '{fileInfo.Extension}'.")
+                };
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Could not load GMD file.");
-                ShowFlashAlert("Could not load GMD file!", ex.Message, FlashMessageButtons.Ok);
+                logger.Error(ex, "Could not open file.");
+                ShowFlashAlert("Could not open file!", ex.Message, FlashMessageButtons.Ok);
                 return null;
             }
         }

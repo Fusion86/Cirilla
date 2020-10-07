@@ -36,9 +36,29 @@
                   ColumnWidth="*"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding FilteredEntries}"
+                  SelectedItem="{Binding SelectedEntry}"
                   CanUserResizeColumns="True"
-                  CanUserDeleteRows="False"
+                  SelectionMode="Extended"
                   CanUserAddRows="False">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem IsEnabled="False" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}">
+                        <MenuItem.Header>
+                            <TextBlock>
+                                <!-- These NEED to be on the same line, otherwise WPF adds some extra spaces between the (). -->
+                                <Run Text="Selected Rows ("/><Run Text="{Binding SelectedItems.Count, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <!--
+                    The command binding is ONLY used for its CanExecute property, it does NOT get called. The Click method is what is being executed. 
+                    -->
+
+                    <MenuItem Header="Delete Selected Rows" Click="DeleteSelectedRows_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
                 <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>

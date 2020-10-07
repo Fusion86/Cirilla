@@ -12,7 +12,7 @@ namespace Cirilla.MVVM.ViewModels
         }
 
         public int Index { get; set; }
-        private readonly IGMD_Entry entry;
+        internal readonly IGMD_Entry entry;
         private static readonly ILogger log = Log.ForContext<GmdEntryViewModel>();
 
         public string? Key

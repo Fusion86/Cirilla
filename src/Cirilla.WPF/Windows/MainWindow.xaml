@@ -61,9 +61,33 @@
 
             <!-- Status Bar -->
             <StatusBar DockPanel.Dock="Bottom">
-                <StatusBarItem Content="{Binding StatusText}"/>
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
 
-                <StatusBarItem HorizontalContentAlignment="Right">
+                <StatusBarItem Grid.Column="0">
+                    <Button Content="Workspace: (none)"
+                            BorderThickness="0"
+                            Padding="0"
+                            Margin="0,-3,0,-3"
+                            Height="22"
+                            Background="Transparent"/>
+                </StatusBarItem>
+
+                <Separator Grid.Column="1"/>
+
+                <StatusBarItem Grid.Column="2" Content="{Binding StatusText}"/>
+
+                <StatusBarItem Grid.Column="3">
                     <Button Content="Show Log"
                             BorderThickness="0"
                             Padding="8,0,8,0"
@@ -172,8 +196,12 @@
                             <view:GmdEditView Margin="0" DataContext="{Binding}"/>
                         </DataTemplate>
 
+                        <DataTemplate DataType="{x:Type vms:GmdCsvViewModel}">
+                            <view:GmdCsvView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+
                         <DataTemplate DataType="{x:Type vms:LogViewerViewModel}">
-                            <view:LogViewer Margin="0" DataContext="{Binding}"/>
+                            <view:LogView Margin="0" DataContext="{Binding}"/>
                         </DataTemplate>
                     </ContentControl.Resources>
 

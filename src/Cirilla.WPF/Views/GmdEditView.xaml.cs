@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Cirilla.MVVM.ViewModels;
+using Serilog;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Cirilla.WPF.Views
 {
@@ -21,6 +15,22 @@ namespace Cirilla.WPF.Views
         public GmdEditView()
         {
             InitializeComponent();
+        }
+
+        public GmdViewModel ViewModel => DataContext as GmdViewModel ?? throw new Exception("DataContext is not of type 'GmdViewModel'.");
+        private static readonly ILogger log = Log.ForContext<GmdEditView>();
+
+        private void DeleteSelectedRows_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedItems = dataGrid.SelectedItems.Cast<GmdEntryViewModel>().ToList();
+                ViewModel.DeleteRowsCommand.Execute(selectedItems).Subscribe();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Can't cast openFilesListBox.SelectedItems to 'IList<IOpenFileViewModel>'.");
+            }
         }
     }
 }
