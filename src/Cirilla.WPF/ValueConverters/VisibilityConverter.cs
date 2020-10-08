@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -13,13 +14,16 @@ namespace Cirilla.WPF.ValueConverters
                 throw new NotSupportedException("Can only convert to 'Visibility' type.");
 
             if (value is int i)
-                value = i != 0;
+                return BoolToVisibility(i != 0);
+
+            if (value is IList list)
+                return BoolToVisibility(list.Count > 0);
 
             if (value is bool b)
-                return b ? Visibility.Visible : Visibility.Collapsed;
+                return BoolToVisibility(b);
 
             if (value is string str)
-                return string.IsNullOrWhiteSpace(str) ? Visibility.Collapsed : Visibility.Visible;
+                return BoolToVisibility(!string.IsNullOrWhiteSpace(str));
 
             return Binding.DoNothing;
         }
@@ -27,6 +31,11 @@ namespace Cirilla.WPF.ValueConverters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+
+        private Visibility BoolToVisibility(bool b)
+        {
+            return b ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

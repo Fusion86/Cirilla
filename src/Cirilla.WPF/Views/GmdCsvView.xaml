@@ -4,10 +4,92 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cirilla.WPF.Views"
+             xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
+             xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid>
-        <TextBlock Text="GMD CSV View"/>
-    </Grid>
+    <UserControl.Resources>
+        <vc:ObjectTypeConverter x:Key="ObjectTypeConverter"/>
+    </UserControl.Resources>
+
+    <TabControl BorderThickness="0">
+        <TabItem Header="CSV Values">
+            <DataGrid x:Name="dataGrid"
+                          CanUserResizeColumns="True"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding CsvEntries}"
+                          SelectionMode="Extended"
+                          CanUserAddRows="False">
+                <DataGrid.RowHeaderStyle>
+                    <Style TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource {x:Type DataGridRowHeader}}">
+                        <Setter Property="Margin" Value="0,0,16,0"/>
+                    </Style>
+                </DataGrid.RowHeaderStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.EditingElementStyle>
+                            <Style TargetType="TextBox">
+                                <Setter Property="AcceptsReturn" Value="true" />
+                            </Style>
+                        </DataGridTextColumn.EditingElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </TabItem>
+
+        <TabItem Header="Apply to GMD">
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="GMD File" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox x:Name="cmbGmdFile" Grid.Column="1" SelectedItem="{Binding SelectedGmdFile}">
+                        <ComboBox.Resources>
+                            <CollectionViewSource x:Key="OpenGmdFiles" Source="{Binding OpenGmdFiles}"/>
+
+                            <DataTemplate DataType="{x:Type vms:GmdViewModel}">
+                                <TextBlock Text="{Binding Info.FullName}"/>
+                            </DataTemplate>
+
+                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                <Style.Triggers>
+                                    <!-- DataTrigger for items of type 'Button' -->
+                                    <DataTrigger Binding="{Binding ., Converter={StaticResource ObjectTypeConverter}}" Value="{x:Type Button}">
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Margin" Value="0"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Resources>
+
+                        <ComboBox.ItemsSource>
+                            <CompositeCollection>
+                                <Button Content="Open File..." Click="OpenFile_Click"/>
+
+                                <Button Content="Auto-Select from Folder..."
+                                        Click="AutoSelectFromFolder_Click"
+                                        ToolTip="Recursively searches a folder on your computer for a GMD file with a matching name."/>
+
+                                <Button Content="Auto-Select from Opened Files..."
+                                        Click="AutoSelectFromOpenedFiles_Click"
+                                        ToolTip="Search for a GMD file with a matching name in the opened files list (left sidebar)."/>
+                                <Separator/>
+                                <CollectionContainer Collection="{Binding Source={StaticResource OpenGmdFiles}}"/>
+                            </CompositeCollection>
+                        </ComboBox.ItemsSource>
+                    </ComboBox>
+                </Grid>
+
+                <DataGrid Margin="0,8,0,0">
+
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+    </TabControl>
 </UserControl>

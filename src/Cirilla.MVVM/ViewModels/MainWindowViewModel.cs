@@ -2,13 +2,13 @@
 using Cirilla.MVVM.Interfaces;
 using Cirilla.MVVM.Services;
 using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IFlashMessageContainer
     {
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
@@ -38,7 +38,7 @@ namespace Cirilla.MVVM.ViewModels
             // True when the OpenFiles list has at least 1 item.
             var hasFiles = openFilesList.CountChanged.Select(x => x > 0).ObserveOn(RxApp.MainThreadScheduler);
 
-            OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileCommandHandler);
+            OpenFileCommand = ReactiveCommand.CreateFromTask<string[]?, IList<IOpenFileViewModel>>(OpenFileCommandHandler);
             OpenFolderCommand = ReactiveCommand.CreateFromTask(OpenFolderHandler);
             SaveSelectedFileCommand = ReactiveCommand.CreateFromTask(SaveSelectedFileHandler, hasSelectedFile);
             SaveSelectedFileAsCommand = ReactiveCommand.CreateFromTask(SaveSelectedFileAsHandler, hasSelectedFile);
@@ -82,18 +82,14 @@ namespace Cirilla.MVVM.ViewModels
 
             if (this.logCollector != null)
             {
-                // HACK: This code is absolutely tragic, but I haven't found a better way to do this.
-                ((INotifyCollectionChanged)this.logCollector.Events).CollectionChanged += (sender, e) =>
-                {
-                    if (e.NewItems != null
-                        && e.NewItems.Count != 0
-                        && e.NewItems[e.NewItems.Count - 1] is LogEventViewModel logEvent)
-                        StatusText = logEvent.Message;
-                };
+                this.logCollector.Events
+                    .ToObservableChangeSet()
+                    .OnItemAdded(x => StatusText = x.Message)
+                    .Subscribe();
             }
         }
 
-        public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+        public ReactiveCommand<string[]?, IList<IOpenFileViewModel>> OpenFileCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowLogViewerCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSelectedFileCommand { get; }
@@ -118,22 +114,36 @@ namespace Cirilla.MVVM.ViewModels
         [ObservableAsProperty] public double ContentOpacity { get; }
 
         private static readonly ILogger logger = Log.ForContext<MainWindowViewModel>();
-        private readonly IFrameworkService framework;
+        internal readonly IFrameworkService framework;
         private readonly LogCollector? logCollector;
         private readonly LogViewerViewModel? logViewerViewModel;
         private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
-        private readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
+        internal readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
         private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
 
         private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
 
-        private async Task OpenFileCommandHandler()
+        private async Task<IList<IOpenFileViewModel>> OpenFileCommandHandler(string[]? allowedExtensions = null)
         {
-            var filters = new List<FileDialogFilter> { new FileDialogFilter("GMD Text File", new List<string> { "gmd" }) };
+            var filters = new List<FileDialogFilter> {
+                new FileDialogFilter("GMD Text File", new List<string> { "gmd" }),
+                new FileDialogFilter("CSV UTF-8 (Comma Delimited)", new List<string> { "csv" })
+            };
+
+            if (allowedExtensions != null)
+            {
+                // Only keep filters that contain atleast one of the extensions in 'allowedExtensions'.
+                filters.RemoveAll(x =>
+                {
+                    var obj = x.Extensions.FirstOrDefault(x => allowedExtensions.Contains(x));
+                    return obj == null; // Remove item if 'Extensions' does not contain one of the 'allowedExtensions'.
+                });
+            }
+
             var files = await framework.OpenFileDialog(true, filters);
 
-            await Task.Run(() => OpenFiles(files));
+            return await Task.Run(() => OpenFiles(files));
         }
 
         private async Task OpenFolderHandler()
@@ -250,9 +260,9 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private void OpenFiles(string[] files)
+        internal IList<IOpenFileViewModel> OpenFiles(string[] files)
         {
-            // TODO: Add cancel button
+            var openedFiles = new List<IOpenFileViewModel>();
             var alert = ShowFlashAlert(buttons: FlashMessageButtons.None);
 
             for (int i = 0; i < files.Length; i++)
@@ -264,10 +274,15 @@ namespace Cirilla.MVVM.ViewModels
                 var vm = TryCreateViewModelForFile(fileInfo);
 
                 if (vm != null)
+                {
                     openFilesList.Add(vm);
+                    openedFiles.Add(vm);
+                }
             }
 
             alert.Close();
+
+            return openedFiles;
         }
 
         /// <summary>
@@ -342,19 +357,19 @@ namespace Cirilla.MVVM.ViewModels
                 return fileInfo.Extension.ToLowerInvariant() switch
                 {
                     ".gmd" => new GmdViewModel(fileInfo),
-                    ".csv" => new GmdCsvViewModel(fileInfo),
-                    _ => throw new NotSupportedException($"Unsupported extension '{fileInfo.Extension}'.")
+                    ".csv" => new GmdCsvViewModel(fileInfo, this),
+                    _ => throw new NotSupportedException($"{fileInfo.FullName} is not a suported file type.")
                 };
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Could not open file.");
-                ShowFlashAlert("Could not open file!", ex.Message, FlashMessageButtons.Ok);
+                logger.Error(ex, "Error when opening file.");
+                ShowFlashAlert("Error when opening file", ex.Message, FlashMessageButtons.Ok);
                 return null;
             }
         }
 
-        private FlashMessageViewModel ShowFlashAlert(string title = "", string message = "", FlashMessageButtons buttons = FlashMessageButtons.Ok)
+        public FlashMessageViewModel ShowFlashAlert(string title = "", string message = "", FlashMessageButtons buttons = FlashMessageButtons.Ok)
         {
             var alert = new FlashMessageViewModel(title, message, buttons);
             alert.OnClose += (sender, e) => flashMessages.Remove(alert);

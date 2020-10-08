@@ -237,6 +237,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0"
@@ -250,7 +251,27 @@
                                TextWrapping="Wrap"
                                Visibility="{Binding FlashMessages[0].Message, Converter={StaticResource VisibilityConverter}}"/>
 
-                    <!-- TODO: Display buttons in ItemsRepeater -->
+                    <ItemsControl Grid.Row="2"
+                                  Margin="0,16,0,-4"
+                                  ItemsSource="{Binding FlashMessages[0].Buttons}"
+                                  Visibility="{Binding FlashMessages[0].Buttons, Converter={StaticResource VisibilityConverter}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Content}"
+                                        MinWidth="100"
+                                        Margin="0,0,4,4"
+                                        Command="{Binding DataContext.FlashMessages[0].ButtonClickCommand,
+                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding Result}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </Border>
         </Grid>
