@@ -14,13 +14,13 @@ namespace Cirilla.WPF.Views
         {
             InitializeComponent();
 
-            dataGrid.LoadingRow += DataGrid_LoadingRow;
+            csvEntriesDataGrid.LoadingRow += LoadingRowShowIndexInHeader;
             cmbGmdFile.SelectionChanged += CmbGmdFile_SelectionChanged;
         }
 
         public GmdCsvViewModel ViewModel => DataContext as GmdCsvViewModel ?? throw new Exception("DataContext is not of type 'GmdViewModel'.");
 
-        private void DataGrid_LoadingRow(object? sender, DataGridRowEventArgs e)
+        private void LoadingRowShowIndexInHeader(object? sender, DataGridRowEventArgs e)
         {
             e.Row.Header = e.Row.GetIndex().ToString();
         }

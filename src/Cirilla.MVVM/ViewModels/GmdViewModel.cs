@@ -24,7 +24,7 @@ namespace Cirilla.MVVM.ViewModels
             gmd = new GMD(fileInfo.FullName);
 
             for (int i = 0; i < gmd.Entries.Count; i++)
-                entries.Add(new GmdEntryViewModel(i, gmd.Entries[i]));
+                entriesList.Add(new GmdEntryViewModel(i, gmd.Entries[i]));
 
             DeleteRowsCommand = ReactiveCommand.Create<IList<GmdEntryViewModel>>(DeleteRowsHandler);
 
@@ -36,12 +36,18 @@ namespace Cirilla.MVVM.ViewModels
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .Select(ValueFilterPredicate);
 
-            entries.Connect()
+            entriesList.Connect()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out entriesBinding)
+                .DisposeMany()
+                .Subscribe();
+
+            entriesList.Connect()
                 .Filter(keyFilter)
                 .Filter(valueFilter)
                 .Sort(SortExpressionComparer<GmdEntryViewModel>.Ascending(x => x.Index))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out filteredEntries)
+                .Bind(out filteredEntriesBinding)
                 .DisposeMany()
                 .Subscribe();
         }
@@ -52,8 +58,10 @@ namespace Cirilla.MVVM.ViewModels
         [Reactive] public string ValueSearchQuery { get; set; } = "";
         [Reactive] public GmdEntryViewModel? SelectedEntry { get; set; }
 
-        private readonly ReadOnlyObservableCollection<GmdEntryViewModel> filteredEntries;
-        public ReadOnlyObservableCollection<GmdEntryViewModel> FilteredEntries => filteredEntries;
+        private readonly ReadOnlyObservableCollection<GmdEntryViewModel> entriesBinding;
+        private readonly ReadOnlyObservableCollection<GmdEntryViewModel> filteredEntriesBinding;
+        public ReadOnlyObservableCollection<GmdEntryViewModel> Entries => entriesBinding;
+        public ReadOnlyObservableCollection<GmdEntryViewModel> FilteredEntries => filteredEntriesBinding;
 
         public FileInfo Info { get; }
         public bool CanClose => true;
@@ -61,7 +69,7 @@ namespace Cirilla.MVVM.ViewModels
         public string Title => Info.Name;
 
         private readonly GMD gmd;
-        private readonly SourceList<GmdEntryViewModel> entries = new SourceList<GmdEntryViewModel>();
+        private readonly SourceList<GmdEntryViewModel> entriesList = new SourceList<GmdEntryViewModel>();
         private static readonly ILogger log = Log.ForContext<GmdViewModel>();
 
         public bool Close()
@@ -74,9 +82,11 @@ namespace Cirilla.MVVM.ViewModels
             await Task.Run(() => gmd.Save(path));
         }
 
+        public IObservable<IChangeSet<GmdEntryViewModel>> Connect() => entriesList.Connect();
+
         private void DeleteRowsHandler(IList<GmdEntryViewModel> rowsToDelete)
         {
-            entries.Edit(x =>
+            entriesList.Edit(x =>
             {
                 foreach (var row in rowsToDelete)
                 {

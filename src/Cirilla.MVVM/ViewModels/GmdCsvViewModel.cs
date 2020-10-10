@@ -6,6 +6,7 @@ using CsvHelper;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,8 +25,11 @@ namespace Cirilla.MVVM.ViewModels
         {
             this.mainWindowViewModel = mainWindowViewModel;
 
+            var canPopulateImportEntries = this.WhenAnyValue(x => x.SelectedGmdFile, (GmdViewModel? x) => x != null);
+
             Info = fileInfo;
             ReloadCsvCommand = ReactiveCommand.Create(() => LoadCsv(Info.FullName));
+            PopulateImportEntriesCommand = ReactiveCommand.Create(PopulateImportEntriesHandler, canPopulateImportEntries);
             PickGmdFileToLinkCommand = ReactiveCommand.CreateFromTask(PickGmdFileToLinkHandler);
             AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolderHandler);
             AutoSelectFromOpenedFilesCommand = ReactiveCommand.Create(AutoSelectFromOpenedFilesHandler);
@@ -44,6 +48,18 @@ namespace Cirilla.MVVM.ViewModels
                 .DisposeMany()
                 .Subscribe();
 
+            importEntries.Connect()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out importEntriesBinding)
+                .DisposeMany()
+                .Subscribe();
+
+            this.WhenAnyValue(x => x.SelectedGmdFile)
+                .Where(x => x != null)
+                .Throttle(TimeSpan.FromMilliseconds(250))
+                .Select(_ => Unit.Default)
+                .InvokeCommand(PopulateImportEntriesCommand);
+
             ReloadCsvCommand.Execute().Subscribe();
         }
 
@@ -53,6 +69,7 @@ namespace Cirilla.MVVM.ViewModels
         public string Title => Info.Name;
 
         public ReactiveCommand<Unit, Unit> ReloadCsvCommand { get; }
+        public ReactiveCommand<Unit, Unit> PopulateImportEntriesCommand { get; }
         public ReactiveCommand<Unit, Unit> PickGmdFileToLinkCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromOpenedFilesCommand { get; }
@@ -60,12 +77,16 @@ namespace Cirilla.MVVM.ViewModels
         [Reactive] public GmdViewModel? SelectedGmdFile { get; set; }
 
         public ReadOnlyObservableCollection<StringKeyValuePair> CsvEntries => csvEntriesBinding;
+        public ReadOnlyObservableCollection<GmdEntryDiffViewModel> ImportEntries => importEntriesBinding;
         public ReadOnlyObservableCollection<GmdViewModel> OpenGmdFiles => openGmdFilesBinding;
 
         private readonly MainWindowViewModel mainWindowViewModel;
         private readonly ReadOnlyObservableCollection<StringKeyValuePair> csvEntriesBinding;
+        private readonly ReadOnlyObservableCollection<GmdEntryDiffViewModel> importEntriesBinding;
         private readonly ReadOnlyObservableCollection<GmdViewModel> openGmdFilesBinding;
         private readonly SourceCache<StringKeyValuePair, string> csvEntries = new SourceCache<StringKeyValuePair, string>(x => x.Key);
+        private readonly SourceCache<GmdEntryDiffViewModel, string> importEntries = new SourceCache<GmdEntryDiffViewModel, string>(x => x.Entry.Key!);
+        private static readonly ILogger log = Log.ForContext<GmdCsvViewModel>();
 
         public bool Close()
         {
@@ -88,11 +109,8 @@ namespace Cirilla.MVVM.ViewModels
                 csv.Configuration.AllowComments = true; // Uses # to identify comments
 
                 var values = csv.GetRecords<StringKeyValuePair>();
-
-                csvEntries.Edit(x =>
-                {
-                    x.Load(values);
-                });
+                csvEntries.Edit(x => x.Load(values));
+                PopulateImportEntriesCommand.Execute().Subscribe();
             }
         }
 
@@ -108,6 +126,31 @@ namespace Cirilla.MVVM.ViewModels
             {
                 SelectedGmdFile = vm;
             }
+        }
+
+        // This function can also be replaced by a DynamicData observable list, but I don't know how.
+        private void PopulateImportEntriesHandler()
+        {
+            // TODO: This function might be pretty slow. Maybe run on background thread?
+            if (SelectedGmdFile == null)
+            {
+                log.Warning("Can't execute 'PopulateImportEntries' when 'SelectedGmdFile' is null.");
+                return;
+            }
+
+            importEntries.Edit(lst =>
+            {
+                lst.Clear();
+
+                foreach (var entry in SelectedGmdFile.Entries.Where(x => x.Key != null))
+                {
+                    // TODO: Allow user to deselect CsvEntry (to not import that entry)
+                    var newValue = CsvEntries.FirstOrDefault(x => x.Key == entry.Key);
+
+                    if (newValue != null)
+                        lst.AddOrUpdate(new GmdEntryDiffViewModel(entry, newValue.Value));
+                }
+            });
         }
 
         private async Task AutoSelectFromFolderHandler()
