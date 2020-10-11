@@ -10,6 +10,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -54,9 +55,8 @@ namespace Cirilla.MVVM.ViewModels
                 .DisposeMany()
                 .Subscribe();
 
-            this.WhenAnyValue(x => x.SelectedGmdFile)
-                .Where(x => x != null)
-                .Throttle(TimeSpan.FromMilliseconds(250))
+            this.WhenAnyValue(x => x.SelectedGmdFile, x => x.HideUnchangedEntries)
+                .Where(x => x.Item1 != null)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(PopulateImportEntriesCommand);
 
@@ -74,6 +74,7 @@ namespace Cirilla.MVVM.ViewModels
         public ReactiveCommand<Unit, Unit> AutoSelectFromFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromOpenedFilesCommand { get; }
 
+        [Reactive] public bool HideUnchangedEntries { get; set; }
         [Reactive] public GmdViewModel? SelectedGmdFile { get; set; }
 
         public ReadOnlyObservableCollection<StringKeyValuePair> CsvEntries => csvEntriesBinding;
@@ -100,18 +101,17 @@ namespace Cirilla.MVVM.ViewModels
 
         private void LoadCsv(string path)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (TextReader tr = new StreamReader(fs, ExEncoding.UTF8))
-            using (CsvReader csv = new CsvReader(tr, CultureInfo.InvariantCulture))
-            {
-                csv.Configuration.HasHeaderRecord = false;
-                csv.Configuration.Delimiter = ";";
-                csv.Configuration.AllowComments = true; // Uses # to identify comments
+            using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using TextReader tr = new StreamReader(fs, ExEncoding.UTF8);
+            using CsvReader csv = new CsvReader(tr, CultureInfo.InvariantCulture);
 
-                var values = csv.GetRecords<StringKeyValuePair>();
-                csvEntries.Edit(x => x.Load(values));
-                PopulateImportEntriesCommand.Execute().Subscribe();
-            }
+            csv.Configuration.HasHeaderRecord = false;
+            csv.Configuration.Delimiter = ";";
+            csv.Configuration.AllowComments = true; // Uses # to identify comments
+
+            var values = csv.GetRecords<StringKeyValuePair>();
+            csvEntries.Edit(x => x.Load(values));
+            PopulateImportEntriesCommand.Execute().Subscribe();
         }
 
         private async Task PickGmdFileToLinkHandler()
@@ -138,6 +138,9 @@ namespace Cirilla.MVVM.ViewModels
                 return;
             }
 
+            var sw = Stopwatch.StartNew();
+
+            // FUCK: This doesn't run when triggerd by the SelectedGmdFile change event
             importEntries.Edit(lst =>
             {
                 lst.Clear();
@@ -148,9 +151,18 @@ namespace Cirilla.MVVM.ViewModels
                     var newValue = CsvEntries.FirstOrDefault(x => x.Key == entry.Key);
 
                     if (newValue != null)
-                        lst.AddOrUpdate(new GmdEntryDiffViewModel(entry, newValue.Value));
+                    {
+                        var diff = new GmdEntryDiffViewModel(entry, newValue.Value);
+
+                        if (!HideUnchangedEntries || diff.HasChanges)
+                            lst.AddOrUpdate(new GmdEntryDiffViewModel(entry, newValue.Value));
+                    }
                 }
             });
+
+            sw.Stop();
+
+            log.Verbose("PopulateImportEntries took {@ElapsedMilliseconds} ms.", sw.ElapsedMilliseconds);
         }
 
         private async Task AutoSelectFromFolderHandler()

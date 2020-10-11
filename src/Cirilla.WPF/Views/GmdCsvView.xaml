@@ -43,13 +43,20 @@
         <TabItem Header="Apply to GMD">
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
-                    <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Text="GMD File" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
                         <ComboBox x:Name="cmbGmdFile" Grid.Column="1" SelectedItem="{Binding SelectedGmdFile}">
                             <ComboBox.Resources>
                                 <CollectionViewSource x:Key="OpenGmdFiles" Source="{Binding OpenGmdFiles}"/>
@@ -85,7 +92,14 @@
                                 </CompositeCollection>
                             </ComboBox.ItemsSource>
                         </ComboBox>
+
+                        <!-- Apply & Save Button -->
+                        <Button Grid.Column="2" Margin="8,0,0,0" Content="Apply &amp; Save" ToolTip="Write values from the CSV file to the GMD and save (overwrite) the GMD file."/>
                     </Grid>
+
+                    <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                        <CheckBox Content="Hide unchanged entries" IsChecked="{Binding HideUnchangedEntries}" VerticalAlignment="Center"/>
+                    </WrapPanel>
                 </Grid>
 
                 <DataGrid x:Name="csvDataGrid"
