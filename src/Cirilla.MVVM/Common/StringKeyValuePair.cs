@@ -1,4 +1,4 @@
-﻿namespace Cirilla.MVVM.Models
+﻿namespace Cirilla.MVVM.Common
 {
     // Sometimes we can't KeyValuePair<string, String>, for example with CsvReader.GetRecords<T>().
     public class StringKeyValuePair

@@ -94,7 +94,11 @@
                         </ComboBox>
 
                         <!-- Apply & Save Button -->
-                        <Button Grid.Column="2" Margin="8,0,0,0" Content="Apply &amp; Save" ToolTip="Write values from the CSV file to the GMD and save (overwrite) the GMD file."/>
+                        <Button Grid.Column="2"
+                                Margin="8,0,0,0"
+                                Content="Apply &amp; Save"
+                                Command="{Binding ApplyAndSaveCommand}"
+                                ToolTip="Write values from the CSV file to the GMD and save (overwrite) the GMD file."/>
                     </Grid>
 
                     <WrapPanel Grid.Row="1" Margin="0,8,0,0">
@@ -108,7 +112,7 @@
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding ImportEntries}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Index" Binding="{Binding Entry.Index}" IsReadOnly="True" Width="50"/>
+                        <DataGridTextColumn Header="Index" Binding="{Binding Entry.Index}" IsReadOnly="True" Width="50" SortDirection="Ascending"/>
                         <DataGridTextColumn Header="Key" Binding="{Binding Entry.Key}" IsReadOnly="True"/>
 
                         <DataGridTemplateColumn Header="Current">

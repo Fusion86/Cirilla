@@ -3,6 +3,7 @@ using Cirilla.MVVM.Interfaces;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -15,7 +16,7 @@ namespace Cirilla.WPF
             return Application.Current.FindResource(key);
         }
 
-        public Task<string[]> OpenFileDialog(bool allowMultiple = false, List<FileDialogFilter>? filters = null)
+        public Task<string[]> OpenFileDialog(bool allowMultiple = false, IList<FileDialogFilter>? filters = null)
         {
             var ofd = new OpenFileDialog
             {
@@ -37,7 +38,7 @@ namespace Cirilla.WPF
             return Task.FromResult<string?>(null);
         }
 
-        public Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<FileDialogFilter>? filters = null)
+        public Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, IList<FileDialogFilter>? filters = null)
         {
             var sfd = new SaveFileDialog
             {
@@ -51,10 +52,22 @@ namespace Cirilla.WPF
             return Task.FromResult<string?>(null);
         }
 
-        private string GetFilter(List<FileDialogFilter>? filters)
+        private string GetFilter(IList<FileDialogFilter>? filters)
         {
-            // TODO: Implement this
-            return "";
+            if (filters == null) return "";
+
+            var filterStrList = new List<string>();
+
+            foreach (var filter in filters)
+            {
+                var extList = filter.Extensions.Select(x => $"*.{x}").ToList();
+                string extText = string.Join(", ", extList);
+                string extFilter = string.Join(';', extList);
+                string filterStr = $"{filter.Name} ({extText})|{extFilter}";
+                filterStrList.Add(filterStr);
+            }
+
+            return string.Join("|", filterStrList);
         }
     }
 }

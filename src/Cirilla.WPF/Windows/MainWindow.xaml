@@ -19,6 +19,7 @@
 
     <Window.Resources>
         <vc:VisibilityConverter x:Key="VisibilityConverter"/>
+        <vc:ObjectOfTypeToVisibilityConverter x:Key="ObjectOfTypeConveter"/>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -35,26 +36,42 @@
             <!-- Main Menu -->
             <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
                 <MenuItem Header="File">
+                    <!-- Open Menu Items -->
                     <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O"/>
                     <MenuItem Header="Open Folder..." Command="{Binding OpenFolderCommand}" InputGestureText="Ctrl+Shift+O"/>
+
+                    <!-- Save Menu Items -->
                     <Separator/>
                     <MenuItem Header="_Save" Command="{Binding SaveSelectedFileCommand}" InputGestureText="Ctrl+S"/>
                     <MenuItem Header="Save As..." Command="{Binding SaveSelectedFileAsCommand}" InputGestureText="Ctrl+Shift+S"/>
                     <MenuItem Header="Save All" Command="{Binding SaveAllFilesCommand}"/>
+
+                    <!-- GmdViewModel Menu Items -->
+                    <Separator Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <MenuItem Header="Import values from CSV"
+                              Command="{Binding SelectedItem.ImportFromCsvCommand}"
+                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <MenuItem Header="Export values to CSV"
+                              Command="{Binding SelectedItem.ExportToCsvCommand}"
+                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+
+                    <!-- Close Menu Items -->
                     <Separator/>
                     <MenuItem Header="Close File" Command="{Binding CloseSelectedFileCommand}" InputGestureText="Ctrl+W"/>
                     <MenuItem Header="Close All" Command="{Binding CloseAllFilesCommand}" InputGestureText="Ctrl+Shift+W"/>
+
+                    <!-- Exit -->
                     <Separator/>
-                    <!-- HotKeys don't seem to work for Alt+F4 -->
                     <MenuItem Header="Exit" Click="MenuExit_Click"/>
                 </MenuItem>
 
-                <MenuItem Header="Edit">
+                <MenuItem Header="Edit"
+                          Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}">
                     <MenuItem Header="Add Normal Entry (with key)" Command="{Binding AddEntryCommand}"/>
                     <MenuItem Header="Add Padding Entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
                 </MenuItem>
 
-                <MenuItem Header="Batch Tools">
+                <MenuItem Header="Tools">
                     <MenuItem Header="Search for text in all open files"/>
                 </MenuItem>
             </Menu>

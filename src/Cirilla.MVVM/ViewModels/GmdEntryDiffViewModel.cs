@@ -24,7 +24,14 @@ namespace Cirilla.MVVM.ViewModels
         public GmdEntryViewModel Entry { get; }
         public bool HasChanges => !Entry.Value.Equals(NewValue);
 
-        [Reactive] public object NewValue { get; set; }
+        [Reactive] public string NewValue { get; set; }
         //[ObservableAsProperty] public bool HasChanges { get; }
+
+        public bool ApplyChanges()
+        {
+            if (!HasChanges) return false;
+            Entry.Value = NewValue;
+            return true;
+        }
     }
 }

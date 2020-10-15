@@ -1,7 +1,5 @@
 ﻿using Cirilla.Core.Helpers;
 using Cirilla.MVVM.Common;
-using Cirilla.MVVM.Interfaces;
-using Cirilla.MVVM.Models;
 using CsvHelper;
 using DynamicData;
 using ReactiveUI;
@@ -30,6 +28,7 @@ namespace Cirilla.MVVM.ViewModels
 
             Info = fileInfo;
             ReloadCsvCommand = ReactiveCommand.Create(() => LoadCsv(Info.FullName));
+            ApplyAndSaveCommand = ReactiveCommand.CreateFromTask(ApplyAndSaveHandler);
             PopulateImportEntriesCommand = ReactiveCommand.Create(PopulateImportEntriesHandler, canPopulateImportEntries);
             PickGmdFileToLinkCommand = ReactiveCommand.CreateFromTask(PickGmdFileToLinkHandler);
             AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolderHandler);
@@ -68,7 +67,10 @@ namespace Cirilla.MVVM.ViewModels
         public bool CanSave => true;
         public string Title => Info.Name;
 
+        public IList<FileDialogFilter> SaveFileDialogFilters { get; } = new[] { FileDialogFilter.CSV };
+
         public ReactiveCommand<Unit, Unit> ReloadCsvCommand { get; }
+        public ReactiveCommand<Unit, Unit> ApplyAndSaveCommand { get; }
         public ReactiveCommand<Unit, Unit> PopulateImportEntriesCommand { get; }
         public ReactiveCommand<Unit, Unit> PickGmdFileToLinkCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromFolderCommand { get; }
@@ -114,18 +116,29 @@ namespace Cirilla.MVVM.ViewModels
             PopulateImportEntriesCommand.Execute().Subscribe();
         }
 
-        private async Task PickGmdFileToLinkHandler()
+        private async Task ApplyAndSaveHandler()
         {
-            var openedFiles = await mainWindowViewModel.OpenFileCommand.Execute(new[] { "gmd" });
+            if (SelectedGmdFile == null) return;
 
-            if (openedFiles.Count > 1)
+            int updatedEntriesCount = 0;
+
+            foreach (var entry in ImportEntries)
             {
-                mainWindowViewModel.ShowFlashAlert("Can't link GMD", "You opened multiple GMD files and I don't know which one you want to link.\nPlease manually select the desired GMD file in the drop down.");
+                if (entry.ApplyChanges())
+                    updatedEntriesCount++;
             }
-            else if (openedFiles.Count == 1 && openedFiles[0] is GmdViewModel vm)
+
+            if (updatedEntriesCount > 0)
             {
-                SelectedGmdFile = vm;
+                await mainWindowViewModel.SaveFilesCommand.Execute(new[] { SelectedGmdFile });
+                mainWindowViewModel.ShowFlashAlert("Updated entries", $"Changed {updatedEntriesCount} entries in {SelectedGmdFile.Info.FullName}");
             }
+            else
+            {
+                mainWindowViewModel.ShowFlashAlert("No entries changed", $"No entries have been modified in {SelectedGmdFile.Info.FullName}");
+            }
+
+            log.Information($"Applied {updatedEntriesCount} changes from '{Info.FullName}' to '{SelectedGmdFile.Info.FullName}'");
         }
 
         // This function can also be replaced by a DynamicData observable list, but I don't know how.
@@ -140,12 +153,14 @@ namespace Cirilla.MVVM.ViewModels
 
             var sw = Stopwatch.StartNew();
 
-            // FUCK: This doesn't run when triggerd by the SelectedGmdFile change event
             importEntries.Edit(lst =>
             {
                 lst.Clear();
 
-                foreach (var entry in SelectedGmdFile.Entries.Where(x => x.Key != null))
+                // Not sure what this code does, but it seems to work...
+                var entries = SelectedGmdFile.Connect().AsObservableList().Items.ToList();
+
+                foreach (var entry in entries.Where(x => x.Key != null))
                 {
                     // TODO: Allow user to deselect CsvEntry (to not import that entry)
                     var newValue = CsvEntries.FirstOrDefault(x => x.Key == entry.Key);
@@ -165,9 +180,23 @@ namespace Cirilla.MVVM.ViewModels
             log.Verbose("PopulateImportEntries took {@ElapsedMilliseconds} ms.", sw.ElapsedMilliseconds);
         }
 
+        private async Task PickGmdFileToLinkHandler()
+        {
+            var openedFiles = await mainWindowViewModel.OpenFileCommand.Execute(new[] { "gmd" });
+
+            if (openedFiles.Count > 1)
+            {
+                mainWindowViewModel.ShowFlashAlert("Can't link GMD", "You opened multiple GMD files and I don't know which one you want to link.\nPlease manually select the desired GMD file in the drop down.");
+            }
+            else if (openedFiles.Count == 1 && openedFiles[0] is GmdViewModel vm)
+            {
+                SelectedGmdFile = vm;
+            }
+        }
+
         private async Task AutoSelectFromFolderHandler()
         {
-            var folder = await mainWindowViewModel.framework.OpenFolderDialog();
+            var folder = await mainWindowViewModel.Framework.OpenFolderDialog();
             if (folder != null)
             {
                 string expectedName = $"{Path.GetFileNameWithoutExtension(Info.Name)}.gmd";

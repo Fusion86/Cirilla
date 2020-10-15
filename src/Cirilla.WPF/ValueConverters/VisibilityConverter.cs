@@ -33,7 +33,7 @@ namespace Cirilla.WPF.ValueConverters
             throw new NotImplementedException();
         }
 
-        private Visibility BoolToVisibility(bool b)
+        internal static Visibility BoolToVisibility(bool b)
         {
             return b ? Visibility.Visible : Visibility.Collapsed;
         }

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Cirilla.MVVM.Common;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
@@ -8,6 +10,7 @@ namespace Cirilla.MVVM.ViewModels
         FileInfo Info { get; }
         bool CanClose { get; }
         bool CanSave { get; }
+        IList<FileDialogFilter> SaveFileDialogFilters { get; }
 
         /// <summary>
         /// Signal the file that you want to close it. Returns <see langword="true"/> when file has been closed.

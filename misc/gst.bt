@@ -17,11 +17,11 @@
 // world_font_style_support_3 - colorblind scheme, Type 4 (probably, didn't confirm)
 
 typedef struct {
-    uint32 magic;
-    uint32 version;
+    char magic[4];
+    uint32 unk1; // Probably contains a version byte/short
     uint64 file_size;
-    uint32 unk1; // Different between world_font_style, world_font_style_support_1, ... Maybe some kind of color mask/overlay?
-    byte unk2[8];
+    uint32 unk2; // Different between world_font_style, world_font_style_support_1, ... Maybe some kind of color mask/overlay?
+    byte unk3[8];
     uint32 entry_count;
     uint64 info_block_offset;
     uint64 string_block_offset;

@@ -60,7 +60,7 @@
             </DataGrid.ContextMenu>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
+                <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50" SortDirection="Ascending"/>
                 <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.EditingElementStyle>
