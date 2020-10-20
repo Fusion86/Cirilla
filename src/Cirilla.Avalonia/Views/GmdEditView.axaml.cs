@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Cirilla.Avalonia.ViewModels;
+using Cirilla.MVVM.ViewModels;
 
 namespace Cirilla.Avalonia.Views
 {

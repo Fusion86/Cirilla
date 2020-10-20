@@ -1,0 +1,158 @@
+﻿<UserControl x:Class="Cirilla.WPF.Views.GmdCsvView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cirilla.WPF.Views"
+             xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
+             xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <vc:ObjectTypeConverter x:Key="ObjectTypeConverter"/>
+    </UserControl.Resources>
+
+    <TabControl BorderThickness="0">
+        <TabItem Header="CSV Values">
+            <DataGrid x:Name="csvEntriesDataGrid"
+                       CanUserResizeColumns="True"
+                       AutoGenerateColumns="False"
+                       ItemsSource="{Binding CsvEntries}"
+                       SelectionMode="Extended"
+                       CanUserAddRows="False">
+                <DataGrid.RowHeaderStyle>
+                    <Style TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource {x:Type DataGridRowHeader}}">
+                        <Setter Property="Margin" Value="0,0,16,0"/>
+                    </Style>
+                </DataGrid.RowHeaderStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.EditingElementStyle>
+                            <Style TargetType="TextBox">
+                                <Setter Property="AcceptsReturn" Value="true" />
+                            </Style>
+                        </DataGridTextColumn.EditingElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </TabItem>
+
+        <TabItem Header="Apply to GMD">
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="GMD File" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                        <ComboBox x:Name="cmbGmdFile" Grid.Column="1" SelectedItem="{Binding SelectedGmdFile}">
+                            <ComboBox.Resources>
+                                <CollectionViewSource x:Key="OpenGmdFiles" Source="{Binding OpenGmdFiles}"/>
+
+                                <DataTemplate DataType="{x:Type vms:GmdViewModel}">
+                                    <TextBlock Text="{Binding Info.FullName}"/>
+                                </DataTemplate>
+
+                                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                    <Style.Triggers>
+                                        <!-- DataTrigger for items of type 'Button' -->
+                                        <DataTrigger Binding="{Binding ., Converter={StaticResource ObjectTypeConverter}}" Value="{x:Type Button}">
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.Resources>
+
+                            <ComboBox.ItemsSource>
+                                <CompositeCollection>
+                                    <Button Content="Open File..." Click="OpenFile_Click"/>
+
+                                    <Button Content="Auto-Select from Folder..."
+                                        Click="AutoSelectFromFolder_Click"
+                                        ToolTip="Recursively searches a folder on your computer for a GMD file with a matching name."/>
+
+                                    <Button Content="Auto-Select from Opened Files..."
+                                        Click="AutoSelectFromOpenedFiles_Click"
+                                        ToolTip="Search for a GMD file with a matching name in the opened files list (left sidebar)."/>
+                                    <Separator/>
+                                    <CollectionContainer Collection="{Binding Source={StaticResource OpenGmdFiles}}"/>
+                                </CompositeCollection>
+                            </ComboBox.ItemsSource>
+                        </ComboBox>
+
+                        <!-- Apply & Save Button -->
+                        <Button Grid.Column="2"
+                                Margin="8,0,0,0"
+                                Content="Apply &amp; Save"
+                                Command="{Binding ApplyAndSaveCommand}"
+                                ToolTip="Write values from the CSV file to the GMD and save (overwrite) the GMD file."/>
+                    </Grid>
+
+                    <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                        <CheckBox Content="Hide unchanged entries" IsChecked="{Binding HideUnchangedEntries}" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                </Grid>
+
+                <DataGrid x:Name="csvDataGrid"
+                          Margin="0,8,0,0"
+                          CanUserResizeColumns="True"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding ImportEntries}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index" Binding="{Binding Entry.Index}" IsReadOnly="True" Width="50" SortDirection="Ascending"/>
+                        <DataGridTextColumn Header="Key" Binding="{Binding Entry.Key}" IsReadOnly="True"/>
+
+                        <DataGridTemplateColumn Header="Current">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Entry.Value}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasChanges}" Value="True">
+                                                        <Setter Property="Foreground" Value="Orange"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="New">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NewValue}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasChanges}" Value="True">
+                                                        <Setter Property="Foreground" Value="Lime"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+    </TabControl>
+</UserControl>

@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:v="clr-namespace:Cirilla.Avalonia.Views;assembly=Cirilla.Avalonia"
-        xmlns:vm="clr-namespace:Cirilla.Avalonia.ViewModels;assembly=Cirilla.Avalonia"
         xmlns:vc="clr-namespace:Cirilla.Avalonia.ValueConverters;assembly=Cirilla.Avalonia"
+        xmlns:vm="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Cirilla.Avalonia.Views.MainWindow"
@@ -48,8 +48,7 @@
                 <Border Grid.Column="0" Background="{DynamicResource FusionDark2Brush}" Padding="0,8,0,8">
 
                     <!-- Open files -->
-                    <ListBox Grid.Row="0"
-                             BorderThickness="0"
+                    <ListBox BorderThickness="0"
                              Margin="0"
                              Padding="0"
                              Background="Transparent"

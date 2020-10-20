@@ -2,7 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using Cirilla.Avalonia.ViewModels;
+using Cirilla.MVVM.ViewModels;
 
 namespace Cirilla.Avalonia.Views
 {

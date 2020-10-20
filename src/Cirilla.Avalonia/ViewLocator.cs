@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Cirilla.Avalonia.ViewModels;
+using Cirilla.MVVM.ViewModels;
 
 namespace Cirilla.Avalonia
 {

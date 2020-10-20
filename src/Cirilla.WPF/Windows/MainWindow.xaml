@@ -1,0 +1,296 @@
+﻿<adonisControls:AdonisWindow x:Class="Cirilla.WPF.Windows.MainWindow"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:local="clr-namespace:Cirilla.WPF.Windows"
+                             xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
+                             xmlns:view="clr-namespace:Cirilla.WPF.Views"
+                             xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
+                             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+                             mc:Ignorable="d"
+                             Title="{Binding Title}" Height="450" Width="800"
+                             TitleBarBackground="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
+
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
+
+    <Window.Resources>
+        <vc:VisibilityConverter x:Key="VisibilityConverter"/>
+        <vc:ObjectOfTypeToVisibilityConverter x:Key="ObjectOfTypeConveter"/>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding OpenFolderCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveSelectedFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding SaveSelectedFileAsCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="W" Command="{Binding CloseSelectedFileCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="W" Command="{Binding CloseAllFilesCommand}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <DockPanel Opacity="{Binding ContentOpacity}">
+            <!-- Main Menu -->
+            <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
+                <MenuItem Header="File">
+                    <!-- Open Menu Items -->
+                    <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O"/>
+                    <MenuItem Header="Open Folder..." Command="{Binding OpenFolderCommand}" InputGestureText="Ctrl+Shift+O"/>
+
+                    <!-- Save Menu Items -->
+                    <Separator/>
+                    <MenuItem Header="_Save" Command="{Binding SaveSelectedFileCommand}" InputGestureText="Ctrl+S"/>
+                    <MenuItem Header="Save As..." Command="{Binding SaveSelectedFileAsCommand}" InputGestureText="Ctrl+Shift+S"/>
+                    <MenuItem Header="Save All" Command="{Binding SaveAllFilesCommand}"/>
+
+                    <!-- GmdViewModel Menu Items -->
+                    <Separator Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <MenuItem Header="Import values from CSV"
+                              Command="{Binding SelectedItem.ImportFromCsvCommand}"
+                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <MenuItem Header="Export values to CSV"
+                              Command="{Binding SelectedItem.ExportToCsvCommand}"
+                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+
+                    <!-- Close Menu Items -->
+                    <Separator/>
+                    <MenuItem Header="Close File" Command="{Binding CloseSelectedFileCommand}" InputGestureText="Ctrl+W"/>
+                    <MenuItem Header="Close All" Command="{Binding CloseAllFilesCommand}" InputGestureText="Ctrl+Shift+W"/>
+
+                    <!-- Exit -->
+                    <Separator/>
+                    <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                </MenuItem>
+
+                <MenuItem Header="Edit"
+                          Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}">
+                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding AddEntryCommand}"/>
+                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="Tools">
+                    <MenuItem Header="Search for text in all open files"/>
+                </MenuItem>
+            </Menu>
+
+            <!-- Status Bar -->
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+
+                <StatusBarItem Grid.Column="0">
+                    <Button Content="Workspace: (none)"
+                            BorderThickness="0"
+                            Padding="0"
+                            Margin="0,-3,0,-3"
+                            Height="22"
+                            Background="Transparent"/>
+                </StatusBarItem>
+
+                <Separator Grid.Column="1"/>
+
+                <StatusBarItem Grid.Column="2" Content="{Binding StatusText}"/>
+
+                <StatusBarItem Grid.Column="3">
+                    <Button Content="Show Log"
+                            BorderThickness="0"
+                            Padding="8,0,8,0"
+                            Margin="0,-3,8,-3"
+                            Height="22"
+                            Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
+                            Command="{Binding ShowLogViewerCommand}"/>
+                </StatusBarItem>
+            </StatusBar>
+
+            <!-- Main Content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Sidebar -->
+                <ListBox x:Name="openFilesListBox"
+                         Grid.Column="0"
+                         BorderThickness="0"
+                         Padding="0,8,0,0"
+                         SelectionMode="Extended"
+                         ItemsSource="{Binding OpenFilesBinding}"
+                         SelectedItem="{Binding SelectedItem}"
+                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
+                         HorizontalAlignment="Stretch">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <!-- See https://stackoverflow.com/a/42589203/2125072 -->
+                            <MenuItem IsEnabled="False" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}">
+                                <MenuItem.Header>
+                                    <TextBlock>
+                                        <!-- These NEED to be on the same line, otherwise WPF adds some extra spaces between the (). -->
+                                        <Run Text="Selected Items ("/><Run Text="{Binding SelectedItems.Count, Mode=OneWay}"/><Run Text=")"/>
+                                    </TextBlock>
+                                </MenuItem.Header>
+                            </MenuItem>
+
+                            <Separator/>
+
+                            <!--
+                            The command binding is ONLY used for its CanExecute property, it does NOT get called. The Click method is what is being executed. 
+                            -->
+
+                            <MenuItem Header="Save Selected Files"
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.SaveFilesCommand}"
+                                      Click="SaveSelectedFiles_Click"/>
+
+                            <MenuItem Header="Save Selected Files As..."
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.SaveFilesAsCommand}"
+                                      Click="SaveSelectedFilesAs_Click"/>
+
+                            <Separator/>
+
+                            <MenuItem Header="Close Selected Files"
+                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
+                                      Command="{Binding DataContext.CloseFilesCommand}"
+                                      Click="CloseSelectedFiles_Click"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="4"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="4"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Margin="0"
+                                        Padding="0"
+                                        BorderThickness="0"
+                                        Width="16"
+                                        Content="×"
+                                        Command="{Binding DataContext.CloseFileCommand, 
+                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding}"/>
+
+                                <TextBlock Grid.Column="2"
+                                               Text="{Binding Info.Name}"/>
+
+                                <TextBlock Grid.Column="4"
+                                               Opacity="0.5"
+                                               Text="{Binding Info.Directory.FullName}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <GridSplitter Grid.Column="1"
+                              Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
+                              HorizontalAlignment="Stretch"/>
+
+                <!-- GMD Editor or CSV import window -->
+                <ContentControl Grid.Column="2">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vms:GmdViewModel}">
+                            <view:GmdEditView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vms:GmdCsvViewModel}">
+                            <view:GmdCsvView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vms:LogViewerViewModel}">
+                            <view:LogView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+
+                    <ContentControl.Content>
+                        <Binding Path="ContentViewModel">
+                            <Binding.TargetNullValue>
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="Open a file to display it here." Opacity="{DynamicResource ThemeDisabledOpacity}"/>
+                                </Grid>
+                            </Binding.TargetNullValue>
+                        </Binding>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Grid>
+        </DockPanel>
+
+        <!-- Popup/flash alert -->
+        <!-- Background=Transparent to block user input. -->
+        <!-- ColumnDefinitions are used to give the Popup/flash alert a small (responsive) margin on both sides. -->
+        <Grid Visibility="{Binding FlashMessages.Count, Converter={StaticResource VisibilityConverter}}"
+              Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="1"
+                    BorderThickness="{DynamicResource ThemeBorderThickness}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
+                    Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BorderBrush}}">
+                <Grid Margin="16" MinWidth="400">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding FlashMessages[0].Title}"
+                               FontSize="{DynamicResource FontSizeLarge}"
+                               Visibility="{Binding FlashMessages[0].Title, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding FlashMessages[0].Message}"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding FlashMessages[0].Message, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <ItemsControl Grid.Row="2"
+                                  Margin="0,16,0,-4"
+                                  ItemsSource="{Binding FlashMessages[0].Buttons}"
+                                  Visibility="{Binding FlashMessages[0].Buttons, Converter={StaticResource VisibilityConverter}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Content}"
+                                        MinWidth="100"
+                                        Margin="0,0,4,4"
+                                        Command="{Binding DataContext.FlashMessages[0].ButtonClickCommand,
+                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding Result}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</adonisControls:AdonisWindow>

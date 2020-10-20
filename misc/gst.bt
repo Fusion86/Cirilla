@@ -1,0 +1,49 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: FusionR (aka Fusion86)
+//   Version: 
+//   Purpose: 
+//  Category: chunk\ui\font
+// File Mask: *.gst
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// world_font_style.gst is the default color scheme, aka colorblind option 'Type 1'
+// world_font_style_support_1 - colorblind scheme, Type 2 
+// world_font_style_support_2 - colorblind scheme, Type 3 (probably, didn't confirm)
+// world_font_style_support_3 - colorblind scheme, Type 4 (probably, didn't confirm)
+
+typedef struct {
+    char magic[4];
+    uint32 unk1; // Probably contains a version byte/short
+    uint64 file_size;
+    uint32 unk2; // Different between world_font_style, world_font_style_support_1, ... Maybe some kind of color mask/overlay?
+    byte unk3[8];
+    uint32 entry_count;
+    uint64 info_block_offset;
+    uint64 string_block_offset;
+} GstHeader;
+
+typedef struct {
+    uint32 index;
+    uint32 unk1;
+    ubyte color[4]; // RGBA
+    uint32 zero1;
+    uint32 offset; // string_block_offset + offset = fs.Position
+    uint32 zero2;
+} GstInfoEntry;
+
+typedef struct {
+    char str[];
+} GstStringEntry;
+
+struct {
+    GstHeader header;
+    //Assert(FTell() == header.info_block_offset, "At this point FTell() should be equal to header.info_block_offset");
+    GstInfoEntry info_entries[header.entry_count];
+    //Assert(FTell() == header.string_block_offset, "At this point FTell() should be equal to header.string_block_offset");
+    GstStringEntry string_entries[header.entry_count]<optimize=false>;
+} GstFile<open=true>;
