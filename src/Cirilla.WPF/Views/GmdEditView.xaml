@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cirilla.WPF.Views"
+             xmlns:ctrl="clr-namespace:Cirilla.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -60,15 +61,35 @@
             </DataGrid.ContextMenu>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Index" Binding="{Binding Index}" IsReadOnly="True" Width="50" SortDirection="Ascending"/>
-                <DataGridTextColumn Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Index -->
+                <DataGridTextColumn Header="Index"
+                                    Binding="{Binding Index}"
+                                    IsReadOnly="True"
+                                    Width="50"
+                                    SortDirection="Ascending"/>
+
+                <!-- Key -->
+                <DataGridTextColumn Header="Key"
+                                    Width="120"
+                                    Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- Value -->
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.EditingElementStyle>
                         <Style TargetType="TextBox">
-                            <Setter Property="AcceptsReturn" Value="true" />
+                            <Setter Property="AcceptsReturn" Value="True"/>
                         </Style>
                     </DataGridTextColumn.EditingElementStyle>
                 </DataGridTextColumn>
+
+                <!-- Preview -->
+                <DataGridTemplateColumn Header="Preview">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ctrl:MojiRenderer Text="{Binding Value}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
 
             <DataGrid.RowStyle>

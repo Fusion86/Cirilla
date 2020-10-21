@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cirilla.Moji\Cirilla.Moji.csproj" />
     <ProjectReference Include="..\Cirilla.MVVM\Cirilla.MVVM.csproj" />
   </ItemGroup>
 
