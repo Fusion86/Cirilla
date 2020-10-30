@@ -1,14 +1,14 @@
 ﻿using Cirilla.Core.Helpers;
 using Cirilla.MVVM.Common;
+using Cirilla.MVVM.Interfaces;
 using CsvHelper;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Serilog;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,44 +22,24 @@ namespace Cirilla.MVVM.ViewModels
     {
         public CsvViewModel(FileInfo fileInfo, MainWindowViewModel mainWindowViewModel)
         {
+            framework = Locator.Current.GetService<IFrameworkService>();
             this.mainWindowViewModel = mainWindowViewModel;
-
-            //var canPopulateImportEntries = this.WhenAnyValue(x => x.SelectedGmdFile, (GmdViewModel? x) => x != null);
 
             Info = fileInfo;
             GmdChangeSet = new GmdChangeSetViewModel(mainWindowViewModel);
 
             ReloadCsvCommand = ReactiveCommand.Create(() => LoadCsv(Info.FullName));
-            //ApplyAndSaveCommand = ReactiveCommand.CreateFromTask(ApplyAndSave);
-            //PopulateImportEntriesCommand = ReactiveCommand.Create(PopulateImportEntries, canPopulateImportEntries);
             PickGmdFileToLinkCommand = ReactiveCommand.CreateFromTask(PickGmdFileToLink);
             AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolder);
             AutoSelectFromOpenedFilesCommand = ReactiveCommand.Create(AutoSelectFromOpenedFiles);
 
-            mainWindowViewModel.sidebarItemsList.Connect()
+            mainWindowViewModel.ConnectSidebarItems()
                 .Filter(x => x is GmdViewModel)
                 .Transform(x => (GmdViewModel)x)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out openGmdFilesBinding)
                 .DisposeMany()
                 .Subscribe();
-
-            //csvEntries.Connect()
-            //    .ObserveOn(RxApp.MainThreadScheduler)
-            //    .Bind(out csvEntriesBinding)
-            //    .DisposeMany()
-            //    .Subscribe();
-
-            //importEntries.Connect()
-            //    .ObserveOn(RxApp.MainThreadScheduler)
-            //    .Bind(out importEntriesBinding)
-            //    .DisposeMany()
-            //    .Subscribe();
-
-            //this.WhenAnyValue(x => x.SelectedGmdFile, x => x.HideUnchangedEntries)
-            //    .Where(x => x.Item1 != null)
-            //    .Select(_ => Unit.Default)
-            //    .InvokeCommand(PopulateImportEntriesCommand);
 
             ReloadCsvCommand.Execute().Subscribe();
         }
@@ -72,8 +52,6 @@ namespace Cirilla.MVVM.ViewModels
         public IList<FileDialogFilter> SaveFileDialogFilters { get; } = new[] { FileDialogFilter.CSV };
 
         public ReactiveCommand<Unit, Unit> ReloadCsvCommand { get; }
-        //public ReactiveCommand<Unit, Unit> ApplyAndSaveCommand { get; }
-        //public ReactiveCommand<Unit, Unit> PopulateImportEntriesCommand { get; }
         public ReactiveCommand<Unit, Unit> PickGmdFileToLinkCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> AutoSelectFromOpenedFilesCommand { get; }
@@ -81,17 +59,11 @@ namespace Cirilla.MVVM.ViewModels
         [Reactive] public bool HideUnchangedEntries { get; set; }
         [Reactive] public GmdChangeSetViewModel GmdChangeSet { get; set; }
 
-        //public ReadOnlyObservableCollection<StringKeyValuePair> CsvEntries => csvEntriesBinding;
-        //public ReadOnlyObservableCollection<GmdEntryDiffViewModel> ImportEntries => importEntriesBinding;
         public ReadOnlyObservableCollection<GmdViewModel> OpenGmdFiles => openGmdFilesBinding;
 
+        private readonly IFrameworkService framework;
         private readonly MainWindowViewModel mainWindowViewModel;
-        //private readonly ReadOnlyObservableCollection<StringKeyValuePair> csvEntriesBinding;
-        //private readonly ReadOnlyObservableCollection<GmdEntryDiffViewModel> importEntriesBinding;
         private readonly ReadOnlyObservableCollection<GmdViewModel> openGmdFilesBinding;
-        //private readonly SourceCache<StringKeyValuePair, string> csvEntries = new SourceCache<StringKeyValuePair, string>(x => x.Key);
-        //private readonly SourceCache<GmdEntryDiffViewModel, string> importEntries = new SourceCache<GmdEntryDiffViewModel, string>(x => x.Entry.Key!);
-        //private static readonly ILogger log = Log.ForContext<CsvViewModel>();
 
         public bool Close()
         {
@@ -199,7 +171,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private async Task AutoSelectFromFolder()
         {
-            var folder = await mainWindowViewModel.Framework.OpenFolderDialog();
+            var folder = await framework.OpenFolderDialog();
             if (folder != null)
             {
                 string expectedName = $"{Path.GetFileNameWithoutExtension(Info.Name)}.gmd";

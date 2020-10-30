@@ -1,4 +1,5 @@
 ﻿using Cirilla.MVVM.Common;
+using Cirilla.MVVM.Extensions;
 using Cirilla.MVVM.Interfaces;
 using Cirilla.MVVM.Services;
 using DynamicData;
@@ -6,6 +7,7 @@ using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,18 +21,13 @@ namespace Cirilla.MVVM.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IFlashMessageContainer
     {
-
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-        public MainWindowViewModel() { }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
-        public MainWindowViewModel(IFrameworkService framework, LogCollector? logCollector = null)
+        public MainWindowViewModel()
         {
-            Framework = framework;
-            this.logCollector = logCollector;
+            framework = Locator.Current.GetRequiredService<IFrameworkService>();
 
             RxApp.DefaultExceptionHandler = new ExceptionHandler(this);
 
+            var logCollector = Locator.Current.GetRequiredService<LogCollector>();
             if (logCollector != null)
                 logViewerViewModel = new LogViewerViewModel(logCollector);
 
@@ -83,9 +80,9 @@ namespace Cirilla.MVVM.ViewModels
                 .Skip(1) // Skip initial value
                 .Subscribe(x => ContentViewModel = x);
 
-            if (this.logCollector != null)
+            if (logCollector != null)
             {
-                this.logCollector.Events
+                logCollector.Events
                     .ToObservableChangeSet()
                     .OnItemAdded(x => StatusText = x.Message)
                     .Subscribe();
@@ -117,15 +114,18 @@ namespace Cirilla.MVVM.ViewModels
         [ObservableAsProperty] public string? Title { get; }
         [ObservableAsProperty] public double ContentOpacity { get; }
 
-        public IFrameworkService Framework { get; }
-
-        private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
-        private readonly LogCollector? logCollector;
+        private readonly IFrameworkService framework;
         private readonly LogViewerViewModel? logViewerViewModel;
         private readonly ReadOnlyObservableCollection<ISidebarItemViewModel> sidebarItemsBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
-        internal readonly SourceList<ISidebarItemViewModel> sidebarItemsList = new SourceList<ISidebarItemViewModel>();
+        private readonly SourceList<ISidebarItemViewModel> sidebarItemsList = new SourceList<ISidebarItemViewModel>();
         private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
+        private static readonly Serilog.ILogger log = Log.ForContext<MainWindowViewModel>();
+
+        public IObservable<IChangeSet<ISidebarItemViewModel>> ConnectSidebarItems()
+        {
+            return sidebarItemsList.Connect();
+        }
 
         private async Task<IList<IOpenFileViewModel>> ShowOpenFileDialog(string[]? allowedExtensions = null)
         {
@@ -141,14 +141,14 @@ namespace Cirilla.MVVM.ViewModels
                 });
             }
 
-            var files = await Framework.OpenFileDialog(true, filters);
+            var files = await framework.OpenFileDialog(true, filters);
 
             return await Task.Run(() => OpenFiles(files));
         }
 
         private async Task ShowOpenFolderDialog()
         {
-            var folder = await Framework.OpenFolderDialog();
+            var folder = await framework.OpenFolderDialog();
             if (folder != null)
             {
                 var files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
@@ -195,7 +195,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private void ShowLogViewer()
         {
-            if (logCollector != null)
+            if (logViewerViewModel != null)
             {
                 if (ContentViewModel != logViewerViewModel)
                     ContentViewModel = logViewerViewModel;
@@ -297,7 +297,7 @@ namespace Cirilla.MVVM.ViewModels
         /// <returns></returns>
         public async Task<bool> SaveFileAs(IOpenFileViewModel openFile, bool showMessageOnSuccess = false)
         {
-            var name = await Framework.SaveFileDialog(openFile.Info.Name, openFile.Info.Extension, openFile.SaveFileDialogFilters);
+            var name = await framework.SaveFileDialog(openFile.Info.Name, openFile.Info.Extension, openFile.SaveFileDialogFilters);
 
             if (name != null)
                 return await SaveFile(openFile, name, showMessageOnSuccess);

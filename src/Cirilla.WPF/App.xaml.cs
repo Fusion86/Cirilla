@@ -1,8 +1,10 @@
-﻿using Cirilla.MVVM.Services;
+﻿using Cirilla.MVVM.Interfaces;
+using Cirilla.MVVM.Services;
 using Cirilla.MVVM.ViewModels;
 using Cirilla.WPF.Windows;
 using Serilog;
 using Serilog.Formatting.Compact;
+using Splat;
 using System.Reflection;
 using System.Windows;
 
@@ -31,8 +33,11 @@ namespace Cirilla.WPF
             log.Information("Cirilla version " + Assembly.GetExecutingAssembly().GetName().Version);
             log.Information("Cirilla.Core version " + Assembly.GetAssembly(typeof(Core.Models.GMD))?.GetName().Version ?? "(not found)");
 
+            Locator.CurrentMutable.RegisterConstant(logCollector);
+            Locator.CurrentMutable.RegisterConstant<IFrameworkService>(new FrameworkService());
+
             MainWindow = new MainWindow();
-            MainWindow.DataContext = new MainWindowViewModel(new FrameworkService(), logCollector);
+            MainWindow.DataContext = new MainWindowViewModel();
             MainWindow.Show();
         }
     }

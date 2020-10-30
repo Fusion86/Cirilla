@@ -9,6 +9,7 @@ using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Serilog;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,6 +26,7 @@ namespace Cirilla.MVVM.ViewModels
     {
         public GmdViewModel(FileInfo fileInfo, MainWindowViewModel mainWindowViewModel)
         {
+            framework = Locator.Current.GetService<IFrameworkService>();
             this.mainWindowViewModel = mainWindowViewModel;
 
             Info = fileInfo;
@@ -76,10 +78,11 @@ namespace Cirilla.MVVM.ViewModels
 
         public IList<FileDialogFilter> SaveFileDialogFilters { get; } = new[] { FileDialogFilter.GMD };
 
+        private readonly IFrameworkService framework;
         private readonly GMD gmd;
         private readonly MainWindowViewModel mainWindowViewModel;
         private readonly SourceList<GmdEntryViewModel> entriesList = new SourceList<GmdEntryViewModel>();
-        private static readonly ILogger log = Log.ForContext<GmdViewModel>();
+        private static readonly Serilog.ILogger log = Log.ForContext<GmdViewModel>();
 
         public bool Close()
         {
@@ -118,7 +121,7 @@ namespace Cirilla.MVVM.ViewModels
         private async Task ExportToCsvHandler()
         {
             string csvName = $"{Path.GetFileNameWithoutExtension(Info.Name)}";
-            string? savePath = await mainWindowViewModel.Framework.SaveFileDialog(csvName, "csv", new[] { FileDialogFilter.CSV });
+            string? savePath = await framework.SaveFileDialog(csvName, "csv", new[] { FileDialogFilter.CSV });
 
             if (savePath != null)
             {

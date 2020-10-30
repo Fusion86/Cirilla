@@ -19,7 +19,7 @@
 
     <Window.Resources>
         <vc:VisibilityConverter x:Key="VisibilityConverter"/>
-        <vc:ObjectOfTypeToVisibilityConverter x:Key="ObjectOfTypeConveter"/>
+        <vc:ObjectOfTypeConverter x:Key="ObjectOfTypeConveter"/>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -47,13 +47,13 @@
                     <MenuItem Header="Save All" Command="{Binding SaveAllFilesCommand}"/>
 
                     <!-- GmdViewModel Menu Items -->
-                    <Separator Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <Separator/>
                     <MenuItem Header="Import values from CSV"
                               Command="{Binding SelectedItem.ImportFromCsvCommand}"
-                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                              IsEnabled="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
                     <MenuItem Header="Export values to CSV"
                               Command="{Binding SelectedItem.ExportToCsvCommand}"
-                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                              IsEnabled="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
 
                     <!-- Close Menu Items -->
                     <Separator/>
@@ -65,10 +65,14 @@
                     <MenuItem Header="Exit" Click="MenuExit_Click"/>
                 </MenuItem>
 
-                <MenuItem Header="Edit"
-                          Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}">
-                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding SelectedItem.AddEntryCommand}"/>
-                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding SelectedItem.AddPaddingEntryCommand}"/>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="Add Normal Entry (with key)"
+                              Command="{Binding SelectedItem.AddEntryCommand}"
+                              IsEnabled="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    
+                    <MenuItem Header="Add Padding Entry (no key)"
+                              Command="{Binding SelectedItem.AddPaddingEntryCommand}"
+                              IsEnabled="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
                 </MenuItem>
 
                 <MenuItem Header="Tools">
