@@ -81,6 +81,7 @@
                         </Style>
                     </DataGridTextColumn.EditingElementStyle>
                 </DataGridTextColumn>
+
                 <!-- Preview -->
                 <DataGridTemplateColumn Header="Preview">
                     <DataGridTemplateColumn.CellTemplate>
@@ -103,6 +104,11 @@
                         <DataTrigger Binding="{Binding Key}" Value="{x:Null}">
                             <Setter Property="Background" Value="#55FF7F00"/>
                         </DataTrigger>
+
+                        <!-- The IsSelected color should override any other color. -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}"/>
+                        </Trigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>

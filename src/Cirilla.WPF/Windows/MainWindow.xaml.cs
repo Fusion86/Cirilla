@@ -65,5 +65,14 @@ namespace Cirilla.WPF.Windows
                 log.Error(ex, "Can't cast openFilesListBox.SelectedItems to 'IList<IOpenFileViewModel>'.");
             }
         }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                ViewModel.OpenFiles(files); 
+            }
+        }
     }
 }
