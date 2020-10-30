@@ -130,6 +130,7 @@ namespace Cirilla.MVVM.ViewModels
                     using TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8);
                     using CsvWriter writer = new CsvWriter(tw, CultureInfo.InvariantCulture);
 
+                    writer.Configuration.HasHeaderRecord = false;
                     writer.Configuration.Delimiter = ";";
                     writer.Configuration.ShouldQuote = (str, context) => true; // Always insert quotes
 

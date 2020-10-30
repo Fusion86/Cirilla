@@ -38,7 +38,7 @@ namespace Cirilla.MVVM.ViewModels
             var hasSelectedFile = this.WhenAnyValue(x => x.SelectedItem).Select(x => x != null && typeof(IOpenFileViewModel).IsAssignableFrom(x.GetType()));
 
             // True when the OpenFiles list has at least 1 item.
-            var hasFiles = openFilesList.CountChanged.Select(x => x > 0).ObserveOn(RxApp.MainThreadScheduler);
+            var hasFiles = sidebarItemsList.CountChanged.Select(x => x > 0).ObserveOn(RxApp.MainThreadScheduler);
 
             OpenFileCommand = ReactiveCommand.CreateFromTask<string[]?, IList<IOpenFileViewModel>>(ShowOpenFileDialog);
             OpenFolderCommand = ReactiveCommand.CreateFromTask(ShowOpenFolderDialog);
@@ -48,6 +48,7 @@ namespace Cirilla.MVVM.ViewModels
             CloseSelectedFileCommand = ReactiveCommand.Create(CloseSelectedFile, hasSelectedFile);
             CloseAllFilesCommand = ReactiveCommand.Create(CloseAllFiles, hasFiles);
             ShowLogViewerCommand = ReactiveCommand.Create(ShowLogViewer);
+            OpenBatchImportCommand = ReactiveCommand.Create(OpenBatchImport);
 
             CloseFileCommand = ReactiveCommand.Create<IOpenFileViewModel>(CloseFile);
             // The below commands have a hasSelectedFile because they always get openFileListBox.SelectedItems passed as CommandParameter
@@ -55,9 +56,9 @@ namespace Cirilla.MVVM.ViewModels
             SaveFilesAsCommand = ReactiveCommand.CreateFromTask<IList<IOpenFileViewModel>>(SaveFilesAs, hasSelectedFile);
             CloseFilesCommand = ReactiveCommand.Create<IList<IOpenFileViewModel>>(CloseFiles, hasSelectedFile);
 
-            openFilesList.Connect()
+            sidebarItemsList.Connect()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out openFilesBinding)
+                .Bind(out sidebarItemsBinding)
                 .DisposeMany()
                 .Subscribe();
 
@@ -99,17 +100,18 @@ namespace Cirilla.MVVM.ViewModels
         public ReactiveCommand<Unit, Unit> SaveAllFilesCommand { get; } // We can't use SaveFilesCommand because we want to use the CanExecute property
         public ReactiveCommand<Unit, Unit> CloseSelectedFileCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseAllFilesCommand { get; } // We can't use CloseFilesCommand because we want to use the CanExecute property
+        public ReactiveCommand<Unit, Unit> OpenBatchImportCommand { get; }
 
         public ReactiveCommand<IOpenFileViewModel, Unit> CloseFileCommand { get; }
         public ReactiveCommand<IList<IOpenFileViewModel>, Unit> SaveFilesCommand { get; }
         public ReactiveCommand<IList<IOpenFileViewModel>, Unit> SaveFilesAsCommand { get; }
         public ReactiveCommand<IList<IOpenFileViewModel>, Unit> CloseFilesCommand { get; }
 
-        public ReadOnlyObservableCollection<IOpenFileViewModel> OpenFilesBinding => openFilesBinding;
+        public ReadOnlyObservableCollection<ISidebarItemViewModel> SidebarItemsBinding => sidebarItemsBinding;
         public ReadOnlyObservableCollection<FlashMessageViewModel> FlashMessages => flashMessagesBinding;
 
         [Reactive] public string StatusText { get; set; } = "";
-        [Reactive] public IOpenFileViewModel? SelectedItem { get; set; }
+        [Reactive] public ISidebarItemViewModel? SelectedItem { get; set; }
         [Reactive] public ITitledViewModel? ContentViewModel { get; set; }
 
         [ObservableAsProperty] public string? Title { get; }
@@ -120,9 +122,9 @@ namespace Cirilla.MVVM.ViewModels
         private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
         private readonly LogCollector? logCollector;
         private readonly LogViewerViewModel? logViewerViewModel;
-        private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
+        private readonly ReadOnlyObservableCollection<ISidebarItemViewModel> sidebarItemsBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
-        internal readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
+        internal readonly SourceList<ISidebarItemViewModel> sidebarItemsList = new SourceList<ISidebarItemViewModel>();
         private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
 
         private async Task<IList<IOpenFileViewModel>> ShowOpenFileDialog(string[]? allowedExtensions = null)
@@ -174,7 +176,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private async Task SaveAllFiles()
         {
-            await SaveFiles(OpenFilesBinding);
+            await SaveFiles(SidebarItemsBinding.OfType<IOpenFileViewModel>().ToList());
         }
 
         private void CloseSelectedFile()
@@ -187,7 +189,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private void CloseAllFiles()
         {
-            foreach (var file in OpenFilesBinding)
+            foreach (var file in SidebarItemsBinding)
                 CloseFile(file);
         }
 
@@ -278,7 +280,7 @@ namespace Cirilla.MVVM.ViewModels
 
                 if (vm != null)
                 {
-                    openFilesList.Add(vm);
+                    sidebarItemsList.Add(vm);
                     openedFiles.Add(vm);
                 }
             }
@@ -306,12 +308,12 @@ namespace Cirilla.MVVM.ViewModels
         /// Checks if passed file CanClose, calls the Close() method on the file, and removes it from the openFilesList.
         /// </summary>
         /// <param name="vm"></param>
-        public void CloseFile(IOpenFileViewModel vm)
+        public void CloseFile(ISidebarItemViewModel vm)
         {
             if (vm.CanClose && vm.Close())
             {
                 SelectedItem = null;
-                openFilesList.Remove(vm);
+                sidebarItemsList.Remove(vm);
             }
             else
             {
@@ -364,7 +366,7 @@ namespace Cirilla.MVVM.ViewModels
                 return fileInfo.Extension.ToLowerInvariant() switch
                 {
                     ".gmd" => new GmdViewModel(fileInfo, this),
-                    ".csv" => new GmdCsvViewModel(fileInfo, this),
+                    ".csv" => new CsvViewModel(fileInfo, this),
                     _ => throw new NotSupportedException($"{fileInfo.FullName} is not a suported file type.")
                 };
             }
@@ -374,6 +376,11 @@ namespace Cirilla.MVVM.ViewModels
                 ShowFlashAlert("Error when opening file", ex.Message, FlashMessageButtons.Ok);
                 return null;
             }
+        }
+
+        private void OpenBatchImport()
+        {
+            sidebarItemsList.Add(new BatchImportViewModel());
         }
 
         public FlashMessageViewModel ShowFlashAlert(string title = "", string message = "", FlashMessageButtons buttons = FlashMessageButtons.Ok)

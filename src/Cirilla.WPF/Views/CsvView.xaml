@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="Cirilla.WPF.Views.GmdCsvView"
+﻿<UserControl x:Class="Cirilla.WPF.Views.CsvView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Cirilla.WPF.Views"
+             xmlns:view="clr-namespace:Cirilla.WPF.Views"
              xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
              xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
              mc:Ignorable="d" 
@@ -18,7 +18,7 @@
             <DataGrid x:Name="csvEntriesDataGrid"
                        CanUserResizeColumns="True"
                        AutoGenerateColumns="False"
-                       ItemsSource="{Binding CsvEntries}"
+                       ItemsSource="{Binding GmdChangeSet.ValuesToUpdate}"
                        SelectionMode="Extended"
                        CanUserAddRows="False">
                 <DataGrid.RowHeaderStyle>
@@ -57,7 +57,7 @@
 
                         <TextBlock Grid.Column="0" Text="GMD File" VerticalAlignment="Center" Margin="0,0,8,0"/>
 
-                        <ComboBox x:Name="cmbGmdFile" Grid.Column="1" SelectedItem="{Binding SelectedGmdFile}">
+                        <ComboBox x:Name="cmbGmdFile" Grid.Column="1" SelectedItem="{Binding GmdChangeSet.GmdSource}">
                             <ComboBox.Resources>
                                 <CollectionViewSource x:Key="OpenGmdFiles" Source="{Binding OpenGmdFiles}"/>
 
@@ -97,61 +97,16 @@
                         <Button Grid.Column="2"
                                 Margin="8,0,0,0"
                                 Content="Apply &amp; Save"
-                                Command="{Binding ApplyAndSaveCommand}"
+                                Command="{Binding GmdChangeSet.ApplyAndSaveCommand}"
                                 ToolTip="Write values from the CSV file to the GMD and save (overwrite) the GMD file."/>
                     </Grid>
 
                     <WrapPanel Grid.Row="1" Margin="0,8,0,0">
-                        <CheckBox Content="Hide unchanged entries" IsChecked="{Binding HideUnchangedEntries}" VerticalAlignment="Center"/>
+                        <CheckBox Content="Hide unchanged entries" IsChecked="{Binding GmdChangeSet.HideUnchangedEntries}" VerticalAlignment="Center"/>
                     </WrapPanel>
                 </Grid>
 
-                <DataGrid x:Name="csvDataGrid"
-                          Margin="0,8,0,0"
-                          CanUserResizeColumns="True"
-                          AutoGenerateColumns="False"
-                          ItemsSource="{Binding ImportEntries}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Index" Binding="{Binding Entry.Index}" IsReadOnly="True" Width="50" SortDirection="Ascending"/>
-                        <DataGridTextColumn Header="Key" Binding="{Binding Entry.Key}" IsReadOnly="True"/>
-
-                        <DataGridTemplateColumn Header="Current">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Entry.Value}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasChanges}" Value="True">
-                                                        <Setter Property="Foreground" Value="Orange"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="New">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding NewValue}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasChanges}" Value="True">
-                                                        <Setter Property="Foreground" Value="Lime"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <view:GmdChangeSetView DataContext="{Binding GmdChangeSet}" Margin="0,8,0,0"/>
             </DockPanel>
         </TabItem>
     </TabControl>

@@ -72,7 +72,8 @@
                 </MenuItem>
 
                 <MenuItem Header="Tools">
-                    <MenuItem Header="Search for text in all open files"/>
+                    <MenuItem Header="Batch Import" Command="{Binding OpenBatchImportCommand}"/>
+                    <MenuItem Header="Search for Text in All Open Files"/>
                 </MenuItem>
             </Menu>
 
@@ -129,7 +130,7 @@
                          BorderThickness="0"
                          Padding="0,8,0,0"
                          SelectionMode="Extended"
-                         ItemsSource="{Binding OpenFilesBinding}"
+                         ItemsSource="{Binding SidebarItemsBinding}"
                          SelectedItem="{Binding SelectedItem}"
                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                          HorizontalAlignment="Stretch">
@@ -187,12 +188,12 @@
                                         BorderThickness="0"
                                         Width="16"
                                         Content="×"
-                                        Command="{Binding DataContext.CloseFileCommand, 
+                                        Command="{Binding DataContext.CloseItemCommand, 
                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding}"/>
 
                                 <TextBlock Grid.Column="2"
-                                               Text="{Binding Info.Name}"/>
+                                               Text="{Binding Title}"/>
 
                                 <TextBlock Grid.Column="4"
                                                Opacity="0.5"
@@ -200,6 +201,31 @@
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+
+                    <ListBox.Resources>
+                        <DataTemplate DataType="{x:Type vms:BatchImportViewModel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="4"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Margin="0"
+                                        Padding="0"
+                                        BorderThickness="0"
+                                        Width="16"
+                                        Content="×"
+                                        Command="{Binding DataContext.CloseItemCommand, 
+                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding}"/>
+
+                                <TextBlock Grid.Column="2"
+                                               Text="{Binding Title}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.Resources>
                 </ListBox>
 
                 <GridSplitter Grid.Column="1"
@@ -210,15 +236,19 @@
                 <ContentControl Grid.Column="2">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type vms:GmdViewModel}">
-                            <view:GmdEditView Margin="0" DataContext="{Binding}"/>
+                            <view:GmdEditView DataContext="{Binding}"/>
                         </DataTemplate>
 
-                        <DataTemplate DataType="{x:Type vms:GmdCsvViewModel}">
-                            <view:GmdCsvView Margin="0" DataContext="{Binding}"/>
+                        <DataTemplate DataType="{x:Type vms:CsvViewModel}">
+                            <view:CsvView DataContext="{Binding}"/>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vms:BatchImportViewModel}">
+                            <view:BatchImportView DataContext="{Binding}"/>
                         </DataTemplate>
 
                         <DataTemplate DataType="{x:Type vms:LogViewerViewModel}">
-                            <view:LogView Margin="0" DataContext="{Binding}"/>
+                            <view:LogView DataContext="{Binding}"/>
                         </DataTemplate>
                     </ContentControl.Resources>
 

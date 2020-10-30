@@ -32,7 +32,7 @@ namespace Cirilla.MVVM
         {
             if (Debugger.IsAttached) Debugger.Break();
             mainWindowViewModel.ShowFlashAlert("Unhandled Event", $"Type: {value.GetType()}\nMessage: {value.Message}");
-            RxApp.MainThreadScheduler.Schedule(() => { throw value; });
+            //RxApp.MainThreadScheduler.Schedule(() => { throw value; });
         }
     }
 }

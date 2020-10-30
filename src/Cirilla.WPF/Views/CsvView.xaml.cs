@@ -8,9 +8,9 @@ namespace Cirilla.WPF.Views
     /// <summary>
     /// Interaction logic for GmdCsvView.xaml
     /// </summary>
-    public partial class GmdCsvView : UserControl
+    public partial class CsvView : UserControl
     {
-        public GmdCsvView()
+        public CsvView()
         {
             InitializeComponent();
 
@@ -18,7 +18,7 @@ namespace Cirilla.WPF.Views
             cmbGmdFile.SelectionChanged += CmbGmdFile_SelectionChanged;
         }
 
-        public GmdCsvViewModel ViewModel => DataContext as GmdCsvViewModel ?? throw new Exception("DataContext is not of type 'GmdViewModel'.");
+        public CsvViewModel ViewModel => DataContext as CsvViewModel ?? throw new Exception("DataContext is not of type 'GmdViewModel'.");
 
         private void LoadingRowShowIndexInHeader(object? sender, DataGridRowEventArgs e)
         {
