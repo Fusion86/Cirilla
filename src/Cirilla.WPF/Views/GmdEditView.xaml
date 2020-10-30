@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Cirilla.WPF.Views.GmdEditView"
+<UserControl x:Class="Cirilla.WPF.Views.GmdEditView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -81,7 +81,6 @@
                         </Style>
                     </DataGridTextColumn.EditingElementStyle>
                 </DataGridTextColumn>
-
                 <!-- Preview -->
                 <DataGridTemplateColumn Header="Preview">
                     <DataGridTemplateColumn.CellTemplate>
@@ -93,9 +92,7 @@
             </DataGrid.Columns>
 
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="Transparent"/>
-
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Value}" Value="">
                             <Setter Property="Background" Value="#55FFF000"/>
