@@ -17,7 +17,7 @@
         <Grid Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="8"/>
+                <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
@@ -28,12 +28,12 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Folder with GMDs" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Row="0" Grid.Column="1"/>
-            <Button Grid.Row="0" Grid.Column="2" Margin="8,0,0,0" Content="Browse..."/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding GmdFolder}"/>
+            <Button Grid.Row="0" Grid.Column="2" Margin="4,0,0,0" Content="Browse..." Command="{Binding PickGmdFolderCommand}"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Folder with CSVs" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Row="2" Grid.Column="1"/>
-            <Button Grid.Row="2" Grid.Column="2" Margin="8,0,0,0" Content="Browse..."/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CsvFolder}"/>
+            <Button Grid.Row="2" Grid.Column="2" Margin="4,0,0,0" Content="Browse..." Command="{Binding PickCsvFolderCommand}"/>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -43,17 +43,23 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ListBox x:Name="openFilesListBox"
-                         Grid.Column="0"
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <ListBox x:Name="openFilesListBox"
+                         Grid.Row="0"
                          BorderThickness="0"
                          SelectedItem="{Binding SelectedItem}"
-                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
                          HorizontalAlignment="Stretch">
-            </ListBox>
+                </ListBox>
 
-            <GridSplitter Grid.Column="1"
-                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
-                          HorizontalAlignment="Stretch"/>
+                <Button Grid.Row="1" Margin="4" Content="Import Values"/>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"/>
 
             <view:GmdChangeSetView Grid.Column="2"/>
         </Grid>
