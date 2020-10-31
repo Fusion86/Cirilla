@@ -31,7 +31,7 @@
         <KeyBinding Modifiers="Ctrl+Shift" Key="W" Command="{Binding CloseAllFilesCommand}"/>
     </Window.InputBindings>
 
-    <Grid>
+    <Grid AllowDrop="True" Drop="Grid_Drop">
         <DockPanel Opacity="{Binding ContentOpacity}">
             <!-- Main Menu -->
             <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
@@ -67,8 +67,8 @@
 
                 <MenuItem Header="Edit"
                           Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}">
-                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding AddEntryCommand}"/>
-                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding AddEntryNoKeyCommand}"/>
+                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding SelectedItem.AddEntryCommand}"/>
+                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding SelectedItem.AddPaddingEntryCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="Tools">

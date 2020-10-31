@@ -28,11 +28,11 @@ namespace Cirilla.MVVM.ViewModels
 
             Info = fileInfo;
             ReloadCsvCommand = ReactiveCommand.Create(() => LoadCsv(Info.FullName));
-            ApplyAndSaveCommand = ReactiveCommand.CreateFromTask(ApplyAndSaveHandler);
-            PopulateImportEntriesCommand = ReactiveCommand.Create(PopulateImportEntriesHandler, canPopulateImportEntries);
-            PickGmdFileToLinkCommand = ReactiveCommand.CreateFromTask(PickGmdFileToLinkHandler);
-            AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolderHandler);
-            AutoSelectFromOpenedFilesCommand = ReactiveCommand.Create(AutoSelectFromOpenedFilesHandler);
+            ApplyAndSaveCommand = ReactiveCommand.CreateFromTask(ApplyAndSave);
+            PopulateImportEntriesCommand = ReactiveCommand.Create(PopulateImportEntries, canPopulateImportEntries);
+            PickGmdFileToLinkCommand = ReactiveCommand.CreateFromTask(PickGmdFileToLink);
+            AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolder);
+            AutoSelectFromOpenedFilesCommand = ReactiveCommand.Create(AutoSelectFromOpenedFiles);
 
             mainWindowViewModel.openFilesList.Connect()
                 .Filter(x => x is GmdViewModel)
@@ -116,7 +116,7 @@ namespace Cirilla.MVVM.ViewModels
             PopulateImportEntriesCommand.Execute().Subscribe();
         }
 
-        private async Task ApplyAndSaveHandler()
+        private async Task ApplyAndSave()
         {
             if (SelectedGmdFile == null) return;
 
@@ -142,7 +142,7 @@ namespace Cirilla.MVVM.ViewModels
         }
 
         // This function can also be replaced by a DynamicData observable list, but I don't know how.
-        private void PopulateImportEntriesHandler()
+        private void PopulateImportEntries()
         {
             // TODO: This function might be pretty slow. Maybe run on background thread?
             if (SelectedGmdFile == null)
@@ -180,7 +180,7 @@ namespace Cirilla.MVVM.ViewModels
             log.Verbose("PopulateImportEntries took {@ElapsedMilliseconds} ms.", sw.ElapsedMilliseconds);
         }
 
-        private async Task PickGmdFileToLinkHandler()
+        private async Task PickGmdFileToLink()
         {
             var openedFiles = await mainWindowViewModel.OpenFileCommand.Execute(new[] { "gmd" });
 
@@ -194,7 +194,7 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private async Task AutoSelectFromFolderHandler()
+        private async Task AutoSelectFromFolder()
         {
             var folder = await mainWindowViewModel.Framework.OpenFolderDialog();
             if (folder != null)
@@ -216,7 +216,7 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private void AutoSelectFromOpenedFilesHandler()
+        private void AutoSelectFromOpenedFiles()
         {
             string expectedName = $"{Path.GetFileNameWithoutExtension(Info.Name)}.gmd";
             var matchingGmd = OpenGmdFiles.FirstOrDefault(x => x.Info.Name == expectedName);

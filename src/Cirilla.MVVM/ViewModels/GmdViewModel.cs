@@ -33,9 +33,11 @@ namespace Cirilla.MVVM.ViewModels
             for (int i = 0; i < gmd.Entries.Count; i++)
                 entriesList.Add(new GmdEntryViewModel(i, gmd.Entries[i]));
 
+            AddEntryCommand = ReactiveCommand.Create(AddEntry);
+            AddPaddingEntryCommand = ReactiveCommand.Create(AddPaddingEntry);
             ImportFromCsvCommand = ReactiveCommand.Create(ImportFromCsvHandler);
             ExportToCsvCommand = ReactiveCommand.CreateFromTask(ExportToCsvHandler);
-            DeleteRowsCommand = ReactiveCommand.Create<IList<GmdEntryViewModel>>(DeleteRowsHandler);
+            DeleteRowsCommand = ReactiveCommand.Create<IList<GmdEntryViewModel>>(DeleteRows);
 
             var keyFilter = this.WhenValueChanged(t => t.KeySearchQuery)
                 .Throttle(TimeSpan.FromMilliseconds(250))
@@ -54,6 +56,8 @@ namespace Cirilla.MVVM.ViewModels
                 .Subscribe();
         }
 
+        public ReactiveCommand<Unit, Unit> AddEntryCommand { get; }
+        public ReactiveCommand<Unit, Unit> AddPaddingEntryCommand { get; }
         public ReactiveCommand<Unit, Unit> ImportFromCsvCommand { get; }
         public ReactiveCommand<Unit, Unit> ExportToCsvCommand { get; }
         public ReactiveCommand<IList<GmdEntryViewModel>, Unit> DeleteRowsCommand { get; }
@@ -90,6 +94,19 @@ namespace Cirilla.MVVM.ViewModels
         public IObservable<IChangeSet<GmdEntryViewModel>> Connect()
         {
             return entriesList.Connect();
+        }
+
+        private void AddEntry()
+        {
+            string key = $"CIRILLA_KEY_" + entriesList.Count;
+            var vm = new GmdEntryViewModel(entriesList.Count, new GMD_Entry { Key = key });
+            entriesList.Add(vm);
+        }
+
+        private void AddPaddingEntry()
+        {
+            var vm = new GmdEntryViewModel(entriesList.Count, new GMD_EntryWithoutKey());
+            entriesList.Add(vm);
         }
 
         private void ImportFromCsvHandler()
@@ -135,7 +152,7 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private void DeleteRowsHandler(IList<GmdEntryViewModel> rowsToDelete)
+        private void DeleteRows(IList<GmdEntryViewModel> rowsToDelete)
         {
             entriesList.Edit(x =>
             {
