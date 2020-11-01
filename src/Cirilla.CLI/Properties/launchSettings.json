@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Cirilla.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "savedata decrypt \"C:\\Users\\Wouter\\Downloads\\MH Wrold Iceborn\\582010\\remote\\SAVEDATA1000\""
+    }
+  }
+}
