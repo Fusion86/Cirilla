@@ -10,13 +10,11 @@ using Cirilla.Core.Structs.Native;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Cirilla.Core.Models
 {
-    public class SaveData : FileTypeBase
+    public class SaveData : FileTypeBase, ISaveData
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -35,6 +33,7 @@ namespace Cirilla.Core.Models
             Logger.Info($"Loading '{path}'");
 
             byte[] bytes = File.ReadAllBytes(path);
+            if (bytes.Length == 9438432) throw new Exception("This looks like pre-Iceborne SAVEDATA, which is not supported. Try using an older version of this tool.");
 
             // 0x01 00 00 00 == decrypted, something else means that it's encrypted
             bool isUnencrypted = bytes[0] == 0x01 && bytes[1] == 0x00 && bytes[2] == 0x00 && bytes[3] == 0x00;
@@ -53,7 +52,7 @@ namespace Cirilla.Core.Models
                 if (_header.Magic[0] != 0x01 || _header.Magic[1] != 0x00 || _header.Magic[2] != 0x00 || _header.Magic[3] != 0x00)
                     throw new Exception("Decryption failed or this isn't a valid SAVEDATA file.");
 
-                if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborne SAVEDATA, which is not supported anymore. Try using an older version of this tool.");
+                if (_header.DataSize == 9438368) throw new Exception("This looks like pre-Iceborne SAVEDATA, which is not supported. Try using an older version of this tool.");
                 else if (_header.DataSize != 11284640) throw new Exception("Unexpected DataSize, meaning that this tool can't load this SAVEDATA.");
 
                 _sectionOffsets = new long[4];
@@ -152,7 +151,7 @@ namespace Cirilla.Core.Models
         }
     }
 
-    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ICloneable
+    public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ISaveSlot, ICloneable
     {
         public SaveData SaveData { get; }
 

@@ -44,7 +44,7 @@ namespace Cirilla.Core.Test.Tests
         [DataRow("SAVEDATA1000_ib_dec_1")]
         public void Load__SAVEDATA1000(string filename)
         {
-            SaveData save = new SaveData(@"L:\Nextcloud\Personal\MHW Mods\test_dataset\" + filename);
+            SaveData save = new SaveData(@"L:\Nextcloud\Personal\Modding\MHW Mods\test_dataset" + filename);
             Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
             Assert.AreEqual("Sjonnie Jan", save.SaveSlots[0].PalicoName);
             Assert.AreEqual("Fusion", save.SaveSlots[1].HunterName);
@@ -64,7 +64,7 @@ namespace Cirilla.Core.Test.Tests
         [DataRow("SAVEDATA1000_ib_dec_1", false)]
         public void Rebuild__SAVEDATA1000(string filename, bool encrypt)
         {
-            string origPath = @"L:\Nextcloud\Personal\MHW Mods\test_dataset\" + filename;
+            string origPath = @"L:\Nextcloud\Personal\Modding\MHW Mods\test_dataset" + filename;
             string rebuildPath = "rebuild__" + filename + "_" + (encrypt ? "enc" : "dec");
 
             SaveData save = new SaveData(origPath);
