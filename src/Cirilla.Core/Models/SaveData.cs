@@ -24,10 +24,10 @@ namespace Cirilla.Core.Models
         public SaveData_Header Header => _header;
         public SaveSlot[] SaveSlots { get; private set; }
 
-        private BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
+        private readonly BlowFish _blowfish = new BlowFish(ExEncoding.ASCII.GetBytes(ENCRYPTION_KEY));
         private SaveData_Header _header;
-        private long[] _sectionOffsets;
-        private byte[] _sections;
+        private readonly long[] _sectionOffsets;
+        private readonly byte[] _sections;
 
         public SaveData(string path) : base(path)
         {
@@ -272,6 +272,15 @@ namespace Cirilla.Core.Models
 
         // Oh boy do I miss preprocessor macros here...
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range
+
+        byte[] ICharacterAppearanceProperties.Type
+        {
+            get => _native.CharacterAppearance.Type;
+            set
+            {
+                _native.CharacterAppearance.Type = value;
+            }
+        }
 
         #region Makeup2
 

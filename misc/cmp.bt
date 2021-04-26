@@ -1,0 +1,22 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: Fusion86
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: *.cmp
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+#include "appearance.bt"
+
+struct CMP {
+    // Base game = 0x07, 0x00
+    // Iceborne = 0x01, 0x10
+    ushort magic;
+
+    CHARACTER_APPEARANCE appearance;
+} cmp <open=true>;

@@ -77,5 +77,7 @@ namespace Cirilla.Core.Interfaces
         byte ClothingType { get; set; }
         byte Voice { get; set; }
         int Expression { get; set; }
+
+        byte[] Type { get; set; }
     }
 }

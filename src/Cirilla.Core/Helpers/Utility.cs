@@ -23,13 +23,11 @@ namespace Cirilla.Core.Helpers
 
         private static MHFileType GetFileTypeFromMagic(string path)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (BinaryReader br = new BinaryReader(fs))
-            {
-                byte[] bytes = br.ReadBytes(4);
+            using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using BinaryReader br = new BinaryReader(fs);
+            byte[] bytes = br.ReadBytes(4);
 
-                return _fileTypes.Where(x => x.Magic != null).FirstOrDefault(x => x.Magic.SequenceEqual(bytes.Take(x.Magic.Length)));
-            }
+            return _fileTypes.Where(x => x.Magic != null).FirstOrDefault(x => x.Magic.SequenceEqual(bytes.Take(x.Magic.Length)));
         }
 
         private static MHFileType GetFileTypeFromFileExtension(string path)

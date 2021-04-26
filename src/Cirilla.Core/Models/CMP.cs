@@ -48,6 +48,9 @@ namespace Cirilla.Core.Models
         {
             Logger.Info("Creating new CMP based on CharacterAppearance data");
             _native = characterAppearance;
+
+            Logger.Info("Updating Type to 'Preset'");
+            _native.Type = CharacterAppearanceType.Preset.Value;
         }
 
         public void Save(string path)
@@ -70,6 +73,15 @@ namespace Cirilla.Core.Models
         public ICharacterAppearanceProperties Appearance => this;
 
         #region Character Appearance
+
+        byte[] ICharacterAppearanceProperties.Type
+        {
+            get => _native.Type;
+            set
+            {
+                _native.Type = value;
+            }
+        }
 
         // Oh boy do I miss preprocessor macros here...
         // We could probably do some magic like Fody.PropertyChanged does to check if the value is within range

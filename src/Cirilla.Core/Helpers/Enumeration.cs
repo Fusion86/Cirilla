@@ -26,15 +26,13 @@ namespace Cirilla.Core.Helpers
 
         public override bool Equals(object obj)
         {
-            var otherValue = obj as Enumeration;
-
-            if (otherValue == null)
+            if (obj as Enumeration == null)
             {
                 return false;
             }
 
             var typeMatches = GetType().Equals(obj.GetType());
-            var valueMatches = Identifier.Equals(otherValue.Identifier);
+            var valueMatches = Identifier.Equals((obj as Enumeration).Identifier);
 
             return typeMatches && valueMatches;
         }
@@ -57,9 +55,7 @@ namespace Cirilla.Core.Helpers
             foreach (var info in fields)
             {
                 var instance = new T();
-                var locatedValue = info.GetValue(instance) as T;
-
-                if (locatedValue != null)
+                if (info.GetValue(instance) is T locatedValue)
                 {
                     yield return locatedValue;
                 }

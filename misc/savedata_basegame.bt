@@ -1,0 +1,41 @@
+//------------------------------------------------
+//--- 010 Editor v8.0 Binary Template
+//
+//      File: 
+//   Authors: Fusion86 and many others.
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct HEADER {
+    byte magic[4];
+    uint unk1;
+    uint unk2;
+    byte hash[20];
+    uint64 datasize;
+    uint64 steamid;
+    byte padding[16];
+};
+
+struct SAVEDATA_SAVESLOT {
+    char hunterName[64];
+    int hunterRank;
+    int zeni;
+    int researchPoints;
+    int hunterXp;
+    int timePlayedSec;
+};
+
+struct SAVEDATA {
+    HEADER header;
+    uint64 offsets[4];
+
+    FSeek(offsets[3]); // Other sections
+    FSkip(20);
+
+    SAVEDATA_SAVESLOT saveslots[3];
+} savedata <open=true>;

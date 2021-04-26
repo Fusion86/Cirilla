@@ -35,10 +35,13 @@ namespace Cirilla.Core.Structs.Native
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct CharacterAppearance
     {
-        private int Unk2; // New in Iceborne
+        // See CharacterAppearanceType
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
+        public byte[] Type;
+
         public CharacterMakeup Makeup2;
         public CharacterMakeup Makeup1;
         public CharacterMakeup Makeup3; // New in Iceborne

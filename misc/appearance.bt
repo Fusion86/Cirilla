@@ -1,0 +1,103 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: Fusion86 and many others.
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// All colors are RGBA
+// Keep in mind that all types are zero indexed, so type 0 in file is type 1 in the editor.
+
+struct CHARACTER_MAKEUP {
+    ubyte color[4]; // What is alpha?
+    float posX;
+    float posY;
+    float sizeX;
+    float sizeY;
+    float glossy;
+    float metallic; // Inverted, so 0 = max/100% and 1 = min/0%
+    float luminescent; // 0 - 1
+    int type;
+};
+
+// int32, aka 4 bytes
+enum CHARACTER_GENDER {
+    genderMale = 0,
+    genderFemale = 1
+};
+
+struct CHARACTER_APPEARANCE {
+    // Not entirely sure.
+    // For my original character (created in basegame) = 2
+    // For new characters (created in iceborne) = 0 
+    // For preset (inside cmp) = 0x 09 18 09 00
+    int type;
+
+    CHARACTER_MAKEUP makeup2;
+    CHARACTER_MAKEUP makeup1;
+    CHARACTER_MAKEUP makeup3; // Yes this is the correct order
+
+    ubyte leftEyeColor[4];
+    ubyte rightEyeColor[4];
+    ubyte eyebrowColor[4];
+    ubyte facialHairColor[4];
+
+    ubyte eyeWidth;
+    ubyte eyeHeight;
+    ubyte skinColorX;
+    ubyte skinColorY;
+    ubyte age;
+    ubyte wrinkles;
+    ubyte noseHeight;
+    ubyte mouthHeight;
+
+    CHARACTER_GENDER gender;
+
+    ubyte browType;
+    ubyte faceType;
+    ubyte eyeType;
+    ubyte noseType;
+
+    ubyte mouthType;
+    ubyte eyebrowType;
+    ubyte eyelashLength;
+    ubyte facialHairType;
+
+    int unk1;
+
+    ubyte hairColor[4];
+    ubyte clothingColor[4];
+    ushort hairType;
+
+    ubyte clothingType;
+    ubyte voice;
+    int expression;
+};
+
+struct PALICO_APPEARANCE {
+    ubyte patternColor1[4];
+    ubyte patternColor2[4];
+    ubyte patternColor3[4];
+    ubyte furColor[4];
+    ubyte leftEyeColor[4];
+    ubyte rightEyeColor[4];
+    ubyte clothingColor[4];
+
+    float furLength; // 0.1 to 0.7
+    float furThickness; // 3.8 = 80%, 7 = 0%
+
+    ubyte patternType;
+    ubyte eyeType;
+    ubyte earType;
+    ubyte tailType;
+
+    ubyte voiceType;
+    ubyte voicePitch;
+    ushort unk1; // Outline/face and pupils?
+};
