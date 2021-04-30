@@ -35,14 +35,14 @@ namespace Cirilla.Core.Structs.Native.Compat
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U1)]
         public byte[] FacialHairColor;
 
-        public byte EyeWidth;
-        public byte EyeHeight;
+        public sbyte EyeWidth;
+        public sbyte EyeHeight;
         public byte SkinColorX;
         public byte SkinColorY;
         public byte Age;
         public byte Wrinkles;
-        public byte NoseHeight;
-        public byte MouthHeight;
+        public sbyte NoseHeight;
+        public sbyte MouthHeight;
         public Gender Gender;
         public byte BrowType;
         public byte FaceType;

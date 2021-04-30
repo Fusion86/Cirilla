@@ -50,14 +50,14 @@ namespace Cirilla.Core.Interfaces
         Color EyebrowColor { get; set; }
         Color FacialHairColor { get; set; }
 
-        byte EyeWidth { get; set; }
-        byte EyeHeight { get; set; }
+        sbyte EyeWidth { get; set; }
+        sbyte EyeHeight { get; set; }
         byte SkinColorX { get; set; }
         byte SkinColorY { get; set; }
         byte Age { get; set; }
         byte Wrinkles { get; set; }
-        byte NoseHeight { get; set; }
-        byte MouthHeight { get; set; }
+        sbyte NoseHeight { get; set; }
+        sbyte MouthHeight { get; set; }
 
         Gender Gender { get; set; }
 

@@ -7,22 +7,27 @@ namespace Cirilla.Core.Test
     public class Setup
     {
         [AssemblyInitialize]
-        public static void AssemblyInitialize(TestContext testContext)
+        public static void AssemblyInitialize(TestContext _)
         {
             Logging.LogProvider.SetCurrentLogProvider(new LogProvider());
 
-            var mhwExtractedDataRoot = testContext.Properties["mhwExtractedDataRoot"];
-            if (mhwExtractedDataRoot is string str)
-            {
-                if (!Directory.Exists(str))
-                    Assert.Fail($"mhwExtractedDataRoot '{str}' doesn't exist!");
+            var testDataDir = FindTestDataDir(new DirectoryInfo("."));
 
-                Settings.MHWExtractedDataRoot = str;
-            }
+            if (testDataDir != null)
+                Settings.TestDataDir = testDataDir;
             else
-            {
-                Assert.Fail("No .runsettings file selected or mhwExtractedDataRoot is not set!");
-            }
+                Assert.Fail("Couldn't find TestDataDir in the current directory tree.");
+        }
+
+        public static string? FindTestDataDir(DirectoryInfo currentDir)
+        {
+            var testDataDir = Path.Combine(currentDir.FullName, "testdata");
+            if (Directory.Exists(testDataDir))
+                return testDataDir;
+            else if (currentDir.Parent != null)
+                return FindTestDataDir(currentDir.Parent);
+            else
+                return null;
         }
     }
 }

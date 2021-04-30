@@ -12,14 +12,14 @@ namespace Cirilla.Core.Test.Tests
         [TestMethod]
         public void Load__hair000()
         {
-            MOD3 mod = new MOD3(Utility.GetFullPath("chunk0/pl/hair/hair000/mod/hair000.mod3"));
+            MOD3 mod = new MOD3(Utility.GetTestAsset("game/pl/hair/hair000/mod/hair000.mod3"));
             Assert.AreEqual(mod.MeshParts.Count, mod.VertexBuffers.Count, "Probably unrecognized VertexBuffer block type, see output.");
         }
 
         [TestMethod]
         public void Load__hair103()
         {
-            MOD3 mod = new MOD3(Utility.GetFullPath("chunk0/pl/hair/hair103/mod/hair103.mod3"));
+            MOD3 mod = new MOD3(Utility.GetTestAsset("game/pl/hair/hair103/mod/hair103.mod3"));
             Assert.AreEqual(mod.MeshParts.Count, mod.VertexBuffers.Count, "Probably unrecognized VertexBuffer block type, see output.");
         }
 
@@ -27,11 +27,11 @@ namespace Cirilla.Core.Test.Tests
         public void LoadAllHairStyles()
         {
             int errorCount = 0;
-            var hairTypes = new DirectoryInfo(Utility.GetFullPath("chunk0/pl/hair")).GetDirectories().Select(x => x.Name);
+            var hairTypes = new DirectoryInfo(Utility.GetTestAsset("game/pl/hair")).GetDirectories().Select(x => x.Name);
 
             foreach (var type in hairTypes)
             {
-                string fullPath = Path.Combine(Utility.GetFullPath("chunk0/pl/hair"), type, "mod", type + ".mod3");
+                string fullPath = Path.Combine(Utility.GetTestAsset("game/pl/hair"), type, "mod", type + ".mod3");
 
                 if (!File.Exists(fullPath))
                 {

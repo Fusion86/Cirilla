@@ -487,13 +487,13 @@ namespace Cirilla.Core.Models
 
         #region Types 1
 
-        byte ICharacterAppearanceProperties.EyeWidth
+        sbyte ICharacterAppearanceProperties.EyeWidth
         {
             get => _native.CharacterAppearance.EyeWidth;
             set => _native.CharacterAppearance.EyeWidth = value;
         }
 
-        byte ICharacterAppearanceProperties.EyeHeight
+        sbyte ICharacterAppearanceProperties.EyeHeight
         {
             get => _native.CharacterAppearance.EyeHeight;
             set => _native.CharacterAppearance.EyeHeight = value;
@@ -523,13 +523,13 @@ namespace Cirilla.Core.Models
             set => _native.CharacterAppearance.Wrinkles = value;
         }
 
-        byte ICharacterAppearanceProperties.NoseHeight
+        sbyte ICharacterAppearanceProperties.NoseHeight
         {
             get => _native.CharacterAppearance.NoseHeight;
             set => _native.CharacterAppearance.NoseHeight = value;
         }
 
-        byte ICharacterAppearanceProperties.MouthHeight
+        sbyte ICharacterAppearanceProperties.MouthHeight
         {
             get => _native.CharacterAppearance.MouthHeight;
             set => _native.CharacterAppearance.MouthHeight = value;

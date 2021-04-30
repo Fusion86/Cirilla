@@ -15,7 +15,7 @@
 // Keep in mind that all types are zero indexed, so type 0 in file is type 1 in the editor.
 
 struct CHARACTER_MAKEUP {
-    ubyte color[4]; // What is alpha?
+    ubyte color[4]; // What is the alpha channel, transparency?
     float posX;
     float posY;
     float sizeX;
@@ -34,28 +34,29 @@ enum CHARACTER_GENDER {
 
 struct CHARACTER_APPEARANCE {
     // Not entirely sure.
-    // For my original character (created in basegame) = 2
+    // For my original character (created in basegame) = 0x 02 00 00 00
     // For new characters (created in iceborne) = 0 
     // For preset (inside cmp) = 0x 09 18 09 00
     int type;
 
+    // Yes this is the correct order
     CHARACTER_MAKEUP makeup2;
     CHARACTER_MAKEUP makeup1;
-    CHARACTER_MAKEUP makeup3; // Yes this is the correct order
+    CHARACTER_MAKEUP makeup3; // Can only be used when bought iceborne dlc.
 
     ubyte leftEyeColor[4];
     ubyte rightEyeColor[4];
     ubyte eyebrowColor[4];
     ubyte facialHairColor[4];
 
-    ubyte eyeWidth;
-    ubyte eyeHeight;
-    ubyte skinColorX;
-    ubyte skinColorY;
-    ubyte age;
-    ubyte wrinkles;
-    ubyte noseHeight;
-    ubyte mouthHeight;
+    byte eyeWidth; // -128 - 127
+    byte eyeHeight; // -128 - 127
+    ubyte skinColorX; // 0 - 255
+    ubyte skinColorY; // 0 - 255
+    ubyte age; // 0 - 255, named wrinkle volume in iceborne?
+    ubyte wrinkles; // 0 - 255
+    byte noseHeight; // -128 - 127
+    byte mouthHeight; // -128 - 127
 
     CHARACTER_GENDER gender;
 
@@ -66,10 +67,10 @@ struct CHARACTER_APPEARANCE {
 
     ubyte mouthType;
     ubyte eyebrowType;
-    ubyte eyelashLength;
+    ubyte eyelashLength; // 0, 1, 2
     ubyte facialHairType;
 
-    int unk1;
+    int unk1; // Always zero?
 
     ubyte hairColor[4];
     ubyte clothingColor[4];
@@ -89,7 +90,7 @@ struct PALICO_APPEARANCE {
     ubyte rightEyeColor[4];
     ubyte clothingColor[4];
 
-    float furLength; // 0.1 to 0.7
+    float furLength; // WRONG: 0.1 to 0.7
     float furThickness; // 3.8 = 80%, 7 = 0%
 
     ubyte patternType;
@@ -99,5 +100,5 @@ struct PALICO_APPEARANCE {
 
     ubyte voiceType;
     ubyte voicePitch;
-    ushort unk1; // Outline/face and pupils?
+    ushort unk1; // Outline/face and pupils? Can only be used when bought iceborne dlc.
 };

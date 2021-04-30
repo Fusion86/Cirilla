@@ -1,6 +1,7 @@
 ﻿using Cirilla.Core.Models;
 using Cirilla.Core.Structs.Native;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Test.Tests
@@ -39,32 +40,32 @@ namespace Cirilla.Core.Test.Tests
         }
 
         [DataTestMethod]
-        [DataRow("SAVEDATA1000_ib")]
-        [DataRow("SAVEDATA1000_ib_dec")]
-        [DataRow("SAVEDATA1000_ib_dec_1")]
+        [DataRow("IceborneSave1")]
+        [DataRow("IceborneSaveDec1")]
+        [DataRow("IceborneSaveDec2")]
         public void Load__SAVEDATA1000(string filename)
         {
-            SaveData save = new SaveData(@"L:\Nextcloud\Personal\Modding\MHW Mods\test_dataset" + filename);
+            SaveData save = new SaveData(Utility.GetTestAsset(@"saves/" + filename));
             Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
             Assert.AreEqual("Sjonnie Jan", save.SaveSlots[0].PalicoName);
             Assert.AreEqual("Fusion", save.SaveSlots[1].HunterName);
             Assert.AreEqual("Knor", save.SaveSlots[1].PalicoName);
         }
 
-        [TestMethod]
-        public void Load__SAVEDATA1000_remote()
-        {
-            SaveData save = new SaveData(@"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000");
-            Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
-        }
+        //[TestMethod]
+        //public void Load__SAVEDATA1000_remote()
+        //{
+        //    SaveData save = new SaveData(@"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000");
+        //    Assert.AreEqual("Fusion", save.SaveSlots[0].HunterName);
+        //}
 
         [DataTestMethod]
-        [DataRow("SAVEDATA1000_ib", true)]
-        [DataRow("SAVEDATA1000_ib_dec", false)]
-        [DataRow("SAVEDATA1000_ib_dec_1", false)]
+        [DataRow("IceborneSave1", true)]
+        [DataRow("IceborneSaveDec1", false)]
+        [DataRow("IceborneSaveDec2", false)]
         public void Rebuild__SAVEDATA1000(string filename, bool encrypt)
         {
-            string origPath = @"L:\Nextcloud\Personal\Modding\MHW Mods\test_dataset" + filename;
+            string origPath = Utility.GetTestAsset(@"saves/" + filename);
             string rebuildPath = "rebuild__" + filename + "_" + (encrypt ? "enc" : "dec");
 
             SaveData save = new SaveData(origPath);
@@ -72,19 +73,21 @@ namespace Cirilla.Core.Test.Tests
 
             if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
                 Assert.Fail("Hash doesn't match!");
+
+            File.Delete(rebuildPath);
         }
 
-        [TestMethod]
-        public void Rebuild__SAVEDATA1000_remote()
-        {
-            string origPath = @"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000";
-            string rebuildPath = "rebuild__SAVEDATA1000_remote";
+        //[TestMethod]
+        //public void Rebuild__SAVEDATA1000_remote()
+        //{
+        //    string origPath = @"C:\Steam\userdata\112073240\582010\remote\SAVEDATA1000";
+        //    string rebuildPath = "rebuild__SAVEDATA1000_remote";
 
-            SaveData save = new SaveData(origPath);
-            save.Save(rebuildPath);
+        //    SaveData save = new SaveData(origPath);
+        //    save.Save(rebuildPath);
 
-            if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
-                Assert.Fail("Hash doesn't match!");
-        }
+        //    if (!Utility.CheckFilesAreSame(origPath, rebuildPath))
+        //        Assert.Fail("Hash doesn't match!");
+        //}
     }
 }

@@ -7,19 +7,18 @@ namespace Cirilla.Core.Test
 {
     public static class Utility
     {
-        public static string GetFullPath(string path) => Path.Combine(Settings.MHWExtractedDataRoot, path);
+        public static string GetTestAsset(string path) => Path.Combine(Settings.TestDataDir, path);
 
         public static bool CheckFilesAreSame(string path1, string path2)
         {
-            using (HashAlgorithm hashAlgorithm = SHA256.Create())
-            using (FileStream origFs = new FileStream(path1, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (FileStream rebuildFs = new FileStream(path2, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] origHash = hashAlgorithm.ComputeHash(origFs);
-                byte[] rebuildHash = hashAlgorithm.ComputeHash(rebuildFs);
+            using HashAlgorithm hashAlgorithm = SHA256.Create();
+            using FileStream origFs = new FileStream(path1, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using FileStream rebuildFs = new FileStream(path2, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-                return origHash.SequenceEqual(rebuildHash);
-            }
+            byte[] origHash = hashAlgorithm.ComputeHash(origFs);
+            byte[] rebuildHash = hashAlgorithm.ComputeHash(rebuildFs);
+
+            return origHash.SequenceEqual(rebuildHash);
         }
     }
 }
