@@ -15,7 +15,7 @@
 // Keep in mind that all types are zero indexed, so type 0 in file is type 1 in the editor.
 
 struct CHARACTER_MAKEUP {
-    ubyte color[4]; // What is the alpha channel, transparency?
+    ubyte color[4]; // Alpha = transparency. Where 0 == 0xFF and 100 == 0x00
     float posX;
     float posY;
     float sizeX;

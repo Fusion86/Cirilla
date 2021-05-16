@@ -291,46 +291,46 @@ namespace Cirilla.Core.Models
             set => _native.CharacterAppearance.Makeup2.Color = value.ToRgbaBytes();
         }
 
-        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
         float ICharacterAppearanceProperties.Makeup2PosX
         {
             get => _native.CharacterAppearance.Makeup2.PosX;
             set => _native.CharacterAppearance.Makeup2.PosX = value;
         }
 
-        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
         float ICharacterAppearanceProperties.Makeup2PosY
         {
             get => _native.CharacterAppearance.Makeup2.PosY;
             set => _native.CharacterAppearance.Makeup2.PosY = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup2SizeX
         {
             get => _native.CharacterAppearance.Makeup2.SizeX;
             set => _native.CharacterAppearance.Makeup2.SizeX = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup2SizeY
         {
             get => _native.CharacterAppearance.Makeup2.SizeY;
             set => _native.CharacterAppearance.Makeup2.SizeY = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
         float ICharacterAppearanceProperties.Makeup2Glossy
         {
             get => _native.CharacterAppearance.Makeup2.Glossy;
             set => _native.CharacterAppearance.Makeup2.Glossy = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
         float ICharacterAppearanceProperties.Makeup2Metallic
         {
             get => _native.CharacterAppearance.Makeup2.Metallic;
             set => _native.CharacterAppearance.Makeup2.Metallic = value;
+        }
+
+        float ICharacterAppearanceProperties.Makeup2Luminescent
+        {
+            get => _native.CharacterAppearance.Makeup2.Luminescent;
+            set => _native.CharacterAppearance.Makeup2.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup2Type
@@ -349,46 +349,46 @@ namespace Cirilla.Core.Models
             set => _native.CharacterAppearance.Makeup1.Color = value.ToRgbaBytes();
         }
 
-        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
         float ICharacterAppearanceProperties.Makeup1PosX
         {
             get => _native.CharacterAppearance.Makeup1.PosX;
             set => _native.CharacterAppearance.Makeup1.PosX = value;
         }
 
-        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
         float ICharacterAppearanceProperties.Makeup1PosY
         {
             get => _native.CharacterAppearance.Makeup1.PosY;
             set => _native.CharacterAppearance.Makeup1.PosY = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup1SizeX
         {
             get => _native.CharacterAppearance.Makeup1.SizeX;
             set => _native.CharacterAppearance.Makeup1.SizeX = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup1SizeY
         {
             get => _native.CharacterAppearance.Makeup1.SizeY;
             set => _native.CharacterAppearance.Makeup1.SizeY = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
         float ICharacterAppearanceProperties.Makeup1Glossy
         {
             get => _native.CharacterAppearance.Makeup1.Glossy;
             set => _native.CharacterAppearance.Makeup1.Glossy = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
         float ICharacterAppearanceProperties.Makeup1Metallic
         {
             get => _native.CharacterAppearance.Makeup1.Metallic;
             set => _native.CharacterAppearance.Makeup1.Metallic = value;
+        }
+
+        float ICharacterAppearanceProperties.Makeup1Luminescent
+        {
+            get => _native.CharacterAppearance.Makeup1.Luminescent;
+            set => _native.CharacterAppearance.Makeup1.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup1Type
@@ -407,46 +407,46 @@ namespace Cirilla.Core.Models
             set => _native.CharacterAppearance.Makeup3.Color = value.ToRgbaBytes();
         }
 
-        [Range(-0.2f, 0.2f, "0.2 (left) to -0.2 (right)")]
         float ICharacterAppearanceProperties.Makeup3PosX
         {
             get => _native.CharacterAppearance.Makeup3.PosX;
             set => _native.CharacterAppearance.Makeup3.PosX = value;
         }
 
-        [Range(-0.06f, 0.4f, "0.4 (top) to -0.06 (bottom)")]
         float ICharacterAppearanceProperties.Makeup3PosY
         {
             get => _native.CharacterAppearance.Makeup3.PosY;
             set => _native.CharacterAppearance.Makeup3.PosY = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup3SizeX
         {
             get => _native.CharacterAppearance.Makeup3.SizeX;
             set => _native.CharacterAppearance.Makeup3.SizeX = value;
         }
 
-        [Range(-0.35f, 1.0f, "-0.35 (wide) to 1.0 (narrow)")]
         float ICharacterAppearanceProperties.Makeup3SizeY
         {
             get => _native.CharacterAppearance.Makeup3.SizeY;
             set => _native.CharacterAppearance.Makeup3.SizeY = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (100%) to 1.0 (0%)")]
         float ICharacterAppearanceProperties.Makeup3Glossy
         {
             get => _native.CharacterAppearance.Makeup3.Glossy;
             set => _native.CharacterAppearance.Makeup3.Glossy = value;
         }
 
-        [Range(0.0f, 1.0f, "0.0 (0%) to 1.0 (100%)")]
         float ICharacterAppearanceProperties.Makeup3Metallic
         {
             get => _native.CharacterAppearance.Makeup3.Metallic;
             set => _native.CharacterAppearance.Makeup3.Metallic = value;
+        }
+
+        float ICharacterAppearanceProperties.Makeup3Luminescent
+        {
+            get => _native.CharacterAppearance.Makeup3.Luminescent;
+            set => _native.CharacterAppearance.Makeup3.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup3Type

@@ -16,7 +16,7 @@ namespace Cirilla.Core.Structs.Native
         public float SizeY;
         public float Glossy;
         public float Metallic;
-        public int Luminescent; // New in Iceborne
+        public float Luminescent; // New in Iceborne
         public int Type;
 
         public static implicit operator CharacterMakeup(Compat.CharacterMakeup compat)

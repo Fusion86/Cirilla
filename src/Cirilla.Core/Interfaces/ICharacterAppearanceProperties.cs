@@ -3,7 +3,8 @@ using System.Drawing;
 
 namespace Cirilla.Core.Interfaces
 {
-    // Too lazy to use this
+    // It is not possible to use this.
+    // TL;DR We need to store a ref struct in a field, which is not possible (atm).
     //public interface ICharacterMakeup
     //{
     //    Color Color { get; set; }
@@ -25,6 +26,7 @@ namespace Cirilla.Core.Interfaces
         float Makeup2SizeY { get; set; }
         float Makeup2Glossy { get; set; }
         float Makeup2Metallic { get; set; }
+        float Makeup2Luminescent { get; set; }
         int Makeup2Type { get; set; }
 
         Color Makeup1Color { get; set; }
@@ -34,6 +36,7 @@ namespace Cirilla.Core.Interfaces
         float Makeup1SizeY { get; set; }
         float Makeup1Glossy { get; set; }
         float Makeup1Metallic { get; set; }
+        float Makeup1Luminescent { get; set; }
         int Makeup1Type { get; set; }
 
         Color Makeup3Color { get; set; }
@@ -43,6 +46,7 @@ namespace Cirilla.Core.Interfaces
         float Makeup3SizeY { get; set; }
         float Makeup3Glossy { get; set; }
         float Makeup3Metallic { get; set; }
+        float Makeup3Luminescent { get; set; }
         int Makeup3Type { get; set; }
 
         Color LeftEyeColor { get; set; }
