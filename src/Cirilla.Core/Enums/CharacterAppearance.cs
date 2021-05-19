@@ -24,9 +24,9 @@ namespace Cirilla.Core.Enums
 
     public enum PalicoVoicePitch : byte
     {
-        MediumPitch = 0,
-        LowPitch = 1,
-        HighPitch = 2
+        Medium = 0,
+        Low = 1,
+        High = 2
     }
 
     public class CharacterAppearanceType : Enumeration

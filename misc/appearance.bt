@@ -53,7 +53,7 @@ struct CHARACTER_APPEARANCE {
     byte eyeHeight; // -128 - 127
     ubyte skinColorX; // 0 - 255
     ubyte skinColorY; // 0 - 255
-    ubyte age; // 0 - 255, named wrinkle volume in iceborne?
+    ubyte age; // 0 - 255, called wrinkle volume in iceborne.
     ubyte wrinkles; // 0 - 255
     byte noseHeight; // -128 - 127
     byte mouthHeight; // -128 - 127
