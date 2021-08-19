@@ -6,6 +6,7 @@
                              xmlns:local="clr-namespace:Cirilla.WPF.Windows"
                              xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
                              xmlns:view="clr-namespace:Cirilla.WPF.Views"
+                             xmlns:mvvm="clr-namespace:Cirilla.MVVM;assembly=Cirilla.MVVM"
                              xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
                              xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
                              xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
@@ -19,7 +20,8 @@
 
     <Window.Resources>
         <vc:VisibilityConverter x:Key="VisibilityConverter"/>
-        <vc:ObjectOfTypeToVisibilityConverter x:Key="ObjectOfTypeConveter"/>
+        <vc:ObjectOfTypeConverter x:Key="ObjectOfTypeConveter"/>
+        <mvvm:ApplicationSettings x:Key="ApplicationSettings"/>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -27,15 +29,15 @@
         <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding OpenFolderCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveSelectedFileCommand}"/>
         <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding SaveSelectedFileAsCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="W" Command="{Binding CloseSelectedFileCommand}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="W" Command="{Binding CloseAllFilesCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="W" Command="{Binding CloseSelectedItemCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="W" Command="{Binding CloseAllItemsCommand}"/>
     </Window.InputBindings>
 
     <Grid AllowDrop="True" Drop="Grid_Drop">
         <DockPanel Opacity="{Binding ContentOpacity}">
             <!-- Main Menu -->
             <Menu DockPanel.Dock="Top" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
-                <MenuItem Header="File">
+                <MenuItem Header="_File">
                     <!-- Open Menu Items -->
                     <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O"/>
                     <MenuItem Header="Open Folder..." Command="{Binding OpenFolderCommand}" InputGestureText="Ctrl+Shift+O"/>
@@ -46,33 +48,35 @@
                     <MenuItem Header="Save As..." Command="{Binding SaveSelectedFileAsCommand}" InputGestureText="Ctrl+Shift+S"/>
                     <MenuItem Header="Save All" Command="{Binding SaveAllFilesCommand}"/>
 
-                    <!-- GmdViewModel Menu Items -->
-                    <Separator Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
-                    <MenuItem Header="Import values from CSV"
-                              Command="{Binding SelectedItem.ImportFromCsvCommand}"
-                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
-                    <MenuItem Header="Export values to CSV"
-                              Command="{Binding SelectedItem.ExportToCsvCommand}"
-                              Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}"/>
+                    <!-- GMD Menu Items -->
+                    <Separator/>
+                    <MenuItem Header="Import values from CSV" Command="{Binding ImportFromCsvCommand}"/>
+                    <MenuItem Header="Export values to CSV" Command="{Binding ExportToCsvCommand}"/>
 
                     <!-- Close Menu Items -->
                     <Separator/>
-                    <MenuItem Header="Close File" Command="{Binding CloseSelectedFileCommand}" InputGestureText="Ctrl+W"/>
-                    <MenuItem Header="Close All" Command="{Binding CloseAllFilesCommand}" InputGestureText="Ctrl+Shift+W"/>
+                    <MenuItem Header="Close File" Command="{Binding CloseSelectedItemCommand}" InputGestureText="Ctrl+W"/>
+                    <MenuItem Header="Close All" Command="{Binding CloseAllItemsCommand}" InputGestureText="Ctrl+Shift+W"/>
 
                     <!-- Exit -->
                     <Separator/>
                     <MenuItem Header="Exit" Click="MenuExit_Click"/>
                 </MenuItem>
 
-                <MenuItem Header="Edit"
-                          Visibility="{Binding SelectedItem, Converter={StaticResource ObjectOfTypeConveter}, ConverterParameter={x:Type vms:GmdViewModel}}">
-                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding SelectedItem.AddEntryCommand}"/>
-                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding SelectedItem.AddPaddingEntryCommand}"/>
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Add Normal Entry (with key)" Command="{Binding AddEntryCommand}"/>
+                    <MenuItem Header="Add Padding Entry (no key)" Command="{Binding AddPaddingEntryCommand}"/>
                 </MenuItem>
 
-                <MenuItem Header="Tools">
-                    <MenuItem Header="Search for text in all open files"/>
+                <MenuItem Header="_View">
+                    <MenuItem IsCheckable="True" Header="Smooth Scroll" IsChecked="{Binding Source={StaticResource ApplicationSettings}, Path=Current.SmoothScroll}"/>
+                    <MenuItem IsCheckable="True" Header="Show GMD Text Preview" IsChecked="{Binding Source={StaticResource ApplicationSettings}, Path=Current.ShowGmdTextPreview}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Search for text in all open files" IsEnabled="False"/>
+                    <Separator/>
+                    <MenuItem Header="_Batch GMD/CSV Operations" Command="{Binding ShowBatchToolCommand}"/>
                 </MenuItem>
             </Menu>
 
@@ -91,15 +95,6 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
 
-                <StatusBarItem Grid.Column="0">
-                    <Button Content="Workspace: (none)"
-                            BorderThickness="0"
-                            Padding="0"
-                            Margin="0,-3,0,-3"
-                            Height="22"
-                            Background="Transparent"/>
-                </StatusBarItem>
-
                 <Separator Grid.Column="1"/>
 
                 <StatusBarItem Grid.Column="2" Content="{Binding StatusText}"/>
@@ -111,7 +106,7 @@
                             Margin="0,-3,8,-3"
                             Height="22"
                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
-                            Command="{Binding ShowLogViewerCommand}"/>
+                            Click="showLogButton_Click"/>
                 </StatusBarItem>
             </StatusBar>
 
@@ -129,8 +124,8 @@
                          BorderThickness="0"
                          Padding="0,8,0,0"
                          SelectionMode="Extended"
-                         ItemsSource="{Binding OpenFilesBinding}"
-                         SelectedItem="{Binding SelectedItem}"
+                         ItemsSource="{Binding OpenItemsBinding}"
+                         SelectionChanged="openFilesListBox_SelectionChanged"
                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                          HorizontalAlignment="Stretch">
                     <ListBox.ContextMenu>
@@ -163,9 +158,9 @@
 
                             <Separator/>
 
-                            <MenuItem Header="Close Selected Files"
+                            <MenuItem Header="Close Selected Items"
                                       DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}"
-                                      Command="{Binding DataContext.CloseFilesCommand}"
+                                      Command="{Binding DataContext.CloseItemsCommand}"
                                       Click="CloseSelectedFiles_Click"/>
                         </ContextMenu>
                     </ListBox.ContextMenu>
@@ -187,16 +182,16 @@
                                         BorderThickness="0"
                                         Width="16"
                                         Content="×"
-                                        Command="{Binding DataContext.CloseFileCommand, 
+                                        Command="{Binding DataContext.CloseItemCommand, 
                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding}"/>
 
                                 <TextBlock Grid.Column="2"
-                                               Text="{Binding Info.Name}"/>
+                                               Text="{Binding Title}"/>
 
                                 <TextBlock Grid.Column="4"
                                                Opacity="0.5"
-                                               Text="{Binding Info.Directory.FullName}"/>
+                                               Text="{Binding StatusText}"/>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -219,6 +214,10 @@
 
                         <DataTemplate DataType="{x:Type vms:LogViewerViewModel}">
                             <view:LogView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type vms:GmdCsvBatchToolViewModel}">
+                            <view:GmdCsvBatchToolView Margin="0" DataContext="{Binding}"/>
                         </DataTemplate>
                     </ContentControl.Resources>
 

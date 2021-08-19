@@ -71,7 +71,7 @@ namespace Cirilla.Core.Models
                 Entries.Add(entry);
             }
 
-            // If there are "Invalid Message" entries after the last valid entry then the above code won't add GMD_EntryWithoutKey's for those entries
+            // If there are "Invalid Message" entries after the last valid entry then the above code won't add GMD_EntryWithoutKeys for those entries
             // So here we add GMD_EntryWithoutKey entries till we have {StringCount} amount of them
             for (int i = Entries.Count; i < _header.StringCount; i++)
                 Entries.Add(new GMD_EntryWithoutKey());

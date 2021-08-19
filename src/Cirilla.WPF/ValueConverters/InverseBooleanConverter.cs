@@ -4,15 +4,12 @@ using System.Windows.Data;
 
 namespace Cirilla.WPF.ValueConverters
 {
-    class ObjectOfTypeToVisibilityConverter : IValueConverter
+    public class InverseBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return VisibilityConverter.BoolToVisibility(false);
-
-            if (parameter is Type t)
-                return VisibilityConverter.BoolToVisibility(value.GetType() == t);
+            if (value is bool b)
+                return !b;
 
             return Binding.DoNothing;
         }

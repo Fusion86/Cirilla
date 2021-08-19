@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31606.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Core.Test", "src\Cirilla.Core.Test\Cirilla.Core.Test.csproj", "{504B74E1-6B52-4710-AB83-F08CD8B08782}"
 EndProject
@@ -24,7 +24,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GstTool", "src\GstTool\GstT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Moji", "src\Cirilla.Moji\Cirilla.Moji.csproj", "{743F2580-1E3E-43D4-BC3E-EA9D3805D28D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.CLI", "src\Cirilla.CLI\Cirilla.CLI.csproj", "{7B08CD95-08BD-4B5B-9C0D-0F0B63514668}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.CLI", "src\Cirilla.CLI\Cirilla.CLI.csproj", "{7B08CD95-08BD-4B5B-9C0D-0F0B63514668}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Moji", "Moji", "{A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.Moji.Test", "src\Cirilla.Moji.Test\Cirilla.Moji.Test.csproj", "{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54A5FB11-ECFD-4853-B98C-4269E94D6A63}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +85,10 @@ Global
 		{7B08CD95-08BD-4B5B-9C0D-0F0B63514668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B08CD95-08BD-4B5B-9C0D-0F0B63514668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B08CD95-08BD-4B5B-9C0D-0F0B63514668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,7 +100,9 @@ Global
 		{D59A0064-A374-46EA-A8CE-4CA16FD9F1CE} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{3EB1B693-2035-4016-8F38-03AE7A688FF7} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{942BB253-21BB-4313-B6C8-66C48C81E0DC} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{743F2580-1E3E-43D4-BC3E-EA9D3805D28D} = {A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}
 		{7B08CD95-08BD-4B5B-9C0D-0F0B63514668} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
+		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9} = {A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}

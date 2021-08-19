@@ -5,9 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cirilla.WPF.Views"
              xmlns:ctrl="clr-namespace:Cirilla.WPF.Controls"
+             xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
+             xmlns:mvvm="clr-namespace:Cirilla.MVVM;assembly=Cirilla.MVVM"
              xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+             xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <vc:VisibilityConverter x:Key="VisibilityConverter"/>
+        <vc:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <mvvm:ApplicationSettings x:Key="ApplicationSettings"/>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -41,7 +50,8 @@
                   SelectedItem="{Binding SelectedEntry}"
                   CanUserResizeColumns="True"
                   SelectionMode="Extended"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  ScrollViewer.CanContentScroll="{Binding Source={StaticResource ApplicationSettings}, Path=Current.SmoothScroll, Converter={StaticResource InverseBooleanConverter}}">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem IsEnabled="False" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget}">
@@ -84,7 +94,8 @@
                 </DataGridTextColumn>
 
                 <!-- Preview -->
-                <DataGridTemplateColumn Header="Preview">
+                <DataGridTemplateColumn Header="Preview"
+                                        Visibility="{Binding Source={StaticResource ApplicationSettings}, Path=Current.ShowGmdTextPreview, Converter={StaticResource VisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ctrl:MojiRenderer Text="{Binding Value}"/>
@@ -113,6 +124,12 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
+
+            <DataGrid.Resources>
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                    <Setter Property="adonisExtensions:ScrollBarExtension.ExpansionMode" Value="AlwaysExpand"/>
+                </Style>
+            </DataGrid.Resources>
         </DataGrid>
     </Grid>
 </UserControl>

@@ -2,7 +2,6 @@
 using Cirilla.MVVM.ViewModels;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -31,7 +30,7 @@ namespace Cirilla.WPF.Windows
         {
             try
             {
-                var selectedItems = openFilesListBox.SelectedItems.Cast<IOpenFileViewModel>().ToList();
+                var selectedItems = openFilesListBox.SelectedItems.OfType<IExplorerFileItem>().ToList();
                 ViewModel.SaveFilesCommand.Execute(selectedItems).Subscribe();
             }
             catch (Exception ex)
@@ -44,7 +43,7 @@ namespace Cirilla.WPF.Windows
         {
             try
             {
-                var selectedItems = openFilesListBox.SelectedItems.Cast<IOpenFileViewModel>().ToList();
+                var selectedItems = openFilesListBox.SelectedItems.OfType<IExplorerFileItem>().ToList();
                 ViewModel.SaveFilesAsCommand.Execute(selectedItems).Subscribe();
             }
             catch (Exception ex)
@@ -57,8 +56,8 @@ namespace Cirilla.WPF.Windows
         {
             try
             {
-                var selectedItems = openFilesListBox.SelectedItems.Cast<IOpenFileViewModel>().ToList();
-                ViewModel.CloseFilesCommand.Execute(selectedItems).Subscribe();
+                var selectedItems = openFilesListBox.SelectedItems.OfType<IExplorerItem>().ToList();
+                ViewModel.CloseItemsCommand.Execute(selectedItems).Subscribe();
             }
             catch (Exception ex)
             {
@@ -71,8 +70,20 @@ namespace Cirilla.WPF.Windows
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                ViewModel.OpenFiles(files); 
+                ViewModel.OpenFiles(files);
             }
+        }
+
+        private void openFilesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is ITitledViewModel vm)
+                ViewModel.ContentViewModel = vm;
+        }
+
+        private void showLogButton_Click(object sender, RoutedEventArgs e)
+        {
+            openFilesListBox.SelectedItems.Clear();
+            ViewModel.ShowLogViewerCommand.Execute().Subscribe();
         }
     }
 }

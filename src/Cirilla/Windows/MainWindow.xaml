@@ -42,10 +42,6 @@
                     <DataTemplate DataType="{x:Type vm:GMDViewModel}">
                         <uc:GMDEditor Margin="5" DataContext="{Binding}"/>
                     </DataTemplate>
-
-                    <DataTemplate DataType="{x:Type vm:NBSCViewModel}">
-                        <uc:NBSCEditor Margin="5" DataContext="{Binding}"/>
-                    </DataTemplate>
                 </TabControl.Resources>
 
                 <TabControl.ItemsSource>

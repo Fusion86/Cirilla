@@ -35,29 +35,39 @@ namespace Cirilla.MVVM.ViewModels
                 logViewerViewModel = new LogViewerViewModel(logCollector);
 
             // True when one or more items have been selected in the openFilesList.
-            var hasSelectedFile = this.WhenAnyValue(x => x.SelectedItem).Select(x => x != null && typeof(IOpenFileViewModel).IsAssignableFrom(x.GetType()));
+            var hasSelectedItem = this.WhenAnyValue(x => x.ContentViewModel).Select(x => x != null);
+            var hasSelectedFile = this.WhenAnyValue(x => x.ContentViewModel).Select(x => x != null && typeof(IExplorerFileItem).IsAssignableFrom(x.GetType()));
 
             // True when the OpenFiles list has at least 1 item.
-            var hasFiles = openFilesList.CountChanged.Select(x => x > 0).ObserveOn(RxApp.MainThreadScheduler);
+            var hasItems = openItemsList.CountChanged.Select(x => x > 0);
+            var hasFiles = openItemsList.CountChanged.Select(x => openItemsList.Items.OfType<IExplorerFileItem>().FirstOrDefault() != null); // Probaby not the best way...
 
-            OpenFileCommand = ReactiveCommand.CreateFromTask<string[]?, IList<IOpenFileViewModel>>(ShowOpenFileDialog);
+            OpenFileCommand = ReactiveCommand.CreateFromTask<string[]?, IList<IExplorerFileItem>>(ShowOpenFileDialog);
             OpenFolderCommand = ReactiveCommand.CreateFromTask(ShowOpenFolderDialog);
             SaveSelectedFileCommand = ReactiveCommand.CreateFromTask(SaveSelectedFile, hasSelectedFile);
             SaveSelectedFileAsCommand = ReactiveCommand.CreateFromTask(SaveSelectedFileAs, hasSelectedFile);
             SaveAllFilesCommand = ReactiveCommand.CreateFromTask(SaveAllFiles, hasFiles);
-            CloseSelectedFileCommand = ReactiveCommand.Create(CloseSelectedFile, hasSelectedFile);
-            CloseAllFilesCommand = ReactiveCommand.Create(CloseAllFiles, hasFiles);
+            CloseSelectedItemCommand = ReactiveCommand.Create(CloseSelectedItem, hasSelectedItem);
+            CloseAllItemsCommand = ReactiveCommand.Create(CloseAllItems, hasItems);
             ShowLogViewerCommand = ReactiveCommand.Create(ShowLogViewer);
+            ShowBatchToolCommand = ReactiveCommand.Create(ShowOpenBatchTool);
 
-            CloseFileCommand = ReactiveCommand.Create<IOpenFileViewModel>(CloseFile);
+            CloseItemCommand = ReactiveCommand.Create<IExplorerItem>(CloseItem);
             // The below commands have a hasSelectedFile because they always get openFileListBox.SelectedItems passed as CommandParameter
-            SaveFilesCommand = ReactiveCommand.CreateFromTask<IList<IOpenFileViewModel>>(SaveFiles, hasSelectedFile);
-            SaveFilesAsCommand = ReactiveCommand.CreateFromTask<IList<IOpenFileViewModel>>(SaveFilesAs, hasSelectedFile);
-            CloseFilesCommand = ReactiveCommand.Create<IList<IOpenFileViewModel>>(CloseFiles, hasSelectedFile);
+            SaveFilesCommand = ReactiveCommand.CreateFromTask<IList<IExplorerFileItem>>(SaveFiles, hasSelectedFile);
+            SaveFilesAsCommand = ReactiveCommand.CreateFromTask<IList<IExplorerFileItem>>(SaveFilesAs, hasSelectedFile);
+            CloseItemsCommand = ReactiveCommand.Create<IList<IExplorerItem>>(CloseItems, hasSelectedItem);
 
-            openFilesList.Connect()
+            // GMD Commands
+            var hasGmdSelected = this.WhenAnyValue(x => x.ContentViewModel).Select(x => x is GmdViewModel);
+            ImportFromCsvCommand = ReactiveCommand.Create(() => { if (ContentViewModel is GmdViewModel vm) vm.ImportFromCsvCommand.Execute().Subscribe(); }, hasGmdSelected);
+            ExportToCsvCommand = ReactiveCommand.Create(() => { if (ContentViewModel is GmdViewModel vm) vm.ExportToCsvCommand.Execute().Subscribe(); }, hasGmdSelected);
+            AddEntryCommand = ReactiveCommand.Create(() => { if (ContentViewModel is GmdViewModel vm) vm.AddEntryCommand.Execute().Subscribe(); }, hasGmdSelected);
+            AddPaddingEntryCommand = ReactiveCommand.Create(() => { if (ContentViewModel is GmdViewModel vm) vm.AddPaddingEntryCommand.Execute().Subscribe(); }, hasGmdSelected);
+
+            openItemsList.Connect()
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out openFilesBinding)
+                .Bind(out openItemsBinding)
                 .DisposeMany()
                 .Subscribe();
 
@@ -67,7 +77,7 @@ namespace Cirilla.MVVM.ViewModels
                 .DisposeMany()
                 .Subscribe();
 
-            this.WhenAnyValue(x => x.SelectedItem)
+            this.WhenAnyValue(x => x.ContentViewModel)
                 .Select(x => x == null ? "Cirilla Toolkit" : $"{x.Title} - Cirilla Toolkit")
                 .ToPropertyEx(this, x => x.Title);
 
@@ -78,10 +88,6 @@ namespace Cirilla.MVVM.ViewModels
                 .Select(x => x ? (double)framework.FindResource("ThemeDisabledOpacity")! : 1.0)
                 .ToPropertyEx(this, x => x.ContentOpacity);
 
-            this.WhenAnyValue(x => x.SelectedItem)
-                .Skip(1) // Skip initial value
-                .Subscribe(x => ContentViewModel = x);
-
             if (this.logCollector != null)
             {
                 this.logCollector.Events
@@ -91,25 +97,31 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        public ReactiveCommand<string[]?, IList<IOpenFileViewModel>> OpenFileCommand { get; }
+        public ReactiveCommand<string[]?, IList<IExplorerFileItem>> OpenFileCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowLogViewerCommand { get; }
+        public ReactiveCommand<Unit, Unit> ShowBatchToolCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSelectedFileCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSelectedFileAsCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveAllFilesCommand { get; } // We can't use SaveFilesCommand because we want to use the CanExecute property
-        public ReactiveCommand<Unit, Unit> CloseSelectedFileCommand { get; }
-        public ReactiveCommand<Unit, Unit> CloseAllFilesCommand { get; } // We can't use CloseFilesCommand because we want to use the CanExecute property
+        public ReactiveCommand<Unit, Unit> CloseSelectedItemCommand { get; }
+        public ReactiveCommand<Unit, Unit> CloseAllItemsCommand { get; } // We can't use CloseFilesCommand because we want to use the CanExecute property
 
-        public ReactiveCommand<IOpenFileViewModel, Unit> CloseFileCommand { get; }
-        public ReactiveCommand<IList<IOpenFileViewModel>, Unit> SaveFilesCommand { get; }
-        public ReactiveCommand<IList<IOpenFileViewModel>, Unit> SaveFilesAsCommand { get; }
-        public ReactiveCommand<IList<IOpenFileViewModel>, Unit> CloseFilesCommand { get; }
+        // GMD Commands
+        public ReactiveCommand<Unit, Unit> ImportFromCsvCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExportToCsvCommand { get; }
+        public ReactiveCommand<Unit, Unit> AddEntryCommand { get; }
+        public ReactiveCommand<Unit, Unit> AddPaddingEntryCommand { get; }
 
-        public ReadOnlyObservableCollection<IOpenFileViewModel> OpenFilesBinding => openFilesBinding;
+        public ReactiveCommand<IExplorerItem, Unit> CloseItemCommand { get; }
+        public ReactiveCommand<IList<IExplorerFileItem>, Unit> SaveFilesCommand { get; }
+        public ReactiveCommand<IList<IExplorerFileItem>, Unit> SaveFilesAsCommand { get; }
+        public ReactiveCommand<IList<IExplorerItem>, Unit> CloseItemsCommand { get; }
+
+        public ReadOnlyObservableCollection<IExplorerItem> OpenItemsBinding => openItemsBinding;
         public ReadOnlyObservableCollection<FlashMessageViewModel> FlashMessages => flashMessagesBinding;
 
         [Reactive] public string StatusText { get; set; } = "";
-        [Reactive] public IOpenFileViewModel? SelectedItem { get; set; }
         [Reactive] public ITitledViewModel? ContentViewModel { get; set; }
 
         [ObservableAsProperty] public string? Title { get; }
@@ -120,12 +132,12 @@ namespace Cirilla.MVVM.ViewModels
         private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
         private readonly LogCollector? logCollector;
         private readonly LogViewerViewModel? logViewerViewModel;
-        private readonly ReadOnlyObservableCollection<IOpenFileViewModel> openFilesBinding;
+        private readonly ReadOnlyObservableCollection<IExplorerItem> openItemsBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
-        internal readonly SourceList<IOpenFileViewModel> openFilesList = new SourceList<IOpenFileViewModel>();
+        internal readonly SourceList<IExplorerItem> openItemsList = new SourceList<IExplorerItem>();
         private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
 
-        private async Task<IList<IOpenFileViewModel>> ShowOpenFileDialog(string[]? allowedExtensions = null)
+        private async Task<IList<IExplorerFileItem>> ShowOpenFileDialog(string[]? allowedExtensions = null)
         {
             var filters = new List<FileDialogFilter> { FileDialogFilter.AllFiles, FileDialogFilter.GMD, FileDialogFilter.CSV };
 
@@ -158,7 +170,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private async Task SaveSelectedFile()
         {
-            if (SelectedItem != null && SelectedItem is IOpenFileViewModel openFile)
+            if (ContentViewModel != null && ContentViewModel is IExplorerFileItem openFile)
                 await SaveFile(openFile, showMessageOnSuccess: true);
             else
                 log.Warning("No saveable item selected.");
@@ -166,7 +178,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private async Task SaveSelectedFileAs()
         {
-            if (SelectedItem != null && SelectedItem is IOpenFileViewModel openFile)
+            if (ContentViewModel != null && ContentViewModel is IExplorerFileItem openFile)
                 await SaveFileAs(openFile, true);
             else
                 log.Warning("No saveable item selected.");
@@ -174,37 +186,39 @@ namespace Cirilla.MVVM.ViewModels
 
         private async Task SaveAllFiles()
         {
-            await SaveFiles(OpenFilesBinding);
+            await SaveFiles(OpenItemsBinding.OfType<IExplorerFileItem>().ToList());
         }
 
-        private void CloseSelectedFile()
+        private void CloseSelectedItem()
         {
-            if (SelectedItem != null && SelectedItem is IOpenFileViewModel openFile)
-                CloseFile(openFile);
+            if (ContentViewModel != null && ContentViewModel is IExplorerItem openFile)
+                CloseItem(openFile);
             else
                 log.Warning("No closeable item selected.");
         }
 
-        private void CloseAllFiles()
+        private void CloseAllItems()
         {
-            foreach (var file in OpenFilesBinding)
-                CloseFile(file);
+            foreach (var file in OpenItemsBinding)
+                CloseItem(file);
         }
 
         private void ShowLogViewer()
         {
-            if (logCollector != null)
-            {
-                if (ContentViewModel != logViewerViewModel)
-                    ContentViewModel = logViewerViewModel;
-                else
-                    ContentViewModel = SelectedItem;
-            }
+            if (logViewerViewModel != null)
+                ContentViewModel = ContentViewModel != logViewerViewModel ? logViewerViewModel : null;
             else
                 log.Warning("Can't create LogViewerViewMOdel because no LogCollector was passed to the MainWindowViewModel.");
         }
 
-        private async Task SaveFiles(IList<IOpenFileViewModel> lst)
+        private void ShowOpenBatchTool()
+        {
+            var vm = new GmdCsvBatchToolViewModel();
+            openItemsList.Add(vm);
+            ContentViewModel = vm;
+        }
+
+        private async Task SaveFiles(IList<IExplorerFileItem> lst)
         {
             if (lst == null || lst.Count == 0)
             {
@@ -227,7 +241,7 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private async Task SaveFilesAs(IList<IOpenFileViewModel> lst)
+        private async Task SaveFilesAs(IList<IExplorerFileItem> lst)
         {
             if (lst == null || lst.Count == 0)
             {
@@ -250,7 +264,7 @@ namespace Cirilla.MVVM.ViewModels
             }
         }
 
-        private void CloseFiles(IList<IOpenFileViewModel> lst)
+        private void CloseItems(IList<IExplorerItem> lst)
         {
             if (lst == null || lst.Count == 0)
             {
@@ -259,13 +273,13 @@ namespace Cirilla.MVVM.ViewModels
             else
             {
                 foreach (var file in lst)
-                    CloseFile(file);
+                    CloseItem(file);
             }
         }
 
-        public IList<IOpenFileViewModel> OpenFiles(string[] files)
+        public IList<IExplorerFileItem> OpenFiles(string[] files)
         {
-            var openedFiles = new List<IOpenFileViewModel>();
+            var openedFiles = new List<IExplorerFileItem>();
             var alert = ShowFlashAlert(buttons: FlashMessageButtons.None);
 
             for (int i = 0; i < files.Length; i++)
@@ -278,7 +292,7 @@ namespace Cirilla.MVVM.ViewModels
 
                 if (vm != null)
                 {
-                    openFilesList.Add(vm);
+                    openItemsList.Add(vm);
                     openedFiles.Add(vm);
                 }
             }
@@ -293,7 +307,7 @@ namespace Cirilla.MVVM.ViewModels
         /// </summary>
         /// <param name="openFile"></param>
         /// <returns></returns>
-        public async Task<bool> SaveFileAs(IOpenFileViewModel openFile, bool showMessageOnSuccess = false)
+        public async Task<bool> SaveFileAs(IExplorerFileItem openFile, bool showMessageOnSuccess = false)
         {
             var name = await Framework.SaveFileDialog(openFile.Info.Name, openFile.Info.Extension, openFile.SaveFileDialogFilters);
 
@@ -306,12 +320,14 @@ namespace Cirilla.MVVM.ViewModels
         /// Checks if passed file CanClose, calls the Close() method on the file, and removes it from the openFilesList.
         /// </summary>
         /// <param name="vm"></param>
-        public void CloseFile(IOpenFileViewModel vm)
+        public void CloseItem(IExplorerItem vm)
         {
             if (vm.CanClose && vm.Close())
             {
-                SelectedItem = null;
-                openFilesList.Remove(vm);
+                if (vm == ContentViewModel)
+                    ContentViewModel = null;
+
+                openItemsList.Remove(vm);
             }
             else
             {
@@ -324,7 +340,7 @@ namespace Cirilla.MVVM.ViewModels
         /// </summary>
         /// <param name="file"></param>
         /// <param name="savePath">Where to save the file. If left empty the file will be saved in-place (overwriting the old file).</param>
-        public async Task<bool> SaveFile(IOpenFileViewModel file, string? savePath = null, bool showMessageOnSuccess = false)
+        public async Task<bool> SaveFile(IExplorerFileItem file, string? savePath = null, bool showMessageOnSuccess = false)
         {
             bool isSuccess = false;
 
@@ -354,7 +370,7 @@ namespace Cirilla.MVVM.ViewModels
             return isSuccess;
         }
 
-        private IOpenFileViewModel? TryCreateViewModelForFile(FileInfo fileInfo)
+        private IExplorerFileItem? TryCreateViewModelForFile(FileInfo fileInfo)
         {
             try
             {

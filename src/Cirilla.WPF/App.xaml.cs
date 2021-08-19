@@ -31,8 +31,10 @@ namespace Cirilla.WPF
             log.Information("Cirilla version " + Assembly.GetExecutingAssembly().GetName().Version);
             log.Information("Cirilla.Core version " + Assembly.GetAssembly(typeof(Core.Models.GMD))?.GetName().Version ?? "(not found)");
 
-            MainWindow = new MainWindow();
-            MainWindow.DataContext = new MainWindowViewModel(new FrameworkService(), logCollector);
+            MainWindow = new MainWindow
+            {
+                DataContext = new MainWindowViewModel(new FrameworkService(), logCollector)
+            };
             MainWindow.Show();
         }
     }

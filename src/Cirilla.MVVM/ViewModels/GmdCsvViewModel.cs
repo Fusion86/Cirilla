@@ -1,6 +1,7 @@
 ﻿using Cirilla.Core.Helpers;
 using Cirilla.MVVM.Common;
 using CsvHelper;
+using CsvHelper.Configuration;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
-    public class GmdCsvViewModel : ViewModelBase, IOpenFileViewModel
+    public class GmdCsvViewModel : ViewModelBase, IExplorerFileItem
     {
         public GmdCsvViewModel(FileInfo fileInfo, MainWindowViewModel mainWindowViewModel)
         {
@@ -34,7 +35,7 @@ namespace Cirilla.MVVM.ViewModels
             AutoSelectFromFolderCommand = ReactiveCommand.CreateFromTask(AutoSelectFromFolder);
             AutoSelectFromOpenedFilesCommand = ReactiveCommand.Create(AutoSelectFromOpenedFiles);
 
-            mainWindowViewModel.openFilesList.Connect()
+            mainWindowViewModel.openItemsList.Connect()
                 .Filter(x => x is GmdViewModel)
                 .Transform(x => (GmdViewModel)x)
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -66,6 +67,7 @@ namespace Cirilla.MVVM.ViewModels
         public bool CanClose => true;
         public bool CanSave => true;
         public string Title => Info.Name;
+        public string StatusText => Info.FullName;
 
         public IList<FileDialogFilter> SaveFileDialogFilters { get; } = new[] { FileDialogFilter.CSV };
 
@@ -103,13 +105,16 @@ namespace Cirilla.MVVM.ViewModels
 
         private void LoadCsv(string path)
         {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = false,
+                Delimiter = ";",
+                AllowComments = true, // Uses # to identify comments
+            };
+
             using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             using TextReader tr = new StreamReader(fs, ExEncoding.UTF8);
-            using CsvReader csv = new CsvReader(tr, CultureInfo.InvariantCulture);
-
-            csv.Configuration.HasHeaderRecord = false;
-            csv.Configuration.Delimiter = ";";
-            csv.Configuration.AllowComments = true; // Uses # to identify comments
+            using CsvReader csv = new CsvReader(tr, config);
 
             var values = csv.GetRecords<StringKeyValuePair>();
             csvEntries.Edit(x => x.Load(values));

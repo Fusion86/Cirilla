@@ -67,8 +67,10 @@ namespace Cirilla.WPF.Controls
         {
             if (part is MojiTextPart textPart)
             {
-                var el = new Run();
-                el.Text = textPart.Text;
+                var el = new Run
+                {
+                    Text = textPart.Text
+                };
 
                 if (textPart.Color.HasValue)
                     el.Foreground = GetBrushForColor(textPart.Color.Value);

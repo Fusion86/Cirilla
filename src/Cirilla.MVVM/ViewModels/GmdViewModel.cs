@@ -4,6 +4,7 @@ using Cirilla.Core.Models;
 using Cirilla.MVVM.Common;
 using Cirilla.MVVM.Interfaces;
 using CsvHelper;
+using CsvHelper.Configuration;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Cirilla.MVVM.ViewModels
 {
-    public class GmdViewModel : ViewModelBase, IOpenFileViewModel
+    public class GmdViewModel : ViewModelBase, IExplorerFileItem
     {
         public GmdViewModel(FileInfo fileInfo, MainWindowViewModel mainWindowViewModel)
         {
@@ -73,6 +74,7 @@ namespace Cirilla.MVVM.ViewModels
         public bool CanClose => true;
         public bool CanSave => true;
         public string Title => Info.Name;
+        public string StatusText => Info.FullName;
 
         public IList<FileDialogFilter> SaveFileDialogFilters { get; } = new[] { FileDialogFilter.GMD };
 
@@ -112,7 +114,6 @@ namespace Cirilla.MVVM.ViewModels
         private void ImportFromCsvHandler()
         {
             // TODO:
-            throw new NotImplementedException();
         }
 
         private async Task ExportToCsvHandler()
@@ -126,12 +127,15 @@ namespace Cirilla.MVVM.ViewModels
 
                 try
                 {
+                    var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                    {
+                        Delimiter = ";",
+                        ShouldQuote = _ => true // Always insert quotes
+                    };
+
                     using FileStream fs = new FileStream(savePath, FileMode.Create);
                     using TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8);
-                    using CsvWriter writer = new CsvWriter(tw, CultureInfo.InvariantCulture);
-
-                    writer.Configuration.Delimiter = ";";
-                    writer.Configuration.ShouldQuote = (str, context) => true; // Always insert quotes
+                    using CsvWriter writer = new CsvWriter(tw, config);
 
                     var records = gmd.Entries
                         .OfType<GMD_Entry>()
@@ -164,14 +168,14 @@ namespace Cirilla.MVVM.ViewModels
             });
         }
 
-        private static Func<GmdEntryViewModel, bool> KeyFilterPredicate(string key)
+        private static Func<GmdEntryViewModel, bool> KeyFilterPredicate(string? key)
         {
             if (string.IsNullOrEmpty(key))
                 return x => true;
             return x => x.Key?.Contains(key, StringComparison.OrdinalIgnoreCase) == true;
         }
 
-        private static Func<GmdEntryViewModel, bool> ValueFilterPredicate(string value)
+        private static Func<GmdEntryViewModel, bool> ValueFilterPredicate(string? value)
         {
             if (string.IsNullOrEmpty(value))
                 return x => true;

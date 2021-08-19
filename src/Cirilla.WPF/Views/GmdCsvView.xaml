@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Cirilla.WPF.Views"
              xmlns:vc="clr-namespace:Cirilla.WPF.ValueConverters"
              xmlns:vms="clr-namespace:Cirilla.MVVM.ViewModels;assembly=Cirilla.MVVM"
+             xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -37,6 +38,12 @@
                         </DataGridTextColumn.EditingElementStyle>
                     </DataGridTextColumn>
                 </DataGrid.Columns>
+                
+                <DataGrid.Resources>
+                    <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                        <Setter Property="adonisExtensions:ScrollBarExtension.ExpansionMode" Value="AlwaysExpand"/>
+                    </Style>
+                </DataGrid.Resources>
             </DataGrid>
         </TabItem>
 
@@ -151,6 +158,12 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
+                    
+                    <DataGrid.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                            <Setter Property="adonisExtensions:ScrollBarExtension.ExpansionMode" Value="AlwaysExpand"/>
+                        </Style>
+                    </DataGrid.Resources>
                 </DataGrid>
             </DockPanel>
         </TabItem>
