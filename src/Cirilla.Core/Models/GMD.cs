@@ -3,9 +3,12 @@ using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
 using Cirilla.Core.Logging;
 using Cirilla.Core.Structs.Native;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Force.Crc32;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -24,7 +27,15 @@ namespace Cirilla.Core.Models
         public List<IGMD_Entry> Entries { get; }
 
         private GMD_Header _header;
-        private byte[] _unk1;
+        private readonly byte[] _unk1;
+
+        private readonly static CsvConfiguration csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            Delimiter = ";",
+            ShouldQuote = _ => true, // Always insert quotes
+            HasHeaderRecord = false,
+            AllowComments = true, // Uses # to identify comments
+        };
 
         public GMD(string path) : base(path)
         {
@@ -273,6 +284,49 @@ namespace Cirilla.Core.Models
 
             if (entry != null)
                 Entries.Remove(entry);
+        }
+
+        public int ExportToCsv(string filename)
+        {
+            using FileStream fs = new FileStream(filename, FileMode.Create);
+            using TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8);
+            using CsvWriter writer = new CsvWriter(tw, csvConfig);
+
+            var records = Entries
+                .OfType<GMD_Entry>()
+                .Select(x => new StringKeyValuePair(x.Key, x.Value))
+                .ToList();
+
+            writer.WriteRecords(records);
+            return records.Count;
+        }
+
+        public int ImportFromCsv(string filename)
+        {
+            using FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using TextReader tr = new StreamReader(fs, ExEncoding.UTF8);
+            using CsvReader csv = new CsvReader(tr, csvConfig);
+
+            int updateCount = 0;
+            var entriesToUpdate = csv.GetRecords<StringKeyValuePair>();
+
+            foreach (var upd in entriesToUpdate)
+            {
+                var entry = Entries.OfType<GMD_Entry>().FirstOrDefault(x => x.Key == upd.Key);
+                if (entry != null)
+                {
+                    if (entry.Value != upd.Value)
+                    {
+                        updateCount++;
+                        entry.Value = upd.Value;
+                    }
+                }
+                else
+                {
+                    log.Warn($"Can't update value with key '{upd.Key}', because it is not found in the GMD.");
+                }
+            }
+            return updateCount;
         }
     }
 

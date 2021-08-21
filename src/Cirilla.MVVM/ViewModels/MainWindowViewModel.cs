@@ -129,13 +129,16 @@ namespace Cirilla.MVVM.ViewModels
 
         public IFrameworkService Framework { get; }
 
+        // Kinda hacky, but we can't bind to a selection property or something like that...
+        public Action<IExplorerItem[]>? SetSelectedExplorerItems;
+
         private static readonly ILogger log = Log.ForContext<MainWindowViewModel>();
         private readonly LogCollector? logCollector;
         private readonly LogViewerViewModel? logViewerViewModel;
         private readonly ReadOnlyObservableCollection<IExplorerItem> openItemsBinding;
         private readonly ReadOnlyObservableCollection<FlashMessageViewModel> flashMessagesBinding;
-        internal readonly SourceList<IExplorerItem> openItemsList = new SourceList<IExplorerItem>();
-        private readonly SourceList<FlashMessageViewModel> flashMessages = new SourceList<FlashMessageViewModel>();
+        internal readonly SourceList<IExplorerItem> openItemsList = new();
+        private readonly SourceList<FlashMessageViewModel> flashMessages = new();
 
         private async Task<IList<IExplorerFileItem>> ShowOpenFileDialog(string[]? allowedExtensions = null)
         {
@@ -213,9 +216,10 @@ namespace Cirilla.MVVM.ViewModels
 
         private void ShowOpenBatchTool()
         {
-            var vm = new GmdCsvBatchToolViewModel();
+            var vm = new GmdCsvBatchToolViewModel(this);
             openItemsList.Add(vm);
             ContentViewModel = vm;
+            SetSelectedExplorerItems?.Invoke(new [] { vm });
         }
 
         private async Task SaveFiles(IList<IExplorerFileItem> lst)

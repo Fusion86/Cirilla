@@ -1,9 +1,9 @@
 ﻿using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
 using Cirilla.Core.Models;
-using Cirilla.Models;
 using Cirilla.Windows;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
@@ -32,7 +32,7 @@ namespace Cirilla.ViewModels
         public RelayCommand ImportCsvCommand { get; }
         public RelayCommand ExportCsvCommand { get; }
 
-        private GMD _context;
+        private readonly GMD _context;
 
         public GMDViewModel(string path) : base(path)
         {
@@ -119,18 +119,25 @@ namespace Cirilla.ViewModels
         public bool CanExportCsv() => true;
         public void ExportCsv()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "CSV UTF-8 (Comma delimited)|*.csv";
-            sfd.FileName = Name + ".csv";
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "CSV UTF-8 (Comma delimited)|*.csv",
+                FileName = Name + ".csv"
+            };
 
             if (sfd.ShowDialog() == true)
             {
+                var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = false,
+                    Delimiter = ";",
+                    AllowComments = true, // Uses # to identify comments
+                };
+
                 using (FileStream fs = new FileStream(sfd.FileName, FileMode.Create))
                 using (TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8))
-                using (CsvWriter writer = new CsvWriter(tw, CultureInfo.InvariantCulture))
+                using (CsvWriter writer = new CsvWriter(tw, csvConfig))
                 {
-                    writer.Configuration.Delimiter = ";";
-
                     foreach (var entry in _context.Entries.OfType<GMD_Entry>())
                     {
                         writer.WriteRecord(new StringKeyValuePair(entry.Key, entry.Value));

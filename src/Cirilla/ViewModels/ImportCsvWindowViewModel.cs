@@ -1,6 +1,7 @@
 ﻿using Cirilla.Core.Helpers;
-using Cirilla.Models;
+using Cirilla.Core.Models;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.Win32;
 using Serilog;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Cirilla.ViewModels
 
         #endregion
 
-        private Window _window;
+        private readonly Window _window;
 
         public ImportCsvWindowViewModel(GMDViewModel gmd, Window window)
         {
@@ -59,22 +60,27 @@ namespace Cirilla.ViewModels
 
         public void OpenCsv()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CSV UTF-8 (Comma delimited)|*.csv";
-            ofd.FileName = GMD.Name + ".csv";
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Filter = "CSV UTF-8 (Comma delimited)|*.csv",
+                FileName = GMD.Name + ".csv"
+            };
 
             if (ofd.ShowDialog() == true)
             {
                 List<StringKeyValuePair> values;
 
+                var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = false,
+                    Delimiter = ";",
+                    AllowComments = true, // Uses # to identify comments
+                };
+
                 using (FileStream fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (TextReader tr = new StreamReader(fs, ExEncoding.UTF8))
-                using (CsvReader csv = new CsvReader(tr, CultureInfo.InvariantCulture))
+                using (CsvReader csv = new CsvReader(tr, csvConfig))
                 {
-                    csv.Configuration.HasHeaderRecord = false;
-                    csv.Configuration.Delimiter = ";";
-                    csv.Configuration.AllowComments = true; // Uses # to identify comments
-
                     values = csv.GetRecords<StringKeyValuePair>().ToList();
                 }
 

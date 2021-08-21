@@ -1,4 +1,5 @@
 ﻿using Cirilla.Core.Enums;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -77,6 +78,11 @@ namespace Cirilla.Core.Helpers
             readable /= 1024;
             // Return formatted number with suffix
             return readable.ToString("0.### ") + suffix;
+        }
+
+        public static string GetSafeFilename(string filename)
+        {
+            return string.Join("", filename.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }

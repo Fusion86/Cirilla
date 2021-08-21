@@ -103,7 +103,7 @@
                     <Button Content="Show Log"
                             BorderThickness="0"
                             Padding="8,0,8,0"
-                            Margin="0,-3,8,-3"
+                            Margin="0,-3,13,-3"
                             Height="22"
                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                             Click="showLogButton_Click"/>

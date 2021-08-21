@@ -80,7 +80,7 @@ namespace Cirilla.MVVM.ViewModels
 
         private readonly GMD gmd;
         private readonly MainWindowViewModel mainWindowViewModel;
-        private readonly SourceList<GmdEntryViewModel> entriesList = new SourceList<GmdEntryViewModel>();
+        private readonly SourceList<GmdEntryViewModel> entriesList = new();
         private static readonly ILogger log = Log.ForContext<GmdViewModel>();
 
         public bool Close()
@@ -127,24 +127,8 @@ namespace Cirilla.MVVM.ViewModels
 
                 try
                 {
-                    var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-                    {
-                        Delimiter = ";",
-                        ShouldQuote = _ => true // Always insert quotes
-                    };
-
-                    using FileStream fs = new FileStream(savePath, FileMode.Create);
-                    using TextWriter tw = new StreamWriter(fs, ExEncoding.UTF8);
-                    using CsvWriter writer = new CsvWriter(tw, config);
-
-                    var records = gmd.Entries
-                        .OfType<GMD_Entry>()
-                        .Select(x => new StringKeyValuePair(x.Key, x.Value))
-                        .ToList();
-
-                    writer.WriteRecords(records);
-
-                    mainWindowViewModel.ShowFlashAlert("Successfully exported values", $"Successfully exported {records.Count} values to {savePath}");
+                    var count = gmd.ExportToCsv(savePath);
+                    mainWindowViewModel.ShowFlashAlert("Successfully exported values", $"Successfully exported {count} values to {savePath}");
                 }
                 catch (Exception ex)
                 {

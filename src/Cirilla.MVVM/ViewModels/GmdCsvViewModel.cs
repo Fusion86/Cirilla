@@ -89,8 +89,8 @@ namespace Cirilla.MVVM.ViewModels
         private readonly ReadOnlyObservableCollection<StringKeyValuePair> csvEntriesBinding;
         private readonly ReadOnlyObservableCollection<GmdEntryDiffViewModel> importEntriesBinding;
         private readonly ReadOnlyObservableCollection<GmdViewModel> openGmdFilesBinding;
-        private readonly SourceCache<StringKeyValuePair, string> csvEntries = new SourceCache<StringKeyValuePair, string>(x => x.Key);
-        private readonly SourceCache<GmdEntryDiffViewModel, string> importEntries = new SourceCache<GmdEntryDiffViewModel, string>(x => x.Entry.Key!);
+        private readonly SourceCache<StringKeyValuePair, string> csvEntries = new(x => x.Key);
+        private readonly SourceCache<GmdEntryDiffViewModel, string> importEntries = new(x => x.Entry.Key!);
         private static readonly ILogger log = Log.ForContext<GmdCsvViewModel>();
 
         public bool Close()
@@ -112,9 +112,9 @@ namespace Cirilla.MVVM.ViewModels
                 AllowComments = true, // Uses # to identify comments
             };
 
-            using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             using TextReader tr = new StreamReader(fs, ExEncoding.UTF8);
-            using CsvReader csv = new CsvReader(tr, config);
+            using CsvReader csv = new(tr, config);
 
             var values = csv.GetRecords<StringKeyValuePair>();
             csvEntries.Edit(x => x.Load(values));

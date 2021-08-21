@@ -8,6 +8,6 @@ namespace Cirilla.MVVM
         public static ApplicationSettings Current { get; } = new();
 
         [Reactive] public bool ShowGmdTextPreview { get; set; } = false;
-        [Reactive] public bool SmoothScroll { get; set; } = false;
+        [Reactive] public bool SmoothScroll { get; set; } = false; // Leave this disabled by default!
     }
 }

@@ -15,6 +15,19 @@ namespace Cirilla.WPF.Windows
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContextChanged += (sender, e) =>
+            {
+                if (DataContext is MainWindowViewModel vm)
+                {
+                    vm.SetSelectedExplorerItems = (vms) =>
+                    {
+                        openFilesListBox.SelectedItems.Clear();
+                        foreach (var vm in vms)
+                            openFilesListBox.SelectedItems.Add(vm);
+                    };
+                }
+            };
         }
 
         public MainWindowViewModel ViewModel => DataContext as MainWindowViewModel ?? throw new Exception("DataContext is not of type 'MainWindowViewModel'.");

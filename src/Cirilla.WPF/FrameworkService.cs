@@ -2,6 +2,7 @@
 using Cirilla.MVVM.Interfaces;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Cirilla.WPF
             return Application.Current.FindResource(key);
         }
 
-        public Task<string[]> OpenFileDialog(bool allowMultiple = false, IList<FileDialogFilter>? filters = null)
+        public Task<string[]> OpenFileDialog(bool allowMultiple = false, IList<FileDialogFilter>? filters = null, string? initialDirectory = null)
         {
             var ofd = new OpenFileDialog
             {
@@ -24,15 +25,22 @@ namespace Cirilla.WPF
                 Filter = GetFilter(filters)
             };
 
+            if (initialDirectory != null)
+                ofd.InitialDirectory = initialDirectory;
+
             if (ofd.ShowDialog() == true)
                 return Task.FromResult(ofd.FileNames);
 
-            return Task.FromResult(new string[0]);
+            return Task.FromResult(Array.Empty<string>());
         }
 
-        public Task<string?> OpenFolderDialog()
+        public Task<string?> OpenFolderDialog(string? initialDirectory = null)
         {
             var fbd = new VistaFolderBrowserDialog();
+
+            if (initialDirectory != null)
+                fbd.SelectedPath = initialDirectory;
+
             if (fbd.ShowDialog() == true && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 return Task.FromResult<string?>(fbd.SelectedPath);
             return Task.FromResult<string?>(null);
@@ -52,7 +60,7 @@ namespace Cirilla.WPF
             return Task.FromResult<string?>(null);
         }
 
-        private string GetFilter(IList<FileDialogFilter>? filters)
+        private static string GetFilter(IList<FileDialogFilter>? filters)
         {
             if (filters == null) return "";
 

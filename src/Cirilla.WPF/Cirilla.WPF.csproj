@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <LangVersion>9.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <Version>2021.08.21</Version>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.0" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
-    <PackageReference Include="ReactiveUI.WPF" Version="14.3.10" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.0" />
+        <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
+        <PackageReference Include="ReactiveUI.WPF" Version="14.3.10" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Cirilla.Moji\Cirilla.Moji.csproj" />
-    <ProjectReference Include="..\Cirilla.MVVM\Cirilla.MVVM.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Cirilla.Moji\Cirilla.Moji.csproj" />
+        <ProjectReference Include="..\Cirilla.MVVM\Cirilla.MVVM.csproj" />
+    </ItemGroup>
 
 </Project>

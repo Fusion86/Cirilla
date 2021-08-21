@@ -15,7 +15,7 @@
     <PackageReference Include="Costura.Fody" Version="4.1.0">
         <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="CsvHelper" Version="15.0.5" />
+    <PackageReference Include="CsvHelper" Version="27.1.1" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
     <PackageReference Include="Fody" Version="6.2.6">
       <PrivateAssets>all</PrivateAssets>
