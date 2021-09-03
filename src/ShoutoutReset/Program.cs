@@ -2,13 +2,20 @@
 using Sharprompt;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace ShoutoutReset
 {
     class Program
     {
+        // Kinda shitty but who cares.
         private static byte[] defaultValue = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x10, 0xFC, 0xFA, 0x06, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xB9, 0x32, 0xAB, 0x42, 0x01, 0x00, 0x00, 0x00, 0xAD, 0x4D, 0x3C, 0x42 };
+        private static string listAll = "List all shoutouts";
+        private static string resetSelected = "Reset the selected shoutouts";
+        private static string resetAll = "Reset all shoutouts";
+        private static string saveAndExit = "Save and Exit";
+        private static string[] actions = new[] { listAll, resetSelected, resetAll, saveAndExit };
 
         static void Main(string[] args)
         {
@@ -20,7 +27,13 @@ namespace ShoutoutReset
                 return;
             }
 
+            Console.WriteLine("ShoutoutReset v" + Assembly.GetExecutingAssembly().GetName().Version);
+
+            Console.Write("Loading save... ");
             SaveData savedata = new SaveData(args[0]);
+            Console.WriteLine("OK");
+
+            Console.WriteLine("Use the up/down arrows to make a selection, and press enter to confirm.");
 
             var characterSelectOptions = savedata.SaveSlots.Select(x => $"{x.HunterName} (HR {x.HunterRank})").ToList();
             var selectedCharacter = Prompt.Select("Select a character", characterSelectOptions);
@@ -33,13 +46,6 @@ namespace ShoutoutReset
             }
 
             var saveslot = savedata.SaveSlots[charIdx];
-
-            var listAll = "List all shoutouts";
-            var resetSelected = "Reset the selected shoutouts";
-            var resetAll = "Reset all shoutouts";
-            var saveAndExit = "Save and Exit";
-
-            var actions = new[] { listAll, resetSelected, resetAll, saveAndExit };
 
             while (true)
             {
@@ -72,7 +78,8 @@ namespace ShoutoutReset
                         saveslot.Native.Shoutouts[i].Value = defaultValue;
                     }
 
-                    Console.WriteLine("Reset all shoutouts to their default value. Make sure to choose 'Save and Exit' in the menu before closing this program.");
+                    Console.WriteLine("Done!");
+                    Console.WriteLine("Make sure to choose 'Save and Exit' in the menu before closing this program.");
                 }
                 else if (action == saveAndExit)
                 {
