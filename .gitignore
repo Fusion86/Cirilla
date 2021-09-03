@@ -263,3 +263,4 @@ __pycache__/
 BenchmarkDotNet.Artifacts
 log.json
 testdata/game
+launchSettings.json
