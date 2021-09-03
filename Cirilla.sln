@@ -28,12 +28,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.CLI", "src\Cirilla.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Moji", "Moji", "{A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cirilla.Moji.Test", "src\Cirilla.Moji.Test\Cirilla.Moji.Test.csproj", "{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cirilla.Moji.Test", "src\Cirilla.Moji.Test\Cirilla.Moji.Test.csproj", "{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54A5FB11-ECFD-4853-B98C-4269E94D6A63}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoutoutReset", "src\ShoutoutReset\ShoutoutReset.csproj", "{D27560FD-9DBE-41C8-B7A1-F6092C5BA054}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27560FD-9DBE-41C8-B7A1-F6092C5BA054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27560FD-9DBE-41C8-B7A1-F6092C5BA054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27560FD-9DBE-41C8-B7A1-F6092C5BA054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27560FD-9DBE-41C8-B7A1-F6092C5BA054}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{743F2580-1E3E-43D4-BC3E-EA9D3805D28D} = {A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}
 		{7B08CD95-08BD-4B5B-9C0D-0F0B63514668} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 		{B6BCA3E3-C5D3-4BA0-BB2B-1189545C1AE9} = {A63F0EF0-15DB-42C2-9D0A-25112AAC88C3}
+		{D27560FD-9DBE-41C8-B7A1-F6092C5BA054} = {DDC1458A-C3E0-41E1-A78C-0ABB9A4ABF41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7164D4A3-C8CC-4F9A-982C-205DF18AC35F}

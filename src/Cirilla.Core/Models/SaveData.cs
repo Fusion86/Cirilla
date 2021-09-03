@@ -155,9 +155,7 @@ namespace Cirilla.Core.Models
     public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ISaveSlot, ICloneable
     {
         public SaveData SaveData { get; }
-
-        public SaveData_SaveSlot Native => _native;
-        private SaveData_SaveSlot _native;
+        public SaveData_SaveSlot Native;
 
         public SaveSlot(SaveData saveData, Stream stream)
         {
@@ -165,37 +163,37 @@ namespace Cirilla.Core.Models
 
             // Don't close stream
             using BinaryReader br = new BinaryReader(stream, Encoding.UTF8, true);
-            _native = br.ReadStruct<SaveData_SaveSlot>();
+            Native = br.ReadStruct<SaveData_SaveSlot>();
         }
 
         public SaveSlot(SaveData saveData, SaveData_SaveSlot native)
         {
             SaveData = saveData;
-            _native = native;
+            Native = native;
         }
 
         public override bool Equals(object obj)
         {
             if (obj is SaveSlot other)
-                return _native.Equals(other._native); // Compare struct data
+                return Native.Equals(other.Native); // Compare struct data
 
             return base.Equals(obj);
         }
 
         public override int GetHashCode()
         {
-            return _native.GetHashCode();
+            return Native.GetHashCode();
         }
 
         public object Clone()
         {
-            return new SaveSlot(SaveData, _native); // ValueType = passed by value = new object
+            return new SaveSlot(SaveData, Native); // ValueType = passed by value = new object
         }
 
         public string HunterName
         {
             // TODO: Trim everything after the \0
-            get => Encoding.UTF8.GetString(_native.HunterName).TrimZeroTerminator();
+            get => Encoding.UTF8.GetString(Native.HunterName).TrimZeroTerminator();
 
             set
             {
@@ -206,14 +204,14 @@ namespace Cirilla.Core.Models
                     throw new Exception("Hunter name can't use more than 64 bytes, try using a shorter name!");
 
                 Array.Copy(cStr, bytes, cStr.Length);
-                _native.HunterName = bytes;
+                Native.HunterName = bytes;
             }
         }
 
         public string PalicoName
         {
             // TODO: Trim everything after the \0
-            get => Encoding.UTF8.GetString(_native.PalicoName).TrimZeroTerminator();
+            get => Encoding.UTF8.GetString(Native.PalicoName).TrimZeroTerminator();
 
             set
             {
@@ -225,44 +223,44 @@ namespace Cirilla.Core.Models
                     throw new Exception("Palico name can't use more than 64 bytes, try using a shorter name!");
 
                 Array.Copy(cStr, bytes, cStr.Length);
-                _native.PalicoName = bytes;
+                Native.PalicoName = bytes;
             }
         }
 
         public int HunterRank
         {
-            get => _native.HunterRank;
+            get => Native.HunterRank;
             set
             {
                 if (value > 999)
                     throw new Exception("HunterRank can't be higher than 999!");
 
-                _native.HunterRank = value;
+                Native.HunterRank = value;
             }
         }
 
         public int Zenny
         {
-            get => _native.Zeni;
-            set => _native.Zeni = value;
+            get => Native.Zeni;
+            set => Native.Zeni = value;
         }
 
         public int ResearchPoints
         {
-            get => _native.ResearchPoints;
-            set => _native.ResearchPoints = value;
+            get => Native.ResearchPoints;
+            set => Native.ResearchPoints = value;
         }
 
         public int HunterXp
         {
-            get => _native.HunterXp;
-            set => _native.HunterXp = value;
+            get => Native.HunterXp;
+            set => Native.HunterXp = value;
         }
 
         public int PlayTime
         {
-            get => _native.PlayTime;
-            set => _native.PlayTime = value;
+            get => Native.PlayTime;
+            set => Native.PlayTime = value;
         }
 
         #region Character Appearance
@@ -275,10 +273,10 @@ namespace Cirilla.Core.Models
 
         byte[] ICharacterAppearanceProperties.Type
         {
-            get => _native.CharacterAppearance.Type;
+            get => Native.CharacterAppearance.Type;
             set
             {
-                _native.CharacterAppearance.Type = value;
+                Native.CharacterAppearance.Type = value;
             }
         }
 
@@ -287,56 +285,56 @@ namespace Cirilla.Core.Models
         // HACK: Makeup is not enclassed (like in native struct) because I'm lazy
         Color ICharacterAppearanceProperties.Makeup2Color
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup2.Color);
-            set => _native.CharacterAppearance.Makeup2.Color = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.Makeup2.Color);
+            set => Native.CharacterAppearance.Makeup2.Color = value.ToRgbaBytes();
         }
 
         float ICharacterAppearanceProperties.Makeup2PosX
         {
-            get => _native.CharacterAppearance.Makeup2.PosX;
-            set => _native.CharacterAppearance.Makeup2.PosX = value;
+            get => Native.CharacterAppearance.Makeup2.PosX;
+            set => Native.CharacterAppearance.Makeup2.PosX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2PosY
         {
-            get => _native.CharacterAppearance.Makeup2.PosY;
-            set => _native.CharacterAppearance.Makeup2.PosY = value;
+            get => Native.CharacterAppearance.Makeup2.PosY;
+            set => Native.CharacterAppearance.Makeup2.PosY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2SizeX
         {
-            get => _native.CharacterAppearance.Makeup2.SizeX;
-            set => _native.CharacterAppearance.Makeup2.SizeX = value;
+            get => Native.CharacterAppearance.Makeup2.SizeX;
+            set => Native.CharacterAppearance.Makeup2.SizeX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2SizeY
         {
-            get => _native.CharacterAppearance.Makeup2.SizeY;
-            set => _native.CharacterAppearance.Makeup2.SizeY = value;
+            get => Native.CharacterAppearance.Makeup2.SizeY;
+            set => Native.CharacterAppearance.Makeup2.SizeY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2Glossy
         {
-            get => _native.CharacterAppearance.Makeup2.Glossy;
-            set => _native.CharacterAppearance.Makeup2.Glossy = value;
+            get => Native.CharacterAppearance.Makeup2.Glossy;
+            set => Native.CharacterAppearance.Makeup2.Glossy = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2Metallic
         {
-            get => _native.CharacterAppearance.Makeup2.Metallic;
-            set => _native.CharacterAppearance.Makeup2.Metallic = value;
+            get => Native.CharacterAppearance.Makeup2.Metallic;
+            set => Native.CharacterAppearance.Makeup2.Metallic = value;
         }
 
         float ICharacterAppearanceProperties.Makeup2Luminescent
         {
-            get => _native.CharacterAppearance.Makeup2.Luminescent;
-            set => _native.CharacterAppearance.Makeup2.Luminescent = value;
+            get => Native.CharacterAppearance.Makeup2.Luminescent;
+            set => Native.CharacterAppearance.Makeup2.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup2Type
         {
-            get => _native.CharacterAppearance.Makeup2.Type;
-            set => _native.CharacterAppearance.Makeup2.Type = value;
+            get => Native.CharacterAppearance.Makeup2.Type;
+            set => Native.CharacterAppearance.Makeup2.Type = value;
         }
 
         #endregion
@@ -345,56 +343,56 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.Makeup1Color
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup1.Color);
-            set => _native.CharacterAppearance.Makeup1.Color = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.Makeup1.Color);
+            set => Native.CharacterAppearance.Makeup1.Color = value.ToRgbaBytes();
         }
 
         float ICharacterAppearanceProperties.Makeup1PosX
         {
-            get => _native.CharacterAppearance.Makeup1.PosX;
-            set => _native.CharacterAppearance.Makeup1.PosX = value;
+            get => Native.CharacterAppearance.Makeup1.PosX;
+            set => Native.CharacterAppearance.Makeup1.PosX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1PosY
         {
-            get => _native.CharacterAppearance.Makeup1.PosY;
-            set => _native.CharacterAppearance.Makeup1.PosY = value;
+            get => Native.CharacterAppearance.Makeup1.PosY;
+            set => Native.CharacterAppearance.Makeup1.PosY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1SizeX
         {
-            get => _native.CharacterAppearance.Makeup1.SizeX;
-            set => _native.CharacterAppearance.Makeup1.SizeX = value;
+            get => Native.CharacterAppearance.Makeup1.SizeX;
+            set => Native.CharacterAppearance.Makeup1.SizeX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1SizeY
         {
-            get => _native.CharacterAppearance.Makeup1.SizeY;
-            set => _native.CharacterAppearance.Makeup1.SizeY = value;
+            get => Native.CharacterAppearance.Makeup1.SizeY;
+            set => Native.CharacterAppearance.Makeup1.SizeY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1Glossy
         {
-            get => _native.CharacterAppearance.Makeup1.Glossy;
-            set => _native.CharacterAppearance.Makeup1.Glossy = value;
+            get => Native.CharacterAppearance.Makeup1.Glossy;
+            set => Native.CharacterAppearance.Makeup1.Glossy = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1Metallic
         {
-            get => _native.CharacterAppearance.Makeup1.Metallic;
-            set => _native.CharacterAppearance.Makeup1.Metallic = value;
+            get => Native.CharacterAppearance.Makeup1.Metallic;
+            set => Native.CharacterAppearance.Makeup1.Metallic = value;
         }
 
         float ICharacterAppearanceProperties.Makeup1Luminescent
         {
-            get => _native.CharacterAppearance.Makeup1.Luminescent;
-            set => _native.CharacterAppearance.Makeup1.Luminescent = value;
+            get => Native.CharacterAppearance.Makeup1.Luminescent;
+            set => Native.CharacterAppearance.Makeup1.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup1Type
         {
-            get => _native.CharacterAppearance.Makeup1.Type;
-            set => _native.CharacterAppearance.Makeup1.Type = value;
+            get => Native.CharacterAppearance.Makeup1.Type;
+            set => Native.CharacterAppearance.Makeup1.Type = value;
         }
 
         #endregion
@@ -403,56 +401,56 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.Makeup3Color
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.Makeup3.Color);
-            set => _native.CharacterAppearance.Makeup3.Color = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.Makeup3.Color);
+            set => Native.CharacterAppearance.Makeup3.Color = value.ToRgbaBytes();
         }
 
         float ICharacterAppearanceProperties.Makeup3PosX
         {
-            get => _native.CharacterAppearance.Makeup3.PosX;
-            set => _native.CharacterAppearance.Makeup3.PosX = value;
+            get => Native.CharacterAppearance.Makeup3.PosX;
+            set => Native.CharacterAppearance.Makeup3.PosX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3PosY
         {
-            get => _native.CharacterAppearance.Makeup3.PosY;
-            set => _native.CharacterAppearance.Makeup3.PosY = value;
+            get => Native.CharacterAppearance.Makeup3.PosY;
+            set => Native.CharacterAppearance.Makeup3.PosY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3SizeX
         {
-            get => _native.CharacterAppearance.Makeup3.SizeX;
-            set => _native.CharacterAppearance.Makeup3.SizeX = value;
+            get => Native.CharacterAppearance.Makeup3.SizeX;
+            set => Native.CharacterAppearance.Makeup3.SizeX = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3SizeY
         {
-            get => _native.CharacterAppearance.Makeup3.SizeY;
-            set => _native.CharacterAppearance.Makeup3.SizeY = value;
+            get => Native.CharacterAppearance.Makeup3.SizeY;
+            set => Native.CharacterAppearance.Makeup3.SizeY = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3Glossy
         {
-            get => _native.CharacterAppearance.Makeup3.Glossy;
-            set => _native.CharacterAppearance.Makeup3.Glossy = value;
+            get => Native.CharacterAppearance.Makeup3.Glossy;
+            set => Native.CharacterAppearance.Makeup3.Glossy = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3Metallic
         {
-            get => _native.CharacterAppearance.Makeup3.Metallic;
-            set => _native.CharacterAppearance.Makeup3.Metallic = value;
+            get => Native.CharacterAppearance.Makeup3.Metallic;
+            set => Native.CharacterAppearance.Makeup3.Metallic = value;
         }
 
         float ICharacterAppearanceProperties.Makeup3Luminescent
         {
-            get => _native.CharacterAppearance.Makeup3.Luminescent;
-            set => _native.CharacterAppearance.Makeup3.Luminescent = value;
+            get => Native.CharacterAppearance.Makeup3.Luminescent;
+            set => Native.CharacterAppearance.Makeup3.Luminescent = value;
         }
 
         int ICharacterAppearanceProperties.Makeup3Type
         {
-            get => _native.CharacterAppearance.Makeup3.Type;
-            set => _native.CharacterAppearance.Makeup3.Type = value;
+            get => Native.CharacterAppearance.Makeup3.Type;
+            set => Native.CharacterAppearance.Makeup3.Type = value;
         }
 
         #endregion
@@ -461,26 +459,26 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.LeftEyeColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.LeftEyeColor);
-            set => _native.CharacterAppearance.LeftEyeColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.LeftEyeColor);
+            set => Native.CharacterAppearance.LeftEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.RightEyeColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.RightEyeColor);
-            set => _native.CharacterAppearance.RightEyeColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.RightEyeColor);
+            set => Native.CharacterAppearance.RightEyeColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.EyebrowColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.EyebrowColor);
-            set => _native.CharacterAppearance.EyebrowColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.EyebrowColor);
+            set => Native.CharacterAppearance.EyebrowColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.FacialHairColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.FacialHairColor);
-            set => _native.CharacterAppearance.FacialHairColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.FacialHairColor);
+            set => Native.CharacterAppearance.FacialHairColor = value.ToRgbaBytes();
         }
 
         #endregion
@@ -489,50 +487,50 @@ namespace Cirilla.Core.Models
 
         sbyte ICharacterAppearanceProperties.EyeWidth
         {
-            get => _native.CharacterAppearance.EyeWidth;
-            set => _native.CharacterAppearance.EyeWidth = value;
+            get => Native.CharacterAppearance.EyeWidth;
+            set => Native.CharacterAppearance.EyeWidth = value;
         }
 
         sbyte ICharacterAppearanceProperties.EyeHeight
         {
-            get => _native.CharacterAppearance.EyeHeight;
-            set => _native.CharacterAppearance.EyeHeight = value;
+            get => Native.CharacterAppearance.EyeHeight;
+            set => Native.CharacterAppearance.EyeHeight = value;
         }
 
         byte ICharacterAppearanceProperties.SkinColorX
         {
-            get => _native.CharacterAppearance.SkinColorX;
-            set => _native.CharacterAppearance.SkinColorX = value;
+            get => Native.CharacterAppearance.SkinColorX;
+            set => Native.CharacterAppearance.SkinColorX = value;
         }
 
         byte ICharacterAppearanceProperties.SkinColorY
         {
-            get => _native.CharacterAppearance.SkinColorY;
-            set => _native.CharacterAppearance.SkinColorY = value;
+            get => Native.CharacterAppearance.SkinColorY;
+            set => Native.CharacterAppearance.SkinColorY = value;
         }
 
         byte ICharacterAppearanceProperties.Age
         {
-            get => _native.CharacterAppearance.Age;
-            set => _native.CharacterAppearance.Age = value;
+            get => Native.CharacterAppearance.Age;
+            set => Native.CharacterAppearance.Age = value;
         }
 
         byte ICharacterAppearanceProperties.Wrinkles
         {
-            get => _native.CharacterAppearance.Wrinkles;
-            set => _native.CharacterAppearance.Wrinkles = value;
+            get => Native.CharacterAppearance.Wrinkles;
+            set => Native.CharacterAppearance.Wrinkles = value;
         }
 
         sbyte ICharacterAppearanceProperties.NoseHeight
         {
-            get => _native.CharacterAppearance.NoseHeight;
-            set => _native.CharacterAppearance.NoseHeight = value;
+            get => Native.CharacterAppearance.NoseHeight;
+            set => Native.CharacterAppearance.NoseHeight = value;
         }
 
         sbyte ICharacterAppearanceProperties.MouthHeight
         {
-            get => _native.CharacterAppearance.MouthHeight;
-            set => _native.CharacterAppearance.MouthHeight = value;
+            get => Native.CharacterAppearance.MouthHeight;
+            set => Native.CharacterAppearance.MouthHeight = value;
         }
 
         #endregion
@@ -541,8 +539,8 @@ namespace Cirilla.Core.Models
 
         Gender ICharacterAppearanceProperties.Gender
         {
-            get => _native.CharacterAppearance.Gender;
-            set => _native.CharacterAppearance.Gender = value;
+            get => Native.CharacterAppearance.Gender;
+            set => Native.CharacterAppearance.Gender = value;
         }
 
         #endregion
@@ -551,50 +549,50 @@ namespace Cirilla.Core.Models
 
         byte ICharacterAppearanceProperties.BrowType
         {
-            get => _native.CharacterAppearance.BrowType;
-            set => _native.CharacterAppearance.BrowType = value;
+            get => Native.CharacterAppearance.BrowType;
+            set => Native.CharacterAppearance.BrowType = value;
         }
 
         byte ICharacterAppearanceProperties.FaceType
         {
-            get => _native.CharacterAppearance.FaceType;
-            set => _native.CharacterAppearance.FaceType = value;
+            get => Native.CharacterAppearance.FaceType;
+            set => Native.CharacterAppearance.FaceType = value;
         }
 
         byte ICharacterAppearanceProperties.EyeType
         {
-            get => _native.CharacterAppearance.EyeType;
-            set => _native.CharacterAppearance.EyeType = value;
+            get => Native.CharacterAppearance.EyeType;
+            set => Native.CharacterAppearance.EyeType = value;
         }
 
         byte ICharacterAppearanceProperties.NoseType
         {
-            get => _native.CharacterAppearance.NoseType;
-            set => _native.CharacterAppearance.NoseType = value;
+            get => Native.CharacterAppearance.NoseType;
+            set => Native.CharacterAppearance.NoseType = value;
         }
 
         byte ICharacterAppearanceProperties.MouthType
         {
-            get => _native.CharacterAppearance.MouthType;
-            set => _native.CharacterAppearance.MouthType = value;
+            get => Native.CharacterAppearance.MouthType;
+            set => Native.CharacterAppearance.MouthType = value;
         }
 
         byte ICharacterAppearanceProperties.EyebrowType
         {
-            get => _native.CharacterAppearance.EyebrowType;
-            set => _native.CharacterAppearance.EyebrowType = value;
+            get => Native.CharacterAppearance.EyebrowType;
+            set => Native.CharacterAppearance.EyebrowType = value;
         }
 
         EyelashLength ICharacterAppearanceProperties.EyelashLength
         {
-            get => _native.CharacterAppearance.EyelashLength;
-            set => _native.CharacterAppearance.EyelashLength = value;
+            get => Native.CharacterAppearance.EyelashLength;
+            set => Native.CharacterAppearance.EyelashLength = value;
         }
 
         byte ICharacterAppearanceProperties.FacialHairType
         {
-            get => _native.CharacterAppearance.FacialHairType;
-            set => _native.CharacterAppearance.FacialHairType = value;
+            get => Native.CharacterAppearance.FacialHairType;
+            set => Native.CharacterAppearance.FacialHairType = value;
         }
 
         #endregion
@@ -603,14 +601,14 @@ namespace Cirilla.Core.Models
 
         Color ICharacterAppearanceProperties.HairColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.HairColor);
-            set => _native.CharacterAppearance.HairColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.HairColor);
+            set => Native.CharacterAppearance.HairColor = value.ToRgbaBytes();
         }
 
         Color ICharacterAppearanceProperties.ClothingColor
         {
-            get => Utility.RGBAToColor(_native.CharacterAppearance.ClothingColor);
-            set => _native.CharacterAppearance.ClothingColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.CharacterAppearance.ClothingColor);
+            set => Native.CharacterAppearance.ClothingColor = value.ToRgbaBytes();
         }
 
         #endregion
@@ -619,26 +617,26 @@ namespace Cirilla.Core.Models
 
         short ICharacterAppearanceProperties.HairType
         {
-            get => _native.CharacterAppearance.HairType;
-            set => _native.CharacterAppearance.HairType = value;
+            get => Native.CharacterAppearance.HairType;
+            set => Native.CharacterAppearance.HairType = value;
         }
 
         byte ICharacterAppearanceProperties.ClothingType
         {
-            get => _native.CharacterAppearance.ClothingType;
-            set => _native.CharacterAppearance.ClothingType = value;
+            get => Native.CharacterAppearance.ClothingType;
+            set => Native.CharacterAppearance.ClothingType = value;
         }
 
         byte ICharacterAppearanceProperties.Voice
         {
-            get => _native.CharacterAppearance.Voice;
-            set => _native.CharacterAppearance.Voice = value;
+            get => Native.CharacterAppearance.Voice;
+            set => Native.CharacterAppearance.Voice = value;
         }
 
         int ICharacterAppearanceProperties.Expression
         {
-            get => _native.CharacterAppearance.Expression;
-            set => _native.CharacterAppearance.Expression = value;
+            get => Native.CharacterAppearance.Expression;
+            set => Native.CharacterAppearance.Expression = value;
         }
 
         #endregion
@@ -651,92 +649,92 @@ namespace Cirilla.Core.Models
 
         Color IPalicoAppearanceProperties.PatternColor1
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor1);
-            set => _native.PalicoAppearance.PatternColor1 = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.PatternColor1);
+            set => Native.PalicoAppearance.PatternColor1 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.PatternColor2
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor2);
-            set => _native.PalicoAppearance.PatternColor2 = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.PatternColor2);
+            set => Native.PalicoAppearance.PatternColor2 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.PatternColor3
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.PatternColor3);
-            set => _native.PalicoAppearance.PatternColor3 = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.PatternColor3);
+            set => Native.PalicoAppearance.PatternColor3 = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.FurColor
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.FurColor);
-            set => _native.PalicoAppearance.FurColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.FurColor);
+            set => Native.PalicoAppearance.FurColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.LeftEyeColor
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.LeftEyeColor);
-            set => _native.PalicoAppearance.LeftEyeColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.LeftEyeColor);
+            set => Native.PalicoAppearance.LeftEyeColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.RightEyeColor
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.RightEyeColor);
-            set => _native.PalicoAppearance.RightEyeColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.RightEyeColor);
+            set => Native.PalicoAppearance.RightEyeColor = value.ToRgbaBytes();
         }
 
         Color IPalicoAppearanceProperties.ClothingColor
         {
-            get => Utility.RGBAToColor(_native.PalicoAppearance.ClothingColor);
-            set => _native.PalicoAppearance.ClothingColor = value.ToRgbaBytes();
+            get => Utility.RGBAToColor(Native.PalicoAppearance.ClothingColor);
+            set => Native.PalicoAppearance.ClothingColor = value.ToRgbaBytes();
         }
 
         float IPalicoAppearanceProperties.FurLength
         {
-            get => _native.PalicoAppearance.FurLength;
-            set => _native.PalicoAppearance.FurLength = value;
+            get => Native.PalicoAppearance.FurLength;
+            set => Native.PalicoAppearance.FurLength = value;
         }
 
         float IPalicoAppearanceProperties.FurThickness
         {
-            get => _native.PalicoAppearance.FurThickness;
-            set => _native.PalicoAppearance.FurThickness = value;
+            get => Native.PalicoAppearance.FurThickness;
+            set => Native.PalicoAppearance.FurThickness = value;
         }
 
         byte IPalicoAppearanceProperties.PatternType
         {
-            get => _native.PalicoAppearance.PatternType;
-            set => _native.PalicoAppearance.PatternType = value;
+            get => Native.PalicoAppearance.PatternType;
+            set => Native.PalicoAppearance.PatternType = value;
         }
 
         byte IPalicoAppearanceProperties.EyeType
         {
-            get => _native.PalicoAppearance.EyeType;
-            set => _native.PalicoAppearance.EyeType = value;
+            get => Native.PalicoAppearance.EyeType;
+            set => Native.PalicoAppearance.EyeType = value;
         }
 
         byte IPalicoAppearanceProperties.EarType
         {
-            get => _native.PalicoAppearance.EarType;
-            set => _native.PalicoAppearance.EarType = value;
+            get => Native.PalicoAppearance.EarType;
+            set => Native.PalicoAppearance.EarType = value;
         }
 
         byte IPalicoAppearanceProperties.TailType
         {
-            get => _native.PalicoAppearance.TailType;
-            set => _native.PalicoAppearance.TailType = value;
+            get => Native.PalicoAppearance.TailType;
+            set => Native.PalicoAppearance.TailType = value;
         }
 
         PalicoVoiceType IPalicoAppearanceProperties.VoiceType
         {
-            get => _native.PalicoAppearance.VoiceType;
-            set => _native.PalicoAppearance.VoiceType = value;
+            get => Native.PalicoAppearance.VoiceType;
+            set => Native.PalicoAppearance.VoiceType = value;
         }
 
         PalicoVoicePitch IPalicoAppearanceProperties.VoicePitch
         {
-            get => _native.PalicoAppearance.VoicePitch;
-            set => _native.PalicoAppearance.VoicePitch = value;
+            get => Native.PalicoAppearance.VoicePitch;
+            set => Native.PalicoAppearance.VoicePitch = value;
         }
 
         #endregion

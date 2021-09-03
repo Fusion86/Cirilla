@@ -151,6 +151,12 @@ struct GUILDCARD {
     byte researchLevel[96];
 };
 
+struct SHOUTOUT {
+    int len; // I don't think the game actually uses this value.
+    char str[40];
+    byte unk[88];
+};
+
 struct SAVEDATA_SAVESLOT {
     char hunterName[64];
     int hunterRank;
@@ -170,7 +176,9 @@ struct SAVEDATA_SAVESLOT {
 
     byte unk4[969962];
     char palicoName[64];
-    byte unk5[379569];
+    byte unk5[237679];
+    SHOUTOUT shoutouts[96];
+    byte unk6[129218];
 };
 
 struct SAVEDATA {

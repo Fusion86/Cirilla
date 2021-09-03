@@ -1,4 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿//
+// See misc/savedata.bt
+//
+
+using System.Runtime.InteropServices;
 
 namespace Cirilla.Core.Structs.Native
 {
@@ -61,9 +65,14 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64, ArraySubType = UnmanagedType.U1)]
         public byte[] PalicoName;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 379569, ArraySubType = UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 237679, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk5;
 
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 96, ArraySubType = UnmanagedType.U1)]
+        public Shoutout[] Shoutouts;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 129218, ArraySubType = UnmanagedType.U1)]
+        private byte[] Unk6;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -106,6 +115,19 @@ namespace Cirilla.Core.Structs.Native
         public byte[] Title;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6318, ArraySubType = UnmanagedType.U1)]
+        private byte[] Unk5;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Shoutout
+    {
+        // I don't think the game actually uses this value.
+        public int Length;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 40, ArraySubType = UnmanagedType.U1)]
+        public byte[] Value;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 88, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk5;
     }
 }
