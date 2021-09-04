@@ -16,5 +16,6 @@ namespace Cirilla.MVVM.Common
         public readonly static FileDialogFilter AllFiles = new FileDialogFilter("All Files", new[] { "*" });
         public readonly static FileDialogFilter GMD = new FileDialogFilter("Game Message Data", new[] { "gmd" });
         public readonly static FileDialogFilter CSV = new FileDialogFilter("CSV UTF-8 (Comma Delimited)", new[] { "csv" });
+        public readonly static FileDialogFilter SaveData = new FileDialogFilter("SAVEDATA1000", new[] { "" });
     }
 }

@@ -69,7 +69,7 @@
                 </MenuItem>
 
                 <MenuItem Header="_View">
-                    <MenuItem IsCheckable="True" Header="Smooth Scroll" IsChecked="{Binding Source={StaticResource ApplicationSettings}, Path=Current.SmoothScroll}"/>
+                    <MenuItem IsCheckable="True" Header="Smooth Scroll (slow!)" IsChecked="{Binding Source={StaticResource ApplicationSettings}, Path=Current.SmoothScroll}"/>
                     <MenuItem IsCheckable="True" Header="Show GMD Text Preview" IsChecked="{Binding Source={StaticResource ApplicationSettings}, Path=Current.ShowGmdTextPreview}"/>
                 </MenuItem>
 
@@ -87,7 +87,6 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
@@ -95,11 +94,9 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
 
-                <Separator Grid.Column="1"/>
+                <StatusBarItem Grid.Column="0" Content="{Binding StatusText}"/>
 
-                <StatusBarItem Grid.Column="2" Content="{Binding StatusText}"/>
-
-                <StatusBarItem Grid.Column="3">
+                <StatusBarItem Grid.Column="2">
                     <Button Content="Show Log"
                             BorderThickness="0"
                             Padding="8,0,8,0"
@@ -206,6 +203,10 @@
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type vms:GmdViewModel}">
                             <view:GmdEditView Margin="0" DataContext="{Binding}"/>
+                        </DataTemplate>
+                        
+                        <DataTemplate DataType="{x:Type vms:SaveDataViewModel}">
+                            <view:SaveDataView Margin="0" DataContext="{Binding}"/>
                         </DataTemplate>
 
                         <DataTemplate DataType="{x:Type vms:GmdCsvViewModel}">

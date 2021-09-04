@@ -1,8 +1,11 @@
-﻿using Cirilla.Core.Models;
+﻿using Cirilla.Core.Helpers;
+using Cirilla.Core.Models;
 using Sharprompt;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ShoutoutReset
@@ -10,12 +13,11 @@ namespace ShoutoutReset
     class Program
     {
         // Kinda shitty but who cares.
-        private static byte[] defaultValue = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x10, 0xFC, 0xFA, 0x06, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xB9, 0x32, 0xAB, 0x42, 0x01, 0x00, 0x00, 0x00, 0xAD, 0x4D, 0x3C, 0x42 };
-        private static string listAll = "List all shoutouts";
-        private static string resetSelected = "Reset the selected shoutouts";
-        private static string resetAll = "Reset all shoutouts";
-        private static string saveAndExit = "Save and Exit";
-        private static string[] actions = new[] { listAll, resetSelected, resetAll, saveAndExit };
+        private static readonly string listAll = "List all shoutouts";
+        private static readonly string resetSelected = "Reset the selected shoutouts";
+        private static readonly string resetAll = "Reset all shoutouts";
+        private static readonly string saveAndExit = "Save and Exit";
+        private static readonly string[] actions = new[] { listAll, resetSelected, resetAll, saveAndExit };
 
         static void Main(string[] args)
         {
@@ -24,14 +26,26 @@ namespace ShoutoutReset
                 Console.WriteLine("No savedata given!");
                 Console.WriteLine("USAGE: ShoutoutReset.exe C:/path/to/SAVEDATA1000");
                 Console.WriteLine("Or drop the SAVEDATA1000 file on the ShoutoutReset.exe executable.");
-                return;
+            }
+            else
+            {
+                InteractiveMenu(args[0]);
             }
 
+            if (ConsoleWillBeDestroyedAtTheEnd())
+            {
+                Console.WriteLine("Press any key to close this window...");
+                Console.ReadKey();
+            }
+        }
+
+        private static void InteractiveMenu(string savepath)
+        {
             Console.WriteLine("ShoutoutReset v" + Assembly.GetExecutingAssembly().GetName().Version);
 
             Console.Write("Loading save... ");
-            SaveData savedata = new SaveData(args[0]);
-            Console.WriteLine("OK");
+            SaveData savedata = new(savepath);
+            Console.WriteLine("OK\n");
 
             Console.WriteLine("Use the up/down arrows to make a selection, and press enter to confirm.");
 
@@ -49,33 +63,49 @@ namespace ShoutoutReset
 
             while (true)
             {
+                Console.WriteLine();
                 var action = Prompt.Select("What do you want to do?", actions);
 
                 if (action == listAll)
                 {
-                    Console.WriteLine("Listing all shoutouts (ignore any gibberish after the string, this program is just a PoC)");
+                    Console.WriteLine("Shoutouts:");
                     for (int i = 0; i < saveslot.Native.Shoutouts.Length; i++)
                     {
-                        string str = null!;
+                        Console.WriteLine(ShoutoutToString(saveslot, i));
+                    }
+                }
+                else if (action == resetSelected)
+                {
+                    var options = new List<string>();
 
-                        if (saveslot.Native.Shoutouts[i].Value.SequenceEqual(defaultValue))
+                    for (int i = 0; i < saveslot.Native.Shoutouts.Length; i++)
+                    {
+                        options.Add(ShoutoutToString(saveslot, i));
+                    }
+
+                    var choices = Prompt.MultiSelect("Select which shoutouts you want to select.", options, pageSize: 24);
+
+                    foreach (var choice in choices)
+                    {
+                        int idx = options.IndexOf(choice);
+                        if (idx == -1)
                         {
-                            str = "(default value)";
+                            Console.WriteLine("Invalid options: " + choice);
                         }
                         else
                         {
-                            str = Encoding.UTF8.GetString(saveslot.Native.Shoutouts[i].Value);
+                            ResetShoutout(saveslot, idx);
                         }
-
-                        Console.WriteLine($"{i + 1} - {str}");
                     }
                 }
                 else if (action == resetAll)
                 {
+                    bool confirm = Prompt.Confirm("This will rest all shoutouts to their default value. Continue?");
+                    if (!confirm) return;
+
                     for (int i = 0; i < saveslot.Native.Shoutouts.Length; i++)
                     {
-                        saveslot.Native.Shoutouts[i].Length = 0; // Might not be needed.
-                        saveslot.Native.Shoutouts[i].Value = defaultValue;
+                        ResetShoutout(saveslot, i);
                     }
 
                     Console.WriteLine("Done!");
@@ -86,7 +116,7 @@ namespace ShoutoutReset
                     bool confirm = Prompt.Confirm("This will overwrite your original savedata. It is your responsibility to create a backup. Continue?");
                     if (confirm)
                     {
-                        savedata.Save(args[0]);
+                        savedata.Save(savepath);
                         return;
                     }
                 }
@@ -96,5 +126,32 @@ namespace ShoutoutReset
                 }
             }
         }
+
+        private static string ShoutoutToString(SaveSlot saveslot, int index)
+        {
+            var defaultValue = MhwDefaultValues.GetDefaultShoutoutValue(saveslot.SaveSlotIndex);
+            string str;
+            if (saveslot.Native.Shoutouts[index].Value.SequenceEqual(defaultValue))
+                str = "(default value)";
+            else
+                str = Encoding.UTF8.GetString(saveslot.Native.Shoutouts[index].Value);
+            return $"{index + 1} - {str}";
+        }
+
+        private static void ResetShoutout(SaveSlot saveslot, int index)
+        {
+            var defaultValue = MhwDefaultValues.GetDefaultShoutoutValue(saveslot.SaveSlotIndex);
+            saveslot.Native.Shoutouts[index].Length = 0; // Might not be needed.
+            saveslot.Native.Shoutouts[index].Value = defaultValue;
+        }
+
+        private static bool ConsoleWillBeDestroyedAtTheEnd()
+        {
+            var processList = new uint[1];
+            return GetConsoleProcessList(processList, 1) == 1;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
     }
 }

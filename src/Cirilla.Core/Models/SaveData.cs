@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Attributes;
-using Cirilla.Core.Crypto;
+﻿using Cirilla.Core.Crypto;
 using Cirilla.Core.Crypto.BlowFishCS;
 using Cirilla.Core.Enums;
 using Cirilla.Core.Exceptions;
@@ -69,7 +68,7 @@ namespace Cirilla.Core.Models
                 SaveSlots = new SaveSlot[3];
                 for (int i = 0; i < 3; i++)
                 {
-                    SaveSlots[i] = new SaveSlot(this, ms);
+                    SaveSlots[i] = new SaveSlot(this, ms, i);
                 }
             }
 
@@ -155,11 +154,14 @@ namespace Cirilla.Core.Models
     public class SaveSlot : ICharacterAppearanceProperties, IPalicoAppearanceProperties, ISaveSlot, ICloneable
     {
         public SaveData SaveData { get; }
+        public int SaveSlotIndex { get; }
+
         public SaveData_SaveSlot Native;
 
-        public SaveSlot(SaveData saveData, Stream stream)
+        public SaveSlot(SaveData saveData, Stream stream, int saveSlotIndex)
         {
             SaveData = saveData;
+            SaveSlotIndex = saveSlotIndex;
 
             // Don't close stream
             using BinaryReader br = new BinaryReader(stream, Encoding.UTF8, true);
@@ -262,6 +264,9 @@ namespace Cirilla.Core.Models
             get => Native.PlayTime;
             set => Native.PlayTime = value;
         }
+
+        // All this trash below here could be rewritten now that we have the `ref` function in C#.
+        // That said, I'm not going to touch working code.
 
         #region Character Appearance
 

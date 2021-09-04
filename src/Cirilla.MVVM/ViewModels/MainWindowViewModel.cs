@@ -219,7 +219,7 @@ namespace Cirilla.MVVM.ViewModels
             var vm = new GmdCsvBatchToolViewModel(this);
             openItemsList.Add(vm);
             ContentViewModel = vm;
-            SetSelectedExplorerItems?.Invoke(new [] { vm });
+            SetSelectedExplorerItems?.Invoke(new[] { vm });
         }
 
         private async Task SaveFiles(IList<IExplorerFileItem> lst)
@@ -387,6 +387,18 @@ namespace Cirilla.MVVM.ViewModels
                     ".csv" => new GmdCsvViewModel(fileInfo, this),
                     _ => throw new NotSupportedException($"{fileInfo.FullName} is not a suported file type.")
                 };
+            }
+            catch (NotSupportedException ex)
+            {
+                // Hacky workaround because SAVEDATA1000 doesn't have a file extension.
+                try
+                {
+                    return new SaveDataViewModel(fileInfo, this);
+                }
+                catch
+                {
+                    throw ex;
+                }
             }
             catch (Exception ex)
             {
