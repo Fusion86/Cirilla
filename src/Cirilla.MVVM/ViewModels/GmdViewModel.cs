@@ -101,13 +101,19 @@ namespace Cirilla.MVVM.ViewModels
         private void AddEntry()
         {
             string key = $"CIRILLA_KEY_" + entriesList.Count;
-            var vm = new GmdEntryViewModel(entriesList.Count, new GMD_Entry { Key = key });
+            var entry = new GMD_Entry { Key = key };
+            gmd.Entries.Add(entry);
+
+            var vm = new GmdEntryViewModel(entriesList.Count, entry);
             entriesList.Add(vm);
         }
 
         private void AddPaddingEntry()
         {
-            var vm = new GmdEntryViewModel(entriesList.Count, new GMD_EntryWithoutKey());
+            var entry = new GMD_EntryWithoutKey();
+            gmd.Entries.Add(entry);
+
+            var vm = new GmdEntryViewModel(entriesList.Count, entry);
             entriesList.Add(vm);
         }
 

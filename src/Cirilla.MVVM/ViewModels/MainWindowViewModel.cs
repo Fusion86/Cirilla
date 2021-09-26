@@ -384,7 +384,8 @@ namespace Cirilla.MVVM.ViewModels
                 return fileInfo.Extension.ToLowerInvariant() switch
                 {
                     ".gmd" => new GmdViewModel(fileInfo, this),
-                    ".csv" => new GmdCsvViewModel(fileInfo, this),
+                    // Disable CSV because the workflow is stupid. You should implement the "Import from CSV" command inside GmdViewModel.
+                    //".csv" => new GmdCsvViewModel(fileInfo, this),
                     _ => throw new NotSupportedException($"{fileInfo.FullName} is not a suported file type.")
                 };
             }
