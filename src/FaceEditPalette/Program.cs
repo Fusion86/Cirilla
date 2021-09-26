@@ -12,12 +12,12 @@ namespace FaceEditPalette
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            List<Rgba32> colors = new List<Rgba32>();
+            List<Rgba32> colors = new();
 
             using (var fs = File.OpenRead(@"L:\Sync\MHW Mods\chunks_v0\chunk\common\face_edit\face_edit_palette.pal"))
-            using (BinaryReader br = new BinaryReader(fs))
+            using (BinaryReader br = new(fs))
             {
                 char[] magic = br.ReadChars(3);
                 fs.Position += 5; // Padding

@@ -47,8 +47,8 @@ namespace GstTool
 
             foreach (var file in files)
             {
-                using FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using BinaryReader br = new BinaryReader(fs);
+                using FileStream fs = new(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using BinaryReader br = new(fs);
 
                 var header = br.ReadStruct<GstHeader>();
                 var infos = new GstInfoEntry[header.EntryCount];

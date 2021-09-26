@@ -29,7 +29,7 @@ namespace Cirilla.Core.Enums
         High = 2
     }
 
-    public class CharacterAppearanceType : Enumeration
+    public class CharacterAppearanceType
     {
         // I don't know for sure, see notes inside the appearance.bt file
         public static readonly CharacterAppearanceType Zero = new CharacterAppearanceType(new byte[] { 0, 0, 0, 0 });

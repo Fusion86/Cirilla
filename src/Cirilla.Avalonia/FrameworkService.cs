@@ -11,14 +11,14 @@ namespace Cirilla.Avalonia
 {
     class FrameworkService : IFrameworkService
     {
-        public async Task<string[]> OpenFileDialog(bool allowMultiple = false, List<MVVM.Common.FileDialogFilter>? filters = null)
+        public async Task<string[]> OpenFileDialog(bool allowMultiple = false, IList<MVVM.Common.FileDialogFilter>? filters = null, string? initialDirectory = null)
         {
             OpenFileDialog ofd = new OpenFileDialog { AllowMultiple = allowMultiple };
             ofd.Filters = GetFilters(filters).ToList();
             return await ofd.ShowAsync(GetMainWindow());
         }
 
-        public async Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, List<MVVM.Common.FileDialogFilter>? filters = null)
+        public async Task<string?> SaveFileDialog(string? defaultName = null, string? extension = null, IList<MVVM.Common.FileDialogFilter>? filters = null)
         {
             SaveFileDialog sfd = new SaveFileDialog
             {
@@ -27,6 +27,11 @@ namespace Cirilla.Avalonia
             };
             sfd.Filters = GetFilters(filters).ToList();
             return await sfd.ShowAsync(GetMainWindow());
+        }
+
+        public Task<string?> OpenFolderDialog(string? initialDirectory = null)
+        {
+            throw new NotImplementedException();
         }
 
         public object? FindResource(string key)
@@ -44,7 +49,7 @@ namespace Cirilla.Avalonia
             throw new PlatformNotSupportedException("No MainWindow found for this platform.");
         }
 
-        private IEnumerable<FileDialogFilter> GetFilters(List<MVVM.Common.FileDialogFilter>? filters)
+        private IEnumerable<FileDialogFilter> GetFilters(IList<MVVM.Common.FileDialogFilter>? filters)
         {
             if (filters == null) yield break;
 
@@ -53,7 +58,7 @@ namespace Cirilla.Avalonia
                 yield return new FileDialogFilter
                 {
                     Name = filter.Name,
-                    Extensions = filter.Extensions
+                    Extensions = filter.Extensions.ToList()
                 };
             }
         }

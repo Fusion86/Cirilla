@@ -1,47 +1,53 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.68">
-  <PropertyGroup>
-    <ProjectGuid>{FD8304BD-F468-4229-8627-543085351B56}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <AssemblyTitle>Cirilla Toolkit</AssemblyTitle>
-    <Product>Cirilla Toolkit</Product>
-    <Description>View and edit certain Monster Hunter World files in a frontend for the Cirilla.Core library.</Description>
-    <Version>0.8.0</Version>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="4.1.0">
-        <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="CsvHelper" Version="27.1.1" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
-    <PackageReference Include="Fody" Version="6.2.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="1.1.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.9">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Serilog" Version="2.10.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Design" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cirilla.Core\Cirilla.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Cirilla.jpg" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <ProjectGuid>{FD8304BD-F468-4229-8627-543085351B56}</ProjectGuid>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net472</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <AssemblyTitle>Cirilla Toolkit</AssemblyTitle>
+        <Product>Cirilla Toolkit</Product>
+        <Description>View and edit certain Monster Hunter World files in a frontend for the Cirilla.Core library.</Description>
+        <Version>0.8.0</Version>
+        <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+        <LangVersion>9.0</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Costura.Fody" Version="4.1.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="CsvHelper" Version="27.1.1" />
+        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
+        <PackageReference Include="Fody" Version="6.2.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Ookii.Dialogs.Wpf" Version="1.1.0" />
+        <PackageReference Include="PropertyChanged.Fody" Version="3.2.9">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Serilog" Version="2.10.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Design" />
+        <Reference Include="System.Security" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="FodyWeavers.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Cirilla.Core\Cirilla.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Images\Cirilla.jpg" />
+    </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Cirilla.Core.Helpers
+namespace Cirilla.Helpers
 {
     // Based on https://lostechies.com/jimmybogard/2008/08/12/enumeration-classes/
     public abstract class Enumeration
