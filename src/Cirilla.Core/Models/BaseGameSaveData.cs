@@ -1,5 +1,4 @@
-﻿using Cirilla.Core.Crypto;
-using Cirilla.Core.Crypto.BlowFishCS;
+﻿using Cirilla.Core.Crypto.BlowFishCS;
 using Cirilla.Core.Extensions;
 using Cirilla.Core.Helpers;
 using Cirilla.Core.Interfaces;

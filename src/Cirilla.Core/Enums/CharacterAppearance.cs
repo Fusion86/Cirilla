@@ -1,6 +1,4 @@
-﻿using Cirilla.Core.Helpers;
-
-namespace Cirilla.Core.Enums
+﻿namespace Cirilla.Core.Enums
 {
     public enum Gender : int
     {

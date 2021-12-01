@@ -1,8 +1,5 @@
-﻿using Cirilla.Core.Enums;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
 
 namespace Cirilla.Core.Helpers
 {
