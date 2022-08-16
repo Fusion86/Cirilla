@@ -37,11 +37,11 @@ namespace Cirilla.Core.Structs.Native
         public byte[] HunterName;
 
         public int HunterRank;
-        private int Zero1;
+        public int MasterRank;
         public int Zeni;
         public int ResearchPoints;
         public int HunterXp;
-        private int Zero2;
+        public int MasterXp;
         public int PlayTime; // In seconds
 
         public CharacterAppearance CharacterAppearance;
@@ -81,8 +81,8 @@ namespace Cirilla.Core.Structs.Native
         public long SteamId;
         public long Created; // Timestamp
         private byte Unk1;
-        public uint HunterRank;
-        public uint PlayTime; // Seconds
+        public int HunterRank;
+        public int MasterRank;
         public long LastUpdate; // Timestamp
         private uint Zero1;
 
@@ -95,7 +95,7 @@ namespace Cirilla.Core.Structs.Native
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk2;
 
-        public CharacterAppearance Appearance;
+        public CharacterAppearance CharacterAppearance;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 212, ArraySubType = UnmanagedType.U1)]
         private byte[] Unk3;

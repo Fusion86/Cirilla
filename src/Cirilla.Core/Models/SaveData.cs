@@ -1,4 +1,4 @@
-﻿using Cirilla.Core.Crypto;
+using Cirilla.Core.Crypto;
 using Cirilla.Core.Crypto.BlowFishCS;
 using Cirilla.Core.Enums;
 using Cirilla.Core.Exceptions;
@@ -241,6 +241,18 @@ namespace Cirilla.Core.Models
             }
         }
 
+        public int MasterRank
+        {
+            get => Native.MasterRank;
+            set
+            {
+                if (value > 999)
+                    throw new Exception("MasterRank can't be higher than 999!");
+
+                Native.MasterRank = value;
+            }
+        }
+
         public int Zenny
         {
             get => Native.Zeni;
@@ -257,6 +269,12 @@ namespace Cirilla.Core.Models
         {
             get => Native.HunterXp;
             set => Native.HunterXp = value;
+        }
+
+        public int MasterXp
+        {
+            get => Native.MasterXp;
+            set => Native.MasterXp = value;
         }
 
         public int PlayTime

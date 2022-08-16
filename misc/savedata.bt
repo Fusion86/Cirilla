@@ -117,7 +117,7 @@ struct GUILDCARD {
     uint64 createdOn; // Timestamp
     byte unk1;
     uint hunterRank;
-    uint playTimeSec;
+    uint masterRank;
     uint64 lastUpdated;
     uint zero1;
 
@@ -163,8 +163,8 @@ struct SAVEDATA_SAVESLOT {
     int masterRank;
     int zeni;
     int researchPoints;
-    int hunterXp;
-    int unk2;
+    int hunterRankXp;
+    int masterRankXp; // Probably?
     int timePlayedSec;
 
     CHARACTER_APPEARANCE characterAppearance;
