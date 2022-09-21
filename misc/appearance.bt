@@ -100,5 +100,6 @@ struct PALICO_APPEARANCE {
 
     ubyte voiceType;
     ubyte voicePitch;
-    ushort unk1; // Outline/face and pupils? Can only be used when bought iceborne dlc.
+    ubyte outlineType; // 0 - 3
+    ubyte pupilType; // 0 - 3
 };

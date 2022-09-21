@@ -35,6 +35,7 @@ namespace Cirilla.Core.Structs.Native
         public byte TailType;
         public PalicoVoiceType VoiceType;
         public PalicoVoicePitch VoicePitch;
-        public ushort Unk; // Zero?
+        public byte OutlineType;
+        public byte PupilType;
     }
 }

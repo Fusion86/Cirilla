@@ -19,6 +19,8 @@ namespace Cirilla.Core.Interfaces
         byte EyeType { get; set; }
         byte EarType { get; set; }
         byte TailType { get; set; }
+        byte OutlineType { get; set; }
+        byte PupilType { get; set; }
         PalicoVoiceType VoiceType { get; set; }
         PalicoVoicePitch VoicePitch { get; set; }
     }

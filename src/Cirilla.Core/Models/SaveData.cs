@@ -748,6 +748,18 @@ namespace Cirilla.Core.Models
             set => Native.PalicoAppearance.TailType = value;
         }
 
+        byte IPalicoAppearanceProperties.OutlineType
+        {
+            get => Native.PalicoAppearance.OutlineType;
+            set => Native.PalicoAppearance.OutlineType = value;
+        }
+
+        byte IPalicoAppearanceProperties.PupilType
+        {
+            get => Native.PalicoAppearance.PupilType;
+            set => Native.PalicoAppearance.PupilType = value;
+        }
+
         PalicoVoiceType IPalicoAppearanceProperties.VoiceType
         {
             get => Native.PalicoAppearance.VoiceType;
@@ -759,7 +771,6 @@ namespace Cirilla.Core.Models
             get => Native.PalicoAppearance.VoicePitch;
             set => Native.PalicoAppearance.VoicePitch = value;
         }
-
         #endregion
     }
 }
